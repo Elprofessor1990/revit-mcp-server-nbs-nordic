@@ -5020,6 +5020,29 @@
     }
   },
   {
+    "name": "nbs_lookup_classification",
+    "description": "Search a static CCI classification code reference (Region Syddanmark IKT-liste, 2023-07-12) by free text to find candidate classificationcode/classificationserial values for nbs_create_component. IMPORTANT: this is CCI-specific reference data, not fetched from NBS — NBS Nordic projects can use different classification systems (BIM7AA, CCS, etc.). Call nbs_get_project first and only trust these results if the project's classification_system_name is CCI-based. Never invent a code yourself; if nothing matches, say so.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Free-text search term, e.g. 'facadevæg' or 'vindue'."
+        },
+        "limit": {
+          "type": "number",
+          "default": 10,
+          "description": "Maximum results to return."
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
     "name": "nbs_push_quantities",
     "description": "Push quantity rows to NBS Nordic (POST /quantities). IMPORTANT: verify units before calling — Revit internal units are feet, NBS expects m²/m³/m/pcs. Do not assume unit conversion is automatic; normalize on the caller side first.",
     "input_schema": {

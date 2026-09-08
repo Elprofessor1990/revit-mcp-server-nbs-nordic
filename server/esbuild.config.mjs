@@ -35,4 +35,11 @@ cpSync(
   join(__dirname, 'build/sql-wasm.wasm')
 );
 
-console.log('Build complete: build/index.js + build/sql-wasm.wasm');
+// Copy the CCI classification reference data next to the bundle —
+// ClassificationLookup.ts reads it at runtime via fs, not a static import.
+cpSync(
+  join(__dirname, 'src/integrations/nbs/classification/cci-hierarchy.json'),
+  join(__dirname, 'build/cci-hierarchy.json')
+);
+
+console.log('Build complete: build/index.js + build/sql-wasm.wasm + build/cci-hierarchy.json');

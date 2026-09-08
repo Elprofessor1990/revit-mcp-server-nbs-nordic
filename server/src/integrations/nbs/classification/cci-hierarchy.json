@@ -1,0 +1,5136 @@
+{
+  "_comment": "CCI classification reference data, restructured to match NBS Nordic's own component field names (classificationcode / classificationserial / classificationname) instead of the source PDF's Danish terms, so it can be matched directly against real /components API responses.",
+  "_source": "Region Syddanmark — IKT klassifikation og identifikationsliste, dateret 2023-07-12",
+  "_classification_system_hint": "CCI-compatible. NBS Nordic projects can use different classification systems (seen in live data: BIM7AA v.2.1, BIM7AA v.3.2, CCI Bygningsdele R1, CCS Bygningsdele R1) — verify a project's actual classification_system_name via nbs_get_project before treating these codes as valid for it. Do not assume universal applicability.",
+  "_filtered_out_unpublished_groups": 482,
+  "groups": [
+    {
+      "classificationcode": "[L]%AC",
+      "classificationname": "Etageadskillelsesopbygning",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Etageadskillelse, Præfabrikeret element - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Etageadskillelse, Skeletkonstruktion - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Etageadskillelse, Massiv - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%AD",
+      "classificationname": "Vægopbygning",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Facadevæg, Præfabrikeret element - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Facadevæg, Fuldmuret - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Facadevæg, Skalmuret - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Facadevæg, Skelekkonstruktion - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "190",
+          "name": "Facadevæg, Vægskørte - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Skillevæg, Præfabrikeret element - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Skillevæg, Massiv - ● Et separat BIM-objekt - Muret, In-situ, Pladsstøbt"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Skillevæg, Skeletkonstruktion - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Forsatsvæg, Skeletkonstruktion - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "410",
+          "name": "Halvvæg, Massiv - ● Et separat BIM-objekt - Muret, In-situ, Pladsstøbt"
+        },
+        {
+          "classificationserial": "420",
+          "name": "Halvvæg, Skeletkonstruktion - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "510",
+          "name": "Kældervæg, Præfabrikeret element - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "520",
+          "name": "Kældervæg, Massiv - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Glasvæg - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "700",
+          "name": "Foldevæg - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%AE",
+      "classificationname": "Tagopbygning",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Spærtag - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Tagkassette - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Varmt tag - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Glastag ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Mobilt tag - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "610",
+          "name": "Grønt tag, Ekstensivt  ● ● Et separat BIM-objekt - Sedumtag"
+        },
+        {
+          "classificationserial": "620",
+          "name": "Grønt tag, Semi-intensivt  ● ● Et separat BIM-objekt - Taghave"
+        },
+        {
+          "classificationserial": "630",
+          "name": "Grønt tag, Intensivt  ● ● Et separat BIM-objekt - Taghave"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%AF",
+      "classificationname": "Trappeopbygning",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Ligeløbstrappe, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Ligeløbstrappe, 1-repos ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Ligeløbstrappe, 2-repos ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Toløbstrappe ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Kvartsvingstrappe, Stardard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Kvartsvingstrappe, 1-repos ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "410",
+          "name": "Halvsvingstrappe, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "420",
+          "name": "Halvsvingstrappe, 1-repos ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "430",
+          "name": "Halvsvingstrappe, 2-repos ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Spindeltrappe ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Vindeltrappe ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "900",
+          "name": "Special trappe ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%AG",
+      "classificationname": "Rampeopbygning",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fast rampe ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Flytbar rampe ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Mekanisk rampe ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Hydraulisk rampe ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%AH",
+      "classificationname": "Balkon",
+      "entries": [
+        {
+          "classificationserial": "111",
+          "name": "Altan, Elementaltan, Beton ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "112",
+          "name": "Altan, Elementaltan, Stål ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Altan, Pladsstøbt altan ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Altan, Sammensat altan ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "190",
+          "name": "Altan, Øvrige ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Balkon ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%AM",
+      "classificationname": "Lyskasse",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Lyskasse, Præfabrikeret ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Lyskasse, Massiv ● ● Et separat BIM-objekt - Plads støbt, Muret, In-situ"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BB",
+      "classificationname": "Fundamentskonstruktion",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Stribefundament - ● Et separat BIM-objekt - Randfundament, Linjefundament"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Punktfundament - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Brøndfundament - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Pælefundament - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Skruefundament - ● Et separat BIM-objekt - Jordskruefundament"
+        },
+        {
+          "classificationserial": "610",
+          "name": "Opmurede fundament, Fundablokke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "621",
+          "name": "Opmurede fundament, Lecablokke, Standard - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "622",
+          "name": "Opmurede fundament, Lecablokke, Themblok - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "623",
+          "name": "Opmurede fundament, Lecablokke, Termblok KlimaPlus - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "624",
+          "name": "Opmurede fundament, Lecablokke, Skillerumsblok - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "625",
+          "name": "Opmurede fundament, Lecablokke, Rilleblok - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "626",
+          "name": "Opmurede fundament, Lecablokke, Styrkeblok - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "700",
+          "name": "Maskinfundament - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BF",
+      "classificationname": "Gulvkonstruktion",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Opbygget gulv - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Svømmende gulv - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Støbt gulv - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Flydende gulv - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BG",
+      "classificationname": "Loftkonstruktion",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Påbygget loft - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Nedhængt loft - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "900",
+          "name": "Loftskørte - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%CL",
+      "classificationname": "Terrænvægskonstruktion",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Gravitationsmur - ● Et separat BIM-objekt - Støttemur"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Pælevæg - ● Et separat BIM-objekt - Støttemur"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Vinkelstøttemur - ● Et separat BIM-objekt - Støttemur"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Forankret mur - ● Et separat BIM-objekt - Støttemur"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%HA",
+      "classificationname": "Gas- og luftforsyningssystem",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Gasanlæg, Argon ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "121",
+          "name": "Gasanlæg, Carbondioxid, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "122",
+          "name": "Gasanlæg, Carbondioxid, Medicinsk ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "131",
+          "name": "Gasanlæg, Dinitrogenoxid, Medicinsk ● ● Et separat BIM-objekt - Lattergas, Dinitrogenoxid, Kvælstofforilte"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Gasanlæg, Helium ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "150",
+          "name": "Gasanlæg, Hydrogen ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "171",
+          "name": "Gasanlæg, Nitrogen, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "172",
+          "name": "Gasanlæg, Nitrogen, Medicinsk ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "173",
+          "name": "Gasanlæg, Nitrogen, Flydende ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "181",
+          "name": "Gasanlæg, Oxygen, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "182",
+          "name": "Gasanlæg, Oxygen, Medicinsk ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "311",
+          "name": "Trykluftsanlæg, Trykluft, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "312",
+          "name": "Trykluftsanlæg, Trykluft, Medicinsk ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "313",
+          "name": "Trykluftsanlæg, Trykluft, Kirurgisk ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "411",
+          "name": "Vakuumanlæg, Vakuum, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "412",
+          "name": "Vakuumanlæg, Vakuum, Medicinsk ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "810",
+          "name": "Nødforsyningsenhed, Medicinske gasser  ● ● Et separat BIM-objekt ● Area Valve Service Unit , Nødforsyningsenhed"
+        },
+        {
+          "classificationserial": "910",
+          "name": "Udsugningsanlæg, Anæstesisug ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "920",
+          "name": "Udsugningsanlæg, Diatermisug ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%HC",
+      "classificationname": "Køleforsyningssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Frikøleanlæg ● ● Et separat BIM-objekt - Frikøleanlæg, Tørkøleanlæg"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Vandkølende fordampningsanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Vandkøleanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "CO2 Køleanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Propan Køleanlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%HD",
+      "classificationname": "Varmeforsyningssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fjernvarmeanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Naturgasanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Jordvarmeanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "410",
+          "name": "Varmepumpeanlæg, Luft-til-luft ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "420",
+          "name": "Varmepumpeanlæg, Luft-til-vand ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "510",
+          "name": "Fyringsanlæg, Pille ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "520",
+          "name": "Fyringsanlæg, Olie ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Brændeovn ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "710",
+          "name": "Pejs, Gas ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "720",
+          "name": "Pejs, Bio ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "730",
+          "name": "Pejs, El ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "740",
+          "name": "Pejs, Hybrid ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%HE",
+      "classificationname": "Kombineret varme- og køleforsyningssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Klimaanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Airconditionanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Brugsvandsveksler ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%HF",
+      "classificationname": "Ventilationsforsyningssystem",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Ventilationsanlæg, Balanceret ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Udsugningsanlæg, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Indblæsningsanlæg, Standard ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%HG",
+      "classificationname": "El-forsyningssystem",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Elforsyningsanlæg, Stærkstrøm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Elforsyningsanlæg, Svagstrøm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Reserveforsyningsanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Nødforsyningsanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "810",
+          "name": "Vedvarende energianlæg, Solenergi ● ● Et separat BIM-objekt - Solcelleanlæg"
+        },
+        {
+          "classificationserial": "820",
+          "name": "Vedvarende energianlæg, Vindenergi ● ● Et separat BIM-objekt - Vindturbine, Vindmølle"
+        },
+        {
+          "classificationserial": "830",
+          "name": "Vedvarende energianlæg, Vandenergi ● ● Et separat BIM-objekt - Vandturbine, Vandmølle, Bølgeenergi anlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%HH",
+      "classificationname": "Belysningsforsyningssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Bygningsbeslysning ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Gade- og vejbelysning ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Parkeringspladsbeslysning ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Park- og havebelysning ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Specialbelysning ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%HJ",
+      "classificationname": "Signalforsyningssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Telefonanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Radioanlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%JF",
+      "classificationname": "Kølefordelingssystem",
+      "entries": [
+        {
+          "classificationserial": "900",
+          "name": "Blandesløjfe, Køling ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%JG",
+      "classificationname": "Varmefordelingssystem",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Radiatoranlæg, 1-strengs ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Radiatoranlæg, 2-strengs ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Gulvvarmeanlæg, Vandbåren ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "221",
+          "name": "Gulvvarmeanlæg, El, Varmekabler ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "222",
+          "name": "Gulvvarmeanlæg, El, Folie ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "223",
+          "name": "Gulvvarmeanlæg, El, Lavvolt ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "224",
+          "name": "Gulvvarmeanlæg, El, Selvregulerende ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Gulvvarmeanlæg, Luftbåren ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "910",
+          "name": "Blandesløjfe, Varme, Trykbaseret med tovejsventil ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "920",
+          "name": "Blandesløjfe, Varme, Ikke-trykbaseret med trevejsventil ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%JK",
+      "classificationname": "El-fordelingssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Arbejdsstation ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%JM",
+      "classificationname": "Persontransportsystem",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Personlift, Flytbar ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Personlift, Gulvmonteret ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%JN",
+      "classificationname": "Godstransportsystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Lift, Sakselift ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KD",
+      "classificationname": "Udskillersystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fedtudskilleranlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Olieudskilleranlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Benzinudskilleranlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KE",
+      "classificationname": "Blandingssystem",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Osmose-anlæg, Standard ● ● Et separat BIM-objekt - Osmose-anlæg"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Osmose-anlæg, Omvendt ● ● Et separat BIM-objekt - RO-anlæg, ROW-anlæg, Omvendt osmose-anlæg"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Blødgøringsanlæg ● ● Et separat BIM-objekt - Blødgøringsanlæg, Afkalkningsanlæg"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Klordioxidanlæg ● ● Et separat BIM-objekt - Klordioxidanlæg"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Korrolyseanlæg ● ● Et separat BIM-objekt - Korrolyseanlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KF",
+      "classificationname": "Pumpesystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Pumpeanlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KH",
+      "classificationname": "Omformersystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Transformeranlæg ● ● Et separat BIM-objekt - Transformerstation"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Inverteranlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KJ",
+      "classificationname": "Antennesystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Antenneanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "DAS-anlæg ● ● Et separat BIM-objekt - Indendørs mobildækningsanlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KL",
+      "classificationname": "Adgangskontrolsystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Betalingsanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Bomanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Sluseanlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%LA",
+      "classificationname": "Gasalarmsystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "AGA-anlæg ● ● Et separat BIM-objekt - Automatisk gasalarmsanlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%LB",
+      "classificationname": "Brandalarmsystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "ABA-anlæg ● ● Et separat BIM-objekt - Automatisk brandalarmanlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%LC",
+      "classificationname": "Automationsstyringssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "BMS-anlæg ● ● Et separat BIM-objekt - Building management system, BMS-anlæg"
+        },
+        {
+          "classificationserial": "200",
+          "name": "CTS-anlæg ● ● Et separat BIM-objekt - Anlæg for Central tilstandskontrol og styring, CTS-anlæg"
+        },
+        {
+          "classificationserial": "310",
+          "name": "IBI-anlæg, Central styring ● ● Et separat BIM-objekt - Anlæg for Intelligente BygningiInstallationer, IBI-anlæg"
+        },
+        {
+          "classificationserial": "320",
+          "name": "IBI-anlæg, Distribueret styring ● ● Et separat BIM-objekt - Anlæg for Intelligente BygningiInstallationer, IBI-anlæg"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Lysstyringsanlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%LD",
+      "classificationname": "Adgangsovervågningssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "ADK-anlæg ● ● Et separat BIM-objekt - Adgangskontrolanlæg, ADK-anlæg"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Porttelefonanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Dørtelefonanlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%LE",
+      "classificationname": "Alarmsystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "AIA-anlæg ● ● Et separat BIM-objekt - Automatisk Indbrudsalarmanlæg, AIA-anlæg"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Overfaldsalarmanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Køle- og fryserumsalarmanlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%LF",
+      "classificationname": "Videoovervågningssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "ITV-anlæg ● ● Et separat BIM-objekt - Internt TV anlæg, ITV-anlæg"
+        },
+        {
+          "classificationserial": "200",
+          "name": "CCTV-anlæg ● ● Et separat BIM-objekt - Closed Circuit TeleVision anlæg, CCTV-anlæg"
+        },
+        {
+          "classificationserial": "300",
+          "name": "TVO-anlæg ● ● Et separat BIM-objekt - TV-overvågningsanlæg, TVO-anlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%MA",
+      "classificationname": "Varslingssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "VAR-anlæg ● ● Et separat BIM-objekt - VAR-anlæg, Varslingsanlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%MB",
+      "classificationname": "Audio-Video system",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "AV-anlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Patientkaldeanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Nødkaldeanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Mikrofonanlæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Højtaleranlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%MC",
+      "classificationname": "Trafikstyringssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Trafiksignalanlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%MD",
+      "classificationname": "Tidssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Ur-anlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PA",
+      "classificationname": "Brandbeskyttelsessystem",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Detektoranlæg, Personsikring ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PB",
+      "classificationname": "Brandbekæmpelsessystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "ARS-anlæg ● ● Et separat BIM-objekt - Automatisk rumslukningsanlæg"
+        },
+        {
+          "classificationserial": "200",
+          "name": "ABDL-anlæg ● ● Et separat BIM-objekt - Automatisk branddørslukningsanlæg"
+        },
+        {
+          "classificationserial": "300",
+          "name": "AVS-anlæg ● ● Et separat BIM-objekt - Automatisk vandslukningsanlæg, Sprinkleranlæg"
+        },
+        {
+          "classificationserial": "400",
+          "name": "AVT-anlæg ● ● Et separat BIM-objekt - Automatisk vandtågesystem"
+        },
+        {
+          "classificationserial": "500",
+          "name": "ABV-anlæg ● ● Et separat BIM-objekt - Automatisk brandventilationsanlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PC",
+      "classificationname": "Jordingssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Jordelektrodeanlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PD",
+      "classificationname": "Lynbeskyttelsessystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Lynbeskyttelsesanlæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RA",
+      "classificationname": "Beplantningssystem",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Beplantningsområde, Træer ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Beplantningsområde, Buske ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Hæk ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RB",
+      "classificationname": "Møbelsystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fast inventar ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Løst inventar ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RC",
+      "classificationname": "Udstyrssystem",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Teknisk inventar ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Medicoteknisk Udstyr ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BFA",
+      "classificationname": "Flowtransmitter",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Væskeflowmåler ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Gasflowmåler ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Luftflowmåler ● ● Et separat BIM-objekt ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BFB",
+      "classificationname": "Flow switch",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Kuldioxid detektor ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Vand detektor ● -  ●"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Luftswitch - -  ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BGB",
+      "classificationname": "Positionsswitch",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Positionsswitch - -  ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BGD",
+      "classificationname": "Afstandsswitch",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Bevægelsedetektor, Lys ● ● Et separat BIM-objekt ● Bevægelsesdetektor, Bevægelsessensor, PIR-sensor, Passiv Infrarød"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Bevægelsedetektor, Døråbner ● ● Et separat BIM-objekt ● Bevægelsesdetektor, Bevægelsessensor til døråbner, Dør rader"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BHA",
+      "classificationname": "Flowenergimåler",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Forbrugsmåler, Gas ● ● Et separat BIM-objekt ● Gasforbrugsmåler"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BHB",
+      "classificationname": "Termisk energimåler",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Forbrugsmåler, Køl ● ● Et separat BIM-objekt ● Køleforbrugsmåler"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Forbrugsmåler, Varme ● ● Et separat BIM-objekt ● Varmeforbrugsmåler"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BHC",
+      "classificationname": "Elektrisk energimåler",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Forbrugsmåler, El ● ● Et separat BIM-objekt ● Elforbrugsmåler"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BMA",
+      "classificationname": "Fugttransmitter",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fugtmåler ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BMB",
+      "classificationname": "Fugtswitch",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fugtdetektor ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BPA",
+      "classificationname": "Absolut tryktransmitter",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Tryktransmitter - -  ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BPB",
+      "classificationname": "Absolut trykswitch",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Manometer ● -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BQA",
+      "classificationname": "Gasføler",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Luftkvalitetstransmitter - -  ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BQB",
+      "classificationname": "Gasdetektor",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Gasdetektor ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BQD",
+      "classificationname": "Væskedetektor",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Væskedetektor ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BQF",
+      "classificationname": "Fast emne detektor",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Røgdetektor ● ● Et separat BIM-objekt - Røgdetektor, Optisk røgdetektor"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BRB",
+      "classificationname": "Lysswitch",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Lysdetektor, Natuligt lys ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Lysdetektor, Infrarød ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BRF",
+      "classificationname": "Strålingsswitch",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Strålingsdetektor ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BTA",
+      "classificationname": "Temperatursender",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Temperaturmåler ● ● Et separat BIM-objekt - Temperaturtransmitter"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BTB",
+      "classificationname": "Temperaturswitch",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Temperaturdetektor ● ● Et separat BIM-objekt - Temperaturswitch"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Flammedetektor ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BUA",
+      "classificationname": "Multiføler",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Indeklima måler ● ● Et separat BIM-objekt - IoT, Logger, Indeklimamåler"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BXA",
+      "classificationname": "Akustisk sensor",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Mikrofon ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BXB",
+      "classificationname": "Akustisk switch",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Lyddetektor, Glasbrud ● ● Et separat BIM-objekt - Akustisk glasbrudsdetektor"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BXC",
+      "classificationname": "Billedsensor",
+      "entries": [
+        {
+          "classificationserial": "111",
+          "name": "Kamera, Overvågning, Bullet ● ● Et separat BIM-objekt - Overvågningskamera"
+        },
+        {
+          "classificationserial": "112",
+          "name": "Kamera, Overvågning, Dome ● ● Et separat BIM-objekt - Overvågningskamera"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BYA",
+      "classificationname": "Chiplæser",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Chiplæser ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BYB",
+      "classificationname": "Elektromagnetisk læser",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Kortlæser, Berøringsfri ● ● Et separat BIM-objekt - Magnetkortlæser uden tastatur, Berøringsfri kortlæser"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Kortlæser, Tastatur ● ● Et separat BIM-objekt - Magnetkortlæser med tastatur"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%BZB",
+      "classificationname": "Tæskelsværdidetektor",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Måler, PH ● -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%CMA",
+      "classificationname": "Tank",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Tank, Hydraulik ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Tank, Vand  ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Tank, Olie ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Tank, Kryo ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Tryktank, Vand  ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Tryktank, Ilt  ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%CNA",
+      "classificationname": "Container",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Affaldscontainer ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%CNB",
+      "classificationname": "Gasflaske",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Trykflaske, Inertgas ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%CPA",
+      "classificationname": "Væskebeholder",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Varmtvandsbeholder, EL-vandvarme ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Varmtvandsbeholder, Fjernvarme ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Varmtvandsbeholder, Centralvarme ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Varmtvandsbeholder, Combi ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "150",
+          "name": "Varmtvandsbeholder, Buffer ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "160",
+          "name": "Varmtvandsbeholder, Kappe ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "170",
+          "name": "Varmtvandsbeholder, Varmepumpe ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%CPB",
+      "classificationname": "Gasbeholder",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Beholder, Gas ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%CPC",
+      "classificationname": "Emnebeholder",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Affaldsbeholder, 60 til 120L ● ● Et separat BIM-objekt - Skraldespand"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Affaldsbeholder, 121 til 160L ● ● Et separat BIM-objekt - Skraldespand"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Affaldsbeholder, 161 til 240L ● ● Et separat BIM-objekt - Skraldespand"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Affaldsbeholder, 241 til 370L ● ● Et separat BIM-objekt - Skraldespand"
+        },
+        {
+          "classificationserial": "150",
+          "name": "Affaldsbeholder, 371 til 660L ● ● Et separat BIM-objekt - Skraldespand"
+        },
+        {
+          "classificationserial": "160",
+          "name": "Affaldsbeholder, 661 til 1000L ● ● Et separat BIM-objekt - Skraldespand"
+        },
+        {
+          "classificationserial": "170",
+          "name": "Affaldsbeholder, over 1000L ● ● Et separat BIM-objekt - Skraldespand"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%EBH",
+      "classificationname": "Elektrisk ovn",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Ovn ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Industriovn ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Kombiovn ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Microovn ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%EGA",
+      "classificationname": "Varmepumpe",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Varmepumpe-Luft-til-luft ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Varmepumpe-Jordvarme ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Varmepumpe-Luft-til-vand ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%EGC",
+      "classificationname": "Varmeveksler",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Krydsvarmeveksler ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Væskekoblende veksler ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Roterende varmeveksler ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%EPA",
+      "classificationname": "Varmeflade",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Kanalvarmeflade, Kvadratisk ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Kanalvarmeflade, Rør ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Indstiksvarmeflade ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%EPB",
+      "classificationname": "Varmerør",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Gulvvarmeslange ● -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%EPC",
+      "classificationname": "Varmepanel",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Radiator ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Strålevarmepanel ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%EQA",
+      "classificationname": "Køleflade",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Kanalkøleflade, Kvadratisk ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Kanalkøleflade, Rør ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Fordamper ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%EQB",
+      "classificationname": "Kølepanel",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Kølepanel ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%EQC",
+      "classificationname": "Kølekompressor",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Kompressor, Køl ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%EQD",
+      "classificationname": "Køler",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Kølebaffel ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Fancoil ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FLA",
+      "classificationname": "Sikkerhedsventil",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Sikkerhedsventil ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Alarmventil ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Overtryksventil ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Kontrolventil ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FLB",
+      "classificationname": "Sikkerhedsspjæld",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Overtryksspjæld ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FLE",
+      "classificationname": "Ekspansionbeholder",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Ekspansionsbeholder ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FMA",
+      "classificationname": "Brandspjæld",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Brandspjæld, Enkelbladet ● ● Et separat BIM-objekt - Brandspjæld, Kanalspjæld, Afspærringsspjæld"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Brandspjæld, Multibladet ● ● Et separat BIM-objekt - Brandspjæld, Kanalspjæld, Afspærringsspjæld"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Brandspjæld, Tæppe-type ● ● Et separat BIM-objekt - Brandspjæld, Kanalspjæld, Afspærringsspjæld"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Trykaflastningsspjæld ● ● Et separat BIM-objekt - Brandspjæld, Trykaflastningsspjæld, Kanalspjæld"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FMB",
+      "classificationname": "Røgspjæld",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Røgspjæld, Enkelbladet ● ● Et separat BIM-objekt - Røgspjæld, Kanalspjæld, Afspærringsspjæld"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Røgspjæld, Multibladet ● ● Et separat BIM-objekt - Røgspjæld, Kanalspjæld, Afspærringsspjæld"
+        },
+        {
+          "classificationserial": "131",
+          "name": "Røgspjæld, Dør-type, Enkelbladet ● ● Et separat BIM-objekt - Røgspjæld, Kanalspjæld, Afspærringsspjæld"
+        },
+        {
+          "classificationserial": "132",
+          "name": "Røgspjæld, Dør-type, Multibladet ● ● Et separat BIM-objekt - Røgspjæld, Kanalspjæld, Afspærringsspjæld"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FMC",
+      "classificationname": "Kombineret brand- og røgspjæld",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Brandmanchet ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FMD",
+      "classificationname": "Brandslukker",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Brandslukker, Pulver, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Brandslukker, Pulver, Metal ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Brandslukker, CO2, Standard ● ● Et separat BIM-objekt - Kulsyreslukker, Kulsyresneslukker, CO2-slukker"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Brandslukker, CO2, Antimagnetisk ● ● Et separat BIM-objekt - Kulsyreslukker, Kulsyresneslukker, CO2-slukker"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Brandslukker, Skum ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Brandslukker, Vand ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FME",
+      "classificationname": "Brandjalousi",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Brandjalousi ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FMF",
+      "classificationname": "Røggardin",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Røggardin - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FMH",
+      "classificationname": "Brandisolering",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Brandisolering ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FMK",
+      "classificationname": "Brandimprægnering",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Brandimprægnering ● ● En del af et BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FNB",
+      "classificationname": "Stødbeskyttelse",
+      "entries": [
+        {
+          "classificationserial": "000",
+          "name": ""
+        },
+        {
+          "classificationserial": "110",
+          "name": "Vægbeskytter, Liste ● ● Et separat BIM-objekt - Fenderliste, Vægbeskytter"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Vægbeskytter, Plade ● ● Et separat BIM-objekt - Fenderliste, Vægbeskytter"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Vægbeskytter, Hjørne ● ● Et separat BIM-objekt - Fenderliste, Vægbeskytter"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Dørbeskytter ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FQC",
+      "classificationname": "Håndliste",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Håndliste, Væg ● ● En del af et BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Håndliste, Gelænder ● ● En del af et BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FQD",
+      "classificationname": "Værn",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Stålværn ● ● Et separat BIM-objekt - Gelænder"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Glasværn ● ● Et separat BIM-objekt - Gelænder"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Træværn ● ● Et separat BIM-objekt - Gelænder"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%FSA",
+      "classificationname": "Puds",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Sokkelpuds ● ● En del af et BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Vægpuds ● ● En del af et BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GBA",
+      "classificationname": "Batteri",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Lithiumbatteri, Solceller ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GCA",
+      "classificationname": "Krystallinsk solcellemodul",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Polykrystallinsk solcellepanel ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Monokrystallinsk solcellepanel ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GCB",
+      "classificationname": "Tyndfilm solcellemodul",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Tyndfilmssolcellepanel ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GLA",
+      "classificationname": "Transportbånd",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Rullefortov, Horisontalt ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Rullefortov, Skråt ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GLC",
+      "classificationname": "Transportrulle",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Transportrulle ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GLE",
+      "classificationname": "Rulletrappe",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Rulletrappe ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GLF",
+      "classificationname": "Paternosterelevator",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Paternosterelevator ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GMA",
+      "classificationname": "Vogn",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Madvogn ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Rengøringsvogn ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Væskevogn ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Stikvogn ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Burvogn ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Case-Cart vogn ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GMB",
+      "classificationname": "Elevator",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Personelevator ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Vareelevator ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Godselevator ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Kasseelevator ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GMC",
+      "classificationname": "Kran",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Personkran, Flytbar ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Personkran, Loftmonteret ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "211",
+          "name": "Industrikran, Svingkran, Søjlemonteret flytbar ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "212",
+          "name": "Industrikran, Svingkran, Søjlemonteret ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "213",
+          "name": "Industrikran, Svingkran, Vægmonteret ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Industrikran, Vægkran ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GQA",
+      "classificationname": "Gaskompressor",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Kompressor, Trykluft ● ● Et separat BIM-objekt - Lufttrykskompressor"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%GQB",
+      "classificationname": "Ventilator",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Loftventilaor ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Rørventilator ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Kanalventilator ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Centrifugalventilator ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Aksial ventilator ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "610",
+          "name": "Vægventilator, Varme  ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "700",
+          "name": "Gulvventilator ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "800",
+          "name": "Tårnventilator ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%HMA",
+      "classificationname": "Sætningstank",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fedtudskiller ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Olieudskiller ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Benzinudskiller ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%HQB",
+      "classificationname": "Sorteringsrist",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Grundfilter ● -  -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Finfilter ● -  -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Mikrofilter ● -  -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Kulfilter ● -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%HWB",
+      "classificationname": "Befugter",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Dampbefugter, Elektrode ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Dampbefugter, Varmelegeme ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Dampbefugter, Gas ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Dampbefugter, Kedeldamp ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Koldtvandsbefugter, Højtryk ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Koldtvandsbefugter, Dyse ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Koldtvandsbefugter, Ultralyd ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "240",
+          "name": "Koldtvandsbefugter, Overrisling og hybrid ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "250",
+          "name": "Koldtvandsbefugter, Mobil  ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KEA",
+      "classificationname": "Computer",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Computer, Stationær ● ● Et separat BIM-objekt - PC"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Computer, Bærbar ● ● Et separat BIM-objekt - Notebook, PC"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KEC",
+      "classificationname": "Kommunikationsapparat",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Dørtelefon ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Porttelefon ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "311",
+          "name": "Hovedcentral, Kommunikation, DAS ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "312",
+          "name": "Hovedcentral, Kommunikation, SINE ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Hovedcentral, Netværk og IT ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "331",
+          "name": "Hovedcentral, Sikring og kontrol, AIA ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "332",
+          "name": "Hovedcentral, Sikring og kontrol, ADK ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "341",
+          "name": "Hovedcentral, Brand, ABA ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "342",
+          "name": "Hovedcentral, Brand, ARS ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "351",
+          "name": "Hovedcentral, Gas ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "411",
+          "name": "Undercentral, Kommunikation, DAS ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "412",
+          "name": "Undercentral, Kommunikation, SINE ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "420",
+          "name": "Undercentral, Netværk og IT ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "431",
+          "name": "Undercentral, Sikring og kontrol, AIA ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "432",
+          "name": "Undercentral, Sikring og kontrol, ADK ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "441",
+          "name": "Undercentral, Brand, ABA ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "442",
+          "name": "Undercentral, Brand, ARS ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "451",
+          "name": "Undercentral, Gas ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Server ● ● Et separat BIM-objekt ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KED",
+      "classificationname": "Router",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Trådløs router, N ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Trådløs router, AC ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "200",
+          "name": "4G router ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "300",
+          "name": "MESH router ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Wi-Fi 6 router ● ● Et separat BIM-objekt ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KFE",
+      "classificationname": "IT-switch",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Netværks switch, 100 Mbps ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Netværks switch, 1000 Mbps ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KGC",
+      "classificationname": "Optisk forstærker",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Optisk repeater ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KHA",
+      "classificationname": "Væskebetjæner",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Regulator, Gas ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%KHB",
+      "classificationname": "Pilotventil",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Trykdifferensregulator ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%MLB",
+      "classificationname": "Elastisk energidrev",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Dørlukker, Saksearm ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Dørlukker, Glideskinne ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Dørlukker, Bøjle ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Dørfjeder ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NAA",
+      "classificationname": "Rude",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Standard glas - ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Lydglas - ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Solafskærmende glas - ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Sandblæst glas - ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "510",
+          "name": "Sikkerhedsglas, Hærdet - ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "520",
+          "name": "Sikkerhedsglas, Lamineret - ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Råglas - ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NAB",
+      "classificationname": "Tavle",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Blændingsfelt - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NAC",
+      "classificationname": "Gitter",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Tyveri- og indbrudssikring, Rullegitter ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Tyveri- og indbrudssikring, Rullejalousi ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Tyveri- og indbrudssikring, Saksegitter ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Tyveri- og indbrudssikring, Fastgitter ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Ventilationsrist - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Måtterist, Indgang - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Måtterist, Lyskasse - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NAD",
+      "classificationname": "Fuge",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Brandfuge ● -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NBA",
+      "classificationname": "Dørblad",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Dørblad ● ● En del af et BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NBB",
+      "classificationname": "Portblad",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Portblad ● ● En del af et BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NBC",
+      "classificationname": "Skabsdør",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Skabsdør ● ● En del af et BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NBD",
+      "classificationname": "Lågeblad",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Låge ● ● En del af et BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NBE",
+      "classificationname": "Dæksel",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Renselem ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Brønddæksel ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NCA",
+      "classificationname": "Terrænbelægning",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Flise- og stenbelægning ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Brolægning ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Gummibelægning ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Asfalt belægning ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "510",
+          "name": "Skærver, Granit ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "611",
+          "name": "Grus og sten, Grus, Stabilgrus 0-8mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "612",
+          "name": "Grus og sten, Grus, Stabilgrus 0-32mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "613",
+          "name": "Grus og sten, Grus, Parkgrus 0-8mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "614",
+          "name": "Grus og sten, Grus, Vejgrus 0-8mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "621",
+          "name": "Grus og sten, Sten, Perlesten 4-8mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "622",
+          "name": "Grus og sten, Sten, Ærtesten 8-16mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "623",
+          "name": "Grus og sten, Sten, Nøddesten 16-32mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "624",
+          "name": "Grus og sten, Sten, Singels 32-64mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "625",
+          "name": "Grus og sten, Sten, Pyntesten 8-16mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "626",
+          "name": "Grus og sten, Sten, Pyntesten 16-32mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "711",
+          "name": "Jord og sand, Jord, Muld ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "712",
+          "name": "Jord og sand, Jord, Champost ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "721",
+          "name": "Jord og sand, Sand, Sandkassesad 0-2mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "722",
+          "name": "Jord og sand, Sand, Strandsand 0-2mm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "800",
+          "name": "Græs ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "900",
+          "name": "Træ- og barkflis ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NCB",
+      "classificationname": "Vægbeklædning",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Glasvæv og -filt, Malet ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Puds, Rå ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Puds, Malet ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Vandskuret ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Tapet ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Lamelvæg ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Vægfliser ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NCC",
+      "classificationname": "Gulvbeklædning",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Vinylgulv ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Linoleumsgulv ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Flisegulv, Keramisk ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Flisegulv, Natursten ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Betongulv ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Epoxygulv ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "610",
+          "name": "Trægulv, Massivt ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "621",
+          "name": "Trægulv, Parket, Faldende forløb ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "622",
+          "name": "Trægulv, Parket, Forløb ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "623",
+          "name": "Trægulv, Parket, Sildeben ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "624",
+          "name": "Trægulv, Parket, Skråtavl ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "625",
+          "name": "Trægulv, Parket, Kvadrat ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "626",
+          "name": "Trægulv, Parket, Engelsk ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "627",
+          "name": "Trægulv, Parket, Hollandsk ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "628",
+          "name": "Trægulv, Parket, Konge ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "629",
+          "name": "Trægulv, Parket, Stige ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "631",
+          "name": "Trægulv, Plank, Skibsplank ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "640",
+          "name": "Trægulv, Lamel ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "700",
+          "name": "Laminatgulv ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "810",
+          "name": "Riflet pladegulv, Stål ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "820",
+          "name": "Riflet pladegulv, Aluminium ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "830",
+          "name": "Riflet pladegulv, Plast ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NCD",
+      "classificationname": "Loftbeklædning",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Akustikloft, Gips ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Akustikloft, Træbeton ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Pladeloft, Gips ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Pladeloft, Fibergips ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Pladeloft, Aluminium ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "240",
+          "name": "Pladeloft, Stål ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Lamelloft ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Panelloft ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NCE",
+      "classificationname": "Tagdækning",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Tagpap ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Tagsten, Teglsten ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Tagsten, Betontagsten ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Bølgeplader, Eternitplade ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Bølgeplader, Fibercementplade ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "410",
+          "name": "Trapezplader, Stål ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "420",
+          "name": "Trapezplader, Plast ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "510",
+          "name": "Stående fals, Aluminium ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "520",
+          "name": "Stående fals, Zink ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "530",
+          "name": "Stående fals, Kobber ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Stråtag ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NCF",
+      "classificationname": "Vindueskarm",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Vindueskarm ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NDA",
+      "classificationname": "Rendesten",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Kantsten ● ● Et separat BIM-objekt - Betonsten"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Stålkant ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NDC",
+      "classificationname": "Sandliste",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fejeliste - -  -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Hulkehl - -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NEB",
+      "classificationname": "Fodpanel",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fodliste - -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%NEC",
+      "classificationname": "Væghjørneliste",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Hjørneliste - -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PFA",
+      "classificationname": "Signallampe",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Signallampe ● ● Et separat BIM-objekt ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PGK",
+      "classificationname": "Ur",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Vægur ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PGT",
+      "classificationname": "Termometer",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Termometer ● -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PGZ",
+      "classificationname": "Mængdemåler",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Måler, Væske ● -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PHA",
+      "classificationname": "Display",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Computer skærm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "TV skærm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Informationsskærm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Lærred ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Tablet ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PHB",
+      "classificationname": "Projektor",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fastmonteret projektor ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Transportabel projektor ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PHC",
+      "classificationname": "Printer",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Printer ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Plotter ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PHE",
+      "classificationname": "Skilt",
+      "entries": [
+        {
+          "classificationserial": "111",
+          "name": "Indendørs skilte, Oversigtsskilt, Bygning ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "122",
+          "name": "Indendørs skilte, Vejvisningstavle, Bygningsområder og -faciliteter ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "131",
+          "name": "Indendørs skilte, Områdetavle, Afdeling ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "132",
+          "name": "Indendørs skilte, Områdetavle, Venteområde ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "141",
+          "name": "Indendørs skilte, Servicetavle, Velkomst ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "142",
+          "name": "Indendørs skilte, Servicetavle, Rumbenævnelse ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "143",
+          "name": "Indendørs skilte, Servicetavle, Positionsnummer ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "211",
+          "name": "Udendørs skilte, Oversigtsskilt, Matrikel ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "212",
+          "name": "Udendørs skilte, Oversigtsskilt, Parkering ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "221",
+          "name": "Udendørs skilte, Vejvisningstavle, Parkeringsområder ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "222",
+          "name": "Udendørs skilte, Vejvisningstavle, Indgange ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "231",
+          "name": "Udendørs skilte, Områdetavle, Rækkenumre ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "241",
+          "name": "Udendørs skilte, Servicetavle, Indgangsbenævnelse ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Færdselstavle, Undertavle ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Færdselstavle, Advarselstavle ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "330",
+          "name": "Færdselstavle, Vigepligtstavle ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "340",
+          "name": "Færdselstavle, Forbudstavle ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "350",
+          "name": "Færdselstavle, Påbudstavle ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "360",
+          "name": "Færdselstavle, Oplysningstavle ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "370",
+          "name": "Færdselstavle, Områdetavle ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "380",
+          "name": "Færdselstavle, Vejvisningstavle ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "390",
+          "name": "Færdselstavle, Servicetavle ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PJA",
+      "classificationname": "Højttaler",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Højtaler, Mobilt ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "121",
+          "name": "Højtaler, Monteret, Væg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "131",
+          "name": "Højtaler, Integreret, Væg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "132",
+          "name": "Højtaler, Integreret, Loft ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PLB",
+      "classificationname": "Figur",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Skulptur ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%PLD",
+      "classificationname": "Billede",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Maleri ● -  -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Billede ● -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%QAB",
+      "classificationname": "Strømafbryder",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Strømafbryder ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Lysafbryder ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%QMA",
+      "classificationname": "Afspærringsventil",
+      "entries": [
+        {
+          "classificationserial": "000",
+          "name": ""
+        },
+        {
+          "classificationserial": "100",
+          "name": "Kugleventil ● -  - Stophane, Kugleventil"
+        },
+        {
+          "classificationserial": "211",
+          "name": "Butterflyventil, Centrisk, Standard ● -  - Butterflyventil"
+        },
+        {
+          "classificationserial": "221",
+          "name": "Butterflyventil, Excentrisk, Standard ● -  - Butterflyventil"
+        },
+        {
+          "classificationserial": "222",
+          "name": "Butterflyventil, Excentrisk, Dobbelt ● -  - Butterflyventil"
+        },
+        {
+          "classificationserial": "223",
+          "name": "Butterflyventil, Excentrisk, Triple ● -  - Butterflyventil"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Skydeventil, Parallel ● -  -"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Skydeventil, Kegle ● -  -"
+        },
+        {
+          "classificationserial": "330",
+          "name": "Skydeventil, Spade ● -  -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Slangeventil ● -  -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Stempelventil ● -  -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Svømmerventil ● -  -"
+        },
+        {
+          "classificationserial": "700",
+          "name": "Sædeventil ● -  -"
+        },
+        {
+          "classificationserial": "800",
+          "name": "Bundblæsningsventil ● -  - Udblæsningsventil, bundblæsningsventil"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%QMB",
+      "classificationname": "On-off spjæld",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Spjæld On/Off ● ● Et separat BIM-objekt - On-off spjæld"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%QNA",
+      "classificationname": "Væske styringsventil",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Strengreguleringsventil, Statisk ● -  -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Strengreguleringsventil, Dynamisk ● -  -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Cirkulationsventil ● -  -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Motorventil ● -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%QNB",
+      "classificationname": "Reguleringsspjæld",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Reguleringsspjæld, Variabelt  ● ● Et separat BIM-objekt - Kanalspjæld"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Reguleringsspjæld, Konstant  ● ● Et separat BIM-objekt - Kanalspjæld"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Indreguleringsspjæld, Manuel ● ● Et separat BIM-objekt - Kanalspjæld"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Indreguleringsspjæld, Automatisk ● ● Et separat BIM-objekt - Kanalspjæld"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%QQA",
+      "classificationname": "Vindue",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fastkarmsvindue ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Topstyret vindue ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Sidehængt vindue ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Palævindue ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Dannebrogsvindue ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Bondehusvindue ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "700",
+          "name": "Ovenlysvindue ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "800",
+          "name": "Ovenlyskuppel ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "900",
+          "name": "Fladtagsvindue ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%QQB",
+      "classificationname": "Vindueselement",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Glasfacade ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Vinduesparti ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Dørparti ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "710",
+          "name": "Ovenlys, L-formet ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "800",
+          "name": "Ateliervindue ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "900",
+          "name": "Rytterlys ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%QQC",
+      "classificationname": "Dør",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Enkeltdør ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Dobbeltdør ● ● Et separat BIM-objekt - Symmetrisk dobbeltdør"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Halvanden dør ● ● Et separat BIM-objekt - Assymmetrisk dobbeltdør"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Foldedør ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Svingdør ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "610",
+          "name": "Skydedør, Enkeltrettet ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "620",
+          "name": "Skydedør, Dobbeltrettet ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "710",
+          "name": "Indbygget skydedør, Enkeltrettet ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "720",
+          "name": "Indbygget skydedør, Dobbeltrettet ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "910",
+          "name": "Øvrige, Elevatordør ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "920",
+          "name": "Øvrige, Køle- og fryserumsdør ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%QQD",
+      "classificationname": "Luge",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Røglem ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Inspektionslem, Gulv ● ● Et separat BIM-objekt - Renselem, inspektionslem"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Inspektionslem, Væg ● ● Et separat BIM-objekt - Renselem, inspektionslem"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Inspektionslem, Loft ● ● Et separat BIM-objekt - Renselem, inspektionslem"
+        },
+        {
+          "classificationserial": "240",
+          "name": "Inspektionslem, Rør ● ● Et separat BIM-objekt ● Renselem, inspektionslem"
+        },
+        {
+          "classificationserial": "250",
+          "name": "Inspektionslem, Kanal ● ● Et separat BIM-objekt ● Renselem, inspektionslem"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Loftlem ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Gulvlem ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Skunklem ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%QQE",
+      "classificationname": "Port",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Hurtigport ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Brandport ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Vippeport ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Ledhejseport ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Rulleport ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Foldeport ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RBC",
+      "classificationname": "Fasekompensering",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fasekompensering ● -  - Fasekompenseringsanlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RMA",
+      "classificationname": "Kontraventil",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Kontraventil ● -  ●"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Udluftningsventil ● -  ●"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Aftapningsventil ● -  ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RMB",
+      "classificationname": "Kontraspjæld",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Kontraspjæld ● ● Et separat BIM-objekt ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RMC",
+      "classificationname": "Dyse",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Sprinklerdyse, Nedhængt ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Sprinklerdyse, Skjult ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Sprinklerdyse, Pendant ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Sprinklerdyse, Vægmonteret ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Ventilationsdyse, Indblæsning ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RMD",
+      "classificationname": "Vandlås",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "S-vandlås ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "200",
+          "name": "P-vandlås ● ● Et separat BIM-objekt ● Pungvandlås"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RNA",
+      "classificationname": "Reguleringsventil",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Reguleringsventil ● -  ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RNB",
+      "classificationname": "Reguleringsspjæld",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Reguleringsspjæld ● ● Et separat BIM-objekt ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RND",
+      "classificationname": "Diffusor",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Ventilationsdiffusor, Indtag ● ● Et separat BIM-objekt - Vægarmatur, Indblæsningsventil, Indblæsningsarmatur, Anemostat"
+        },
+        {
+          "classificationserial": "121",
+          "name": "Ventilationsdiffusor, Indblæsning, Vægarmatur ● ● Et separat BIM-objekt - Vægarmatur, Indblæsningsventil, Indblæsningsarmatur, Anemostat"
+        },
+        {
+          "classificationserial": "122",
+          "name": "Ventilationsdiffusor, Indblæsning, Loftarmatur ● ● Et separat BIM-objekt - Loftsarmatur, Indblæsningsventil, Indblæsningsarmatur, Anemostat"
+        },
+        {
+          "classificationserial": "131",
+          "name": "Ventilationsdiffusor, Udsugning, Vægarmatur ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "132",
+          "name": "Ventilationsdiffusor, Udsugning, Loftarmatur ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Ventilationsdiffusor, Punktsug ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "150",
+          "name": "Ventilationsdiffusor, Afkast ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RQA",
+      "classificationname": "Isolering",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Isolering - ● En del af et BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Rørisolering, Varme - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Rørisolering, Kondens - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Rørisolering, Lyd - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Kanalisolering, Varme - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Kanalisolering, Kondens - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "330",
+          "name": "Kanalisolering, Lyd - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RQB",
+      "classificationname": "Membran",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Dampspærre - ● En del af et BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Fugtspærre - ● En del af et BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Vindspærre - ● En del af et BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RQC",
+      "classificationname": "Støjbarriere",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Støjskærm - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "211",
+          "name": "Ventilationslyddæmper, Rund, Fast ● ● Et separat BIM-objekt - Lyddæmper"
+        },
+        {
+          "classificationserial": "212",
+          "name": "Ventilationslyddæmper, Rund, Flexibel ● ● Et separat BIM-objekt - Lyddæmper"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Ventilationslyddæmper, Firkantet ● ● Et separat BIM-objekt - Lyddæmper"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RQD",
+      "classificationname": "Skærm",
+      "entries": [
+        {
+          "classificationserial": "111",
+          "name": "Solafskærmning, Markise, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "112",
+          "name": "Solafskærmning, Markise, Faldarm ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "113",
+          "name": "Solafskærmning, Markise, Pergola ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "114",
+          "name": "Solafskærmning, Markise, Screen ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Solafskærmning, Lamelafskærmning ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RQE",
+      "classificationname": "Gardin",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Foldegardin ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Lamelgardin, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Lamelgardin, Truckgardin ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Lamelgardin, Bændelgardin ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Rullegardin, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Rullegardin, Mørklægning ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "330",
+          "name": "Rullegardin, Multishade ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "410",
+          "name": "Plisségardin, Standard ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "420",
+          "name": "Plisségardin, Mørklægning ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Panelgardin ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RQF",
+      "classificationname": "Persienne",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Persienne ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Facadepersienne ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RQG",
+      "classificationname": "Skodde",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fast skodde ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Oplukkeligskodde ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Skydeskodde ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Foldeskodde ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Rulleskodde ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RQJ",
+      "classificationname": "Skærmvæg",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Gulvskærmvæg ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Bordskærmvæg ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RUA",
+      "classificationname": "Hegn",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Byggepladshegn ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Sikkerhedshegn ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Hegnsmur ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RUB",
+      "classificationname": "Bevægelig barriere",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Bom ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RUC",
+      "classificationname": "Karrusel",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Karruseldør ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RUD",
+      "classificationname": "Pullert",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fast pullert ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Aftagelig pullert ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Halvautomatisk pullert ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Automatisk pullert ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RUE",
+      "classificationname": "Rottespærre",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Rottespærre ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%RUF",
+      "classificationname": "Fuglenet",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fuglenet ● -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%SGA",
+      "classificationname": "Drejehåndtag",
+      "entries": [
+        {
+          "classificationserial": "000",
+          "name": "Omskifter - ● Kan være et separat BIM-objekt ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%SHA",
+      "classificationname": "Fodkontakt",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Fodkontakt, Døråbner ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%SJB",
+      "classificationname": "Trykknap",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Udløsertryk ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%SZA",
+      "classificationname": "Betjeningspanel",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Nødstop ● ● Et separat BIM-objekt - Nødafbryder"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%TAA",
+      "classificationname": "Transformer",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Transformer ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%TAC",
+      "classificationname": "Frekvensomformer",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Frekvensomformer ● ● Kan være et separat BIM-objekt - Frekvensomformeranlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%TBA",
+      "classificationname": "Ensretter",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Ensretter ● ● Kan være et separat BIM-objekt - Ensretteranlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%TBB",
+      "classificationname": "Vekselretter",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Vekselretter ● ● Kan være et separat BIM-objekt - Vekselretteranlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%TBC",
+      "classificationname": "Tovejsretter",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Tovejsretter ● ● Kan være et separat BIM-objekt - Tovejsretteranlæg"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%TRA",
+      "classificationname": "Træ",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Træ ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%TRB",
+      "classificationname": "Busk",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Busk ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%UAC",
+      "classificationname": "Belysningsarmatur",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Loftbelysning, Almindelig pære ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Loftbelysning, Energisparepære ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Loftbelysning, Halogenpære ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Loftbelysning, LED ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "150",
+          "name": "Loftbelysning, Lysstofrør ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Vægbelysning, Almindelig pære ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Vægbelysning, Energisparepære ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Vægbelysning, Halogenpære ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "240",
+          "name": "Vægbelysning, LED ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "250",
+          "name": "Vægbelysning, Lysstofrør ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%UBA",
+      "classificationname": "Kabelbakke",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Kabelrør - ● Et separat BIM-objekt - Trækrør, Tomrør"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Gitterbakke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Kabelbakke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Kabelkanal - ● Et separat BIM-objekt - Installationskanal"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Kabelstige - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%UBB",
+      "classificationname": "Ophæng",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Bæring, Kombineret - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Bæring, Rør - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Bæring, Kanal - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Bæring, Kassebane - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%UBD",
+      "classificationname": "Maste",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Elmast - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%UCA",
+      "classificationname": "Skab",
+      "entries": [
+        {
+          "classificationserial": "111",
+          "name": "EL-skab, Eltavle, Hovedtavle ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "112",
+          "name": "EL-skab, Eltavle, Fordelingstavle ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "113",
+          "name": "EL-skab, Eltavle, Undertavle ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "114",
+          "name": "EL-skab, Eltavle, Gruppetavle ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "115",
+          "name": "EL-skab, Eltavle, Styretavle ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "116",
+          "name": "EL-skab, Eltavle, Målertavle ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "117",
+          "name": "EL-skab, Eltavle, IT-tavle ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "120",
+          "name": "EL-skab, Netværk og serverskab  ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "130",
+          "name": "EL-skab, Kabler ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "190",
+          "name": "EL-skab, Øvrige ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Brandskab ● ● Et separat BIM-objekt - Brandslangevinder"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Sikkerhedsskab ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "410",
+          "name": "Opbevaringsskab, Højskab ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "420",
+          "name": "Opbevaringsskab, Underskab ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "430",
+          "name": "Opbevaringsskab, Hjørneskab ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "440",
+          "name": "Opbevaringsskab, Overskab ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Garderobeskab ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Køleskab ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "700",
+          "name": "Fryseskab ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "800",
+          "name": "Kombineret fryse- og køleskab ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%ULA",
+      "classificationname": "Afretningslag",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Afretningslag - ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%ULC",
+      "classificationname": "Pæl",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Fundament, Pælefundament ● ● Et separat BIM-objekt - Pælefundament"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Fundament, Brøndfundament ● ● Et separat BIM-objekt - Brøndfundament"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%ULD",
+      "classificationname": "Søjle",
+      "entries": [
+        {
+          "classificationserial": "111",
+          "name": "Betonsøjle, Præfabrikeret, Cirkulære betonsøjler - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "112",
+          "name": "Betonsøjle, Præfabrikeret, Kvadratiske betonsøjler - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "113",
+          "name": "Betonsøjle, Præfabrikeret, Rektangulære betonsøjler - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "114",
+          "name": "Betonsøjle, Præfabrikeret, Specielle betonsøjle elementer - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Betonsøjle, Pladsstøbt - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Træsøjle, GL-søjler - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Træsøjle, CLT-søjler - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "311",
+          "name": "Stålsøjle, H-profil, HEA-søjler - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "312",
+          "name": "Stålsøjle, H-profil, HEB-søjler - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "313",
+          "name": "Stålsøjle, H-profil, HEM-søjler - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "321",
+          "name": "Stålsøjle, I-profil, IPE-søjler - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "322",
+          "name": "Stålsøjle, I-profil, INP-søjler - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%ULE",
+      "classificationname": "Bjælke",
+      "entries": [
+        {
+          "classificationserial": "111",
+          "name": "Betonbjælke, Præfabrikeret, SIB-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "112",
+          "name": "Betonbjælke, Præfabrikeret, IB-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "113",
+          "name": "Betonbjælke, Præfabrikeret, RB-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "114",
+          "name": "Betonbjælke, Præfabrikeret, KB-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "115",
+          "name": "Betonbjælke, Præfabrikeret, KBE-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "116",
+          "name": "Betonbjælke, Præfabrikeret, KBB-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "117",
+          "name": "Betonbjælke, Præfabrikeret, KBBE-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "118",
+          "name": "Betonbjælke, Præfabrikeret, LB-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "119",
+          "name": "Betonbjælke, Præfabrikeret, LBE-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Træbjælke, GL-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Træbjælke, GLS-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Træbjælke, I-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "240",
+          "name": "Træbjælke, LVL-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "250",
+          "name": "Træbjælke, CLT-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "311",
+          "name": "Stålbjælke, H-profil, HEA-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "312",
+          "name": "Stålbjælke, H-profil, HEB-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "313",
+          "name": "Stålbjælke, H-profil, HEM-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "321",
+          "name": "Stålbjælke, I-profil, IPE-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "322",
+          "name": "Stålbjælke, I-profil, INP-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "331",
+          "name": "Stålbjælke, U-profil, UPE-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "332",
+          "name": "Stålbjælke, U-profil, UNP.bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "340",
+          "name": "Stålbjælke, T-profil, Runkantede T-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "351",
+          "name": "Stålbjælke, Vinkel-profil, Ligefligede rundkantede vinkelbjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "352",
+          "name": "Stålbjælke, Vinkel-profil, Uligefligede rundkantede vinkelbjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "353",
+          "name": "Stålbjælke, Vinkel-profil, Ligefligede skarpkantede vinkelbjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "410",
+          "name": "Komposit bjælke, Deltabjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "421",
+          "name": "Komposit bjælke, GS, GSY-bjælke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "422",
+          "name": "Komposit bjælke, GS, GSY-E-bjælke - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%ULF",
+      "classificationname": "Trækbånd",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Trækbånd - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%ULK",
+      "classificationname": "Dækplade",
+      "entries": [
+        {
+          "classificationserial": "111",
+          "name": "Dækelement, Betondæk, Huldæk - ● Et separat BIM-objekt - Præfabrikeret betondæk"
+        },
+        {
+          "classificationserial": "112",
+          "name": "Dækelement, Betondæk, Filigrandæk - ● Et separat BIM-objekt - Præfabrikeret betondæk"
+        },
+        {
+          "classificationserial": "113",
+          "name": "Dækelement, Betondæk, P-dæk - ● Et separat BIM-objekt - Præfabrikeret betondæk"
+        },
+        {
+          "classificationserial": "121",
+          "name": "Dækelement, Letbetondæk, Lyddæk - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "131",
+          "name": "Dækelement, Trædæk, CLT-element - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "141",
+          "name": "Dækelement, Ståldæk, Trapezplade - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Pladsstøbt betondæk - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Skeletkonstruerede dækelement, Træskelet - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Skeletkonstruerede dækelement, Stålskelet - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%ULL",
+      "classificationname": "Støttevægsplade",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Spunsvæg - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%ULM",
+      "classificationname": "Vægplade",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Betonvægselement, Præfabrikeret - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Letbetonvægselement, Præfabrikeret - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "311",
+          "name": "Trævægselement, Præfabrikeret, CLT - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%UNB",
+      "classificationname": "Dørtrin",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Bundstykke, Almindeligt  ● ● En del af et BIM-objekt - Anslagsbundstykke"
+        },
+        {
+          "classificationserial": "121",
+          "name": "Bundstykke, Fladt, Mellemliggende ● ● En del af et BIM-objekt -"
+        },
+        {
+          "classificationserial": "122",
+          "name": "Bundstykke, Fladt, Underliggende ● ● En del af et BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%WED",
+      "classificationname": "Udligningsforbindelse",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Hovedudligningsforbindelse ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Lokal udligningsforbindelse uden jordbindelse ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Lokal udligningsforbindelse med jordforbindelse ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Supplerende udligningsforbindelse ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%WGB",
+      "classificationname": "Datakabel",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Netværkskabel, CAT5 ● -  -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Netværkskabel, CAT5e ● -  -"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Netværkskabel, CAT6 ● -  -"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Netværkskabel, CAT6e ● -  -"
+        },
+        {
+          "classificationserial": "150",
+          "name": "Netværkskabel, CAT7 ● -  -"
+        },
+        {
+          "classificationserial": "160",
+          "name": "Netværkskabel, CAT8 ● -  -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Fiberkabel, OM1  ● -  -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Fiberkabel, OM2  ● -  -"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Fiberkabel, OM3  ● -  -"
+        },
+        {
+          "classificationserial": "240",
+          "name": "Fiberkabel, OM4  ● -  -"
+        },
+        {
+          "classificationserial": "250",
+          "name": "Fiberkabel, OM5  ● -  -"
+        },
+        {
+          "classificationserial": "260",
+          "name": "Fiberkabel, OS1  ● -  -"
+        },
+        {
+          "classificationserial": "270",
+          "name": "Fiberkabel, OS2  ● -  -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%WMA",
+      "classificationname": "Drænlag",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Faskine ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%WMB",
+      "classificationname": "Tagrende",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Halvrund tagrende ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Kvartrund tagrende ● ● Et separat BIM-objekt - Arkitekttagrende"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Firkantet tagrende ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%WMG",
+      "classificationname": "Nedsivningsbrønd",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Nedsivningsbrønd ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%WPA",
+      "classificationname": "Rør",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Metalrør, Aluminium - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Metalrør, Kobber - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "131",
+          "name": "Metalrør, Stål, Ubehandlet - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "132",
+          "name": "Metalrør, Stål, Rustfrit - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "133",
+          "name": "Metalrør, Stål, Galvaniseret - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "134",
+          "name": "Metalrør, Stål, Syrefast - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "135",
+          "name": "Metalrør, Stål, Sorte - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "140",
+          "name": "Metalrør, Støbejern - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Plastrør, PVC - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Plastrør, PP - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Plastrør, PE - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "240",
+          "name": "Plastrør, PEX - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "250",
+          "name": "Plastrør, PEH - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "260",
+          "name": "Plastrør, PEM - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "270",
+          "name": "Plastrør, PEL - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Betonrør - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "910",
+          "name": "Fordelerrør, 2 afgange ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "920",
+          "name": "Fordelerrør, 3 afgange ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "930",
+          "name": "Fordelerrør, 4 afgange ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%WPB",
+      "classificationname": "Luftkanal",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Spiorrør - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Fladrør - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Kvadradisk rør - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "810",
+          "name": "Indtag, Hætte - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "820",
+          "name": "Indtag, Skorsten - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "910",
+          "name": "Afkast, Hætte - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "920",
+          "name": "Afkast, Skorsten - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XDB",
+      "classificationname": "Stikkontakt",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Stikkontakt, Type E, 1 modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Stikkontakt, Type E, 2 modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "130",
+          "name": "Stikkontakt, Type E, 3 modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Stikkontakt, Type F, 1 modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Stikkontakt, Type F, 2 modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "230",
+          "name": "Stikkontakt, Type F, 3 modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Stikkontakt, Type C, 1 modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Stikkontakt, Type C, 2 modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "330",
+          "name": "Stikkontakt, Type C, 3modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "410",
+          "name": "Stikkontakt, Type K, 1 modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "420",
+          "name": "Stikkontakt, Type K, 2 modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "430",
+          "name": "Stikkontakt, Type K, 3 modul ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Stikkontakt, Type J ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Stikkontakt, Type L ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "700",
+          "name": "Stikkontakt, Type G ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "800",
+          "name": "Stikkontakt, Type A ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "900",
+          "name": "Stikkontakt, Type B ● ● Et separat BIM-objekt ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XDC",
+      "classificationname": "El-dåse",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Samledåse ● ● Kan være et separat BIM-objekt ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XDD",
+      "classificationname": "Udtag",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Netværksudtag ● ● Et separat BIM-objekt ●"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Luftartsudtag ● ● Et separat BIM-objekt ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XGC",
+      "classificationname": "Patchpanel",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "X-felt ● -  ●"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XKA",
+      "classificationname": "Vask",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Håndvask ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Køkkenvask ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Grovvask ● ● Et separat BIM-objekt - Rengøringsvask"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Udslagsvask ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Lægevask ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Laboratorievask ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "910",
+          "name": "Kombineret vask, Køkken- og grovvask ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XKB",
+      "classificationname": "Toilet",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Toilet med s-lås ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Toilet med p-lås ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Væghængt toilet ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Back-to-wall toilet ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XKC",
+      "classificationname": "Urinal",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Urinalrende ● ● Et separat BIM-objekt - Pissoir"
+        },
+        {
+          "classificationserial": "210",
+          "name": "Vægurinal med vandskyld ● ● Et separat BIM-objekt - Pissoir"
+        },
+        {
+          "classificationserial": "220",
+          "name": "Vægurinal uden vandskyld ● ● Et separat BIM-objekt - Pissoir"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Standurinal ● ● Et separat BIM-objekt - Pissoir"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XKE",
+      "classificationname": "Gulvafløb",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Kvadratisk gulvafløb ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Cirkulært gulvafløb ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Rektagulært gulvafløb ● ● Et separat BIM-objekt - Linje gulvafløb"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Trekantet gulvafløb ● ● Et separat BIM-objekt - Hjørne gulvafløb"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Industrigulvafløb ● ● Et separat BIM-objekt - Hjørne gulvafløb"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XMA",
+      "classificationname": "Rørflange",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Rørflange - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XMB",
+      "classificationname": "Rørfitting",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Muffe - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Nippel - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Vinkel, Muffe/Nippel - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Vinkel, Muffe/Muffe - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "330",
+          "name": "Vinkel, Nippel/Nippel - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "T-stykke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Y-stykke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Samlemuffe - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "710",
+          "name": "Overgang, Overgangsmuffe - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "720",
+          "name": "Overgang, Overgangsnippel - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "730",
+          "name": "Overgang med omløber - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XNC",
+      "classificationname": "Hirth kobler",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Bøjning - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Spidsstykke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Overgangsstykke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "T-stykke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Afgrening - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Påstik - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "700",
+          "name": "Endestykke - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "800",
+          "name": "Flexforbindelse - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XNE",
+      "classificationname": "Buffer-og-kæde kobler",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Spulebrønd ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Drænbrønd ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "300",
+          "name": "Sandfangsbrønd ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "400",
+          "name": "Tørbrønd ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "500",
+          "name": "Pumpebrønd ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "600",
+          "name": "Vejbrønd ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "700",
+          "name": "Rendestensbrønd ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "800",
+          "name": "Tagbrønd ● ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "900",
+          "name": "Kabelbrønd ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XSA",
+      "classificationname": "Repos",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Repos, Trappe ● ● Kan være et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "120",
+          "name": "Repos, Rampe ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XSB",
+      "classificationname": "Trappeløb",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Trappeløb ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XSC",
+      "classificationname": "Stige",
+      "entries": [
+        {
+          "classificationserial": "110",
+          "name": "Fast stige, Adgangsvej ● ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XSD",
+      "classificationname": "Rampe",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Rampe ● ● Kan være et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XSE",
+      "classificationname": "Brandmandsstang",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Brandmandsstang - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XTA",
+      "classificationname": "Hul",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Dørhul - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "200",
+          "name": "Vindueshul - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "310",
+          "name": "Gennemføringshul, Kombineret - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "320",
+          "name": "Gennemføringshul, Rør - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "330",
+          "name": "Gennemføringshul, Luftkanal - ● Et separat BIM-objekt -"
+        },
+        {
+          "classificationserial": "340",
+          "name": "Gennemføringshul, Kassebane - ● Et separat BIM-objekt -"
+        }
+      ]
+    },
+    {
+      "classificationcode": "[L]%XTB",
+      "classificationname": "Udsparing",
+      "entries": [
+        {
+          "classificationserial": "100",
+          "name": "Reces - ● Et separat BIM-objekt - Fordybning, Forsænkning, Recess"
+        }
+      ]
+    }
+  ]
+}
