@@ -6375,6 +6375,41 @@
     }
   },
   {
+    "name": "sync_revit_types_to_nbs",
+    "description": "Match Revit types in a category against NBS Nordic components, then (unless dryRun) write high-confidence matches back to Revit type parameters (NBS Component Type Id / NBS Classificationcode / NBS Component Name). Groups by Revit TYPE, not instance — 400 walls of 4 types produces 4 matches, not 400. Only id/explicit/unique-classificationcode matches (confidence >= 0.9) are ever auto-written; name and fuzzy family+type matches are returned as proposals only. Does NOT create missing NBS components — review proposedCreates and call nbs_create_component explicitly per type you approve. dryRun defaults to true.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Revit BuiltInCategory name, e.g. 'OST_Walls', 'OST_Doors'."
+        },
+        "projectId": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+        },
+        "maxTypes": {
+          "type": "number",
+          "default": 50,
+          "description": "Maximum distinct Revit types to process."
+        },
+        "dryRun": {
+          "type": "boolean",
+          "default": true,
+          "description": "If true (default), only report — no Revit writes happen."
+        }
+      },
+      "required": [
+        "category"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
     "name": "tag_all_rooms",
     "description": "Tag rooms in the current view with room tags.",
     "input_schema": {

@@ -105,6 +105,7 @@ import * as NbsListInstances from "./nbs_list_instances.js";
 import * as NbsPushQuantities from "./nbs_push_quantities.js";
 import * as NbsPushSchedule from "./nbs_push_schedule.js";
 import * as NbsGetDocuments from "./nbs_get_documents.js";
+import * as SyncRevitTypesToNbs from "./sync_revit_types_to_nbs.js";
 import * as ManageProjectParameters from "./manage_project_parameters.js";
 import * as ManageUnplacedViews from "./manage_unplaced_views.js";
 import * as ManageViewTemplates from "./manage_view_templates.js";
@@ -254,6 +255,7 @@ export async function registerTools(server: McpServer) {
     { name: "nbs_push_quantities", module: NbsPushQuantities },
     { name: "nbs_push_schedule", module: NbsPushSchedule },
     { name: "nbs_get_documents", module: NbsGetDocuments },
+    { name: "sync_revit_types_to_nbs", module: SyncRevitTypesToNbs },
     { name: "manage_project_parameters", module: ManageProjectParameters },
     { name: "manage_unplaced_views", module: ManageUnplacedViews },
     { name: "manage_view_templates", module: ManageViewTemplates },
