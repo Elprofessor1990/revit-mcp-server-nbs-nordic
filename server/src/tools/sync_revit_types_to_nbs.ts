@@ -4,6 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { withRevitConnection } from "../utils/ConnectionManager.js";
 import { rawToolResponse, rawToolError } from "../utils/compactTool.js";
 import { listComponents } from "../integrations/nbs/components/ComponentService.js";
+import { resolveProjectId } from "../integrations/nbs/NbsConfig.js";
 import { matchType, RevitTypeInfo, NbsComponentLite, MatchResult } from "../integrations/nbs/matching/TypeMatcher.js";
 import { dbRun } from "../database/db.js";
 
@@ -89,7 +90,7 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
     },
     async (args) => {
       try {
-        const projectId = args.projectId ?? process.env.NBS_PROJECT_ID;
+        const projectId = resolveProjectId(args.projectId);
         if (!projectId) {
           return rawToolError("sync_revit_types_to_nbs", "No projectId provided and NBS_PROJECT_ID is not set.");
         }

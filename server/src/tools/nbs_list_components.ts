@@ -2,6 +2,7 @@ import { errorMessage } from "../utils/errorUtils.js";
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { listComponents } from "../integrations/nbs/components/ComponentService.js";
+import { resolveProjectId } from "../integrations/nbs/NbsConfig.js";
 import { rawToolResponse, rawToolError } from "../utils/compactTool.js";
 
 export function registerNbsListComponentsTool(server: McpServer) {
@@ -16,7 +17,7 @@ export function registerNbsListComponentsTool(server: McpServer) {
     },
     async (args) => {
       try {
-        const projectId = args.projectId ?? process.env.NBS_PROJECT_ID;
+        const projectId = resolveProjectId(args.projectId);
         if (!projectId) {
           return rawToolError("nbs_list_components", "No projectId provided and NBS_PROJECT_ID is not set.");
         }

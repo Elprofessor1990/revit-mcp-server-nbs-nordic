@@ -22,6 +22,9 @@
                 <ListBoxItem x:Name="ApiKeyItem" Padding="10,8">
                     <TextBlock Text="API Key" FontSize="14"/>
                 </ListBoxItem>
+                <ListBoxItem x:Name="NbsItem" Padding="10,8">
+                    <TextBlock Text="NBS Nordic" FontSize="14"/>
+                </ListBoxItem>
                 <ListBoxItem x:Name="CommandSetItem" Padding="10,8">
                     <TextBlock Text="Commands" FontSize="14"/>
                 </ListBoxItem>

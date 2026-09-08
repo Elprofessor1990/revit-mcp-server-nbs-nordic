@@ -3,6 +3,7 @@ import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { nbsClient } from "../integrations/nbs/NbsClient.js";
 import { NbsProject } from "../integrations/nbs/NbsTypes.js";
+import { resolveProjectId } from "../integrations/nbs/NbsConfig.js";
 import { rawToolResponse, rawToolError } from "../utils/compactTool.js";
 
 export function registerNbsGetProjectTool(server: McpServer) {
@@ -17,7 +18,7 @@ export function registerNbsGetProjectTool(server: McpServer) {
     },
     async (args) => {
       try {
-        const projectId = args.projectId ?? process.env.NBS_PROJECT_ID;
+        const projectId = resolveProjectId(args.projectId);
         if (!projectId) {
           return rawToolError("nbs_get_project", "No projectId provided and NBS_PROJECT_ID is not set.");
         }

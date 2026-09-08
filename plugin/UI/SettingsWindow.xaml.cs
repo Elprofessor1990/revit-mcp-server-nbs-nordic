@@ -10,6 +10,7 @@ namespace revit_mcp_plugin.UI
     {
         private GeneralSettingsPage generalPage;
         private ApiKeySettingsPage apiKeyPage;
+        private NbsApiKeySettingsPage nbsPage;
         private CommandSetSettingsPage commandSetPage;
         private bool isInitialized = false;
 
@@ -20,6 +21,7 @@ namespace revit_mcp_plugin.UI
             // Initialize pages
             generalPage = new GeneralSettingsPage();
             apiKeyPage = new ApiKeySettingsPage();
+            nbsPage = new NbsApiKeySettingsPage();
             commandSetPage = new CommandSetSettingsPage();
 
             // Load default page (General)
@@ -39,6 +41,10 @@ namespace revit_mcp_plugin.UI
             else if (NavListBox.SelectedItem == ApiKeyItem)
             {
                 ContentFrame.Navigate(apiKeyPage);
+            }
+            else if (NavListBox.SelectedItem == NbsItem)
+            {
+                ContentFrame.Navigate(nbsPage);
             }
             else if (NavListBox.SelectedItem == CommandSetItem)
             {
