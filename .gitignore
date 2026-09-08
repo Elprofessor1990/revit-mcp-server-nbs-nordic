@@ -8,6 +8,7 @@ server/revit-data.db
 # Environment variables
 .env
 .env.*
+!.env.example
 
 # Temp/report files
 review_diff.txt

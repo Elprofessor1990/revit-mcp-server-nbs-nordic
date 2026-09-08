@@ -97,6 +97,14 @@ import * as LoadFamily from "./load_family.js";
 import * as LoadSelection from "./load_selection.js";
 import * as ManageLinks from "./manage_links.js";
 import * as NavigateView from "./navigate_view.js";
+import * as NbsListProjects from "./nbs_list_projects.js";
+import * as NbsGetProject from "./nbs_get_project.js";
+import * as NbsListComponents from "./nbs_list_components.js";
+import * as NbsCreateComponent from "./nbs_create_component.js";
+import * as NbsListInstances from "./nbs_list_instances.js";
+import * as NbsPushQuantities from "./nbs_push_quantities.js";
+import * as NbsPushSchedule from "./nbs_push_schedule.js";
+import * as NbsGetDocuments from "./nbs_get_documents.js";
 import * as ManageProjectParameters from "./manage_project_parameters.js";
 import * as ManageUnplacedViews from "./manage_unplaced_views.js";
 import * as ManageViewTemplates from "./manage_view_templates.js";
@@ -238,6 +246,14 @@ export async function registerTools(server: McpServer) {
     { name: "load_selection", module: LoadSelection },
     { name: "manage_links", module: ManageLinks },
     { name: "navigate_view", module: NavigateView },
+    { name: "nbs_list_projects", module: NbsListProjects },
+    { name: "nbs_get_project", module: NbsGetProject },
+    { name: "nbs_list_components", module: NbsListComponents },
+    { name: "nbs_create_component", module: NbsCreateComponent },
+    { name: "nbs_list_instances", module: NbsListInstances },
+    { name: "nbs_push_quantities", module: NbsPushQuantities },
+    { name: "nbs_push_schedule", module: NbsPushSchedule },
+    { name: "nbs_get_documents", module: NbsGetDocuments },
     { name: "manage_project_parameters", module: ManageProjectParameters },
     { name: "manage_unplaced_views", module: ManageUnplacedViews },
     { name: "manage_view_templates", module: ManageViewTemplates },

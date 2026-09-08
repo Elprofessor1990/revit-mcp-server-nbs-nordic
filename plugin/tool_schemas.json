@@ -4882,6 +4882,212 @@
     }
   },
   {
+    "name": "nbs_create_component",
+    "description": "Create a new NBS Nordic building component (bygningsdel) in a project. Do not invent structure/description values — they must come from verified Revit parameters, user input, or an approved knowledge source (see prepare_nbs_component_description).",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+        },
+        "name": {
+          "type": "string",
+          "description": "Component name"
+        },
+        "structure": {
+          "type": "string",
+          "description": "Layer/build-up description"
+        },
+        "classificationcode": {
+          "type": "string",
+          "description": "NBS classification code"
+        },
+        "discipline_id": {
+          "type": "number"
+        },
+        "measure_id": {
+          "type": "number"
+        },
+        "active": {
+          "type": "number",
+          "enum": [
+            0,
+            1
+          ],
+          "default": 1
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "nbs_get_documents",
+    "description": "List NBS Nordic documents (all projects, or one project if projectId is given), or fetch a single document by ID. Read-only — NBS has no public API for creating/editing documents or sections; that remains a manual step in the NBS web UI.\nNote: uses the V1 API base path, which is inferred from NBS' documented v1/v2 versioning convention but not independently confirmed — verify against a live account if results look wrong.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "List documents for this project only. Omit to list documents across all your projects."
+        },
+        "documentId": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "Fetch a single document by ID instead of listing."
+        }
+      },
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "nbs_get_project",
+    "description": "Get a single NBS Nordic project by ID. Falls back to NBS_PROJECT_ID env var if projectId is omitted.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+        }
+      },
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "nbs_list_components",
+    "description": "List NBS Nordic building components (bygningsdele) for a project. Falls back to NBS_PROJECT_ID env var if projectId is omitted.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+        }
+      },
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "nbs_list_instances",
+    "description": "List all NBS Nordic project instances (linked model elements) with their component links and instance parameters. Falls back to NBS_PROJECT_ID env var if projectId is omitted.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+        }
+      },
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "nbs_list_projects",
+    "description": "List NBS Nordic projects accessible with the configured API key. Requires NBS_API_KEY to be set.",
+    "input_schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "nbs_push_quantities",
+    "description": "Push quantity rows to NBS Nordic (POST /quantities). IMPORTANT: verify units before calling — Revit internal units are feet, NBS expects m²/m³/m/pcs. Do not assume unit conversion is automatic; normalize on the caller side first.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "description": "Quantity rows. Exact row shape is not fully documented by NBS — verify against a real response before relying on specific field names."
+        }
+      },
+      "required": [
+        "rows"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "nbs_push_schedule",
+    "description": "Push a Revit schedule to NBS Nordic (POST /sheet). Get the schedule data first with get_schedule_data, then pass its rows here. NBS documents can reference synced schedules as variables.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+        },
+        "name": {
+          "type": "string",
+          "description": "Sheet name in NBS"
+        },
+        "revitId": {
+          "type": "string",
+          "description": "Identifier of the source Revit schedule/view"
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "description": "Schedule rows (from get_schedule_data)."
+        }
+      },
+      "required": [
+        "name",
+        "revitId",
+        "rows"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
     "name": "operate_element",
     "description": "Perform operations: select, color, hide, unhide, pin, unpin, etc.",
     "input_schema": {

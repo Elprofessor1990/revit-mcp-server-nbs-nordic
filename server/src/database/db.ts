@@ -94,10 +94,36 @@ function initializeDatabase(database: SqlJsDatabase) {
     )
   `);
 
+  database.run(`
+    CREATE TABLE IF NOT EXISTS nbs_type_mappings (
+      revit_type_id INTEGER NOT NULL,
+      nbs_project_id TEXT NOT NULL,
+      nbs_component_id TEXT NOT NULL,
+      matched_by TEXT NOT NULL,
+      confidence REAL,
+      timestamp INTEGER NOT NULL,
+      UNIQUE(revit_type_id, nbs_project_id)
+    )
+  `);
+
+  database.run(`
+    CREATE TABLE IF NOT EXISTS nbs_sync_log (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      operation TEXT NOT NULL,
+      revit_type_id INTEGER,
+      nbs_component_id TEXT,
+      source TEXT NOT NULL,
+      dry_run INTEGER NOT NULL,
+      timestamp INTEGER NOT NULL
+    )
+  `);
+
   database.run(`CREATE INDEX IF NOT EXISTS idx_projects_name ON projects(project_name)`);
   database.run(`CREATE INDEX IF NOT EXISTS idx_projects_timestamp ON projects(timestamp)`);
   database.run(`CREATE INDEX IF NOT EXISTS idx_rooms_project_id ON rooms(project_id)`);
   database.run(`CREATE INDEX IF NOT EXISTS idx_rooms_room_number ON rooms(room_number)`);
+  database.run(`CREATE INDEX IF NOT EXISTS idx_nbs_type_mappings_project ON nbs_type_mappings(nbs_project_id)`);
+  database.run(`CREATE INDEX IF NOT EXISTS idx_nbs_sync_log_timestamp ON nbs_sync_log(timestamp)`);
 }
 
 function getDb(): SqlJsDatabase {

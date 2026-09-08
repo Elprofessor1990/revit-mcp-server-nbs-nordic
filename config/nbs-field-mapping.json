@@ -1,0 +1,4 @@
+{
+  "_comment": "Maps Revit parameter names to NBS Nordic extra-field IDs (Pro feature: POST /projects/[id]/component/[extra_field_id]). Empty by default — fill in per project once extra fields are confirmed available. Never hardcode this mapping inside orchestration tools.",
+  "mappings": []
+}
