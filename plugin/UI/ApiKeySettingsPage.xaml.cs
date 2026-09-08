@@ -49,6 +49,9 @@ namespace revit_mcp_plugin.UI
                 StatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4CAF50"));
                 StatusSourceText.Text = "(from environment variable)";
                 EnvVarRadio.IsChecked = true;
+                currentApiKey = envKey;
+                ApiKeyPasswordBox.Password = envKey;
+                ApiKeyTextBox.Text = envKey;
             }
             else if (!string.IsNullOrEmpty(fileKey))
             {
@@ -56,6 +59,9 @@ namespace revit_mcp_plugin.UI
                 StatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4CAF50"));
                 StatusSourceText.Text = "(from file)";
                 FileRadio.IsChecked = true;
+                currentApiKey = fileKey;
+                ApiKeyPasswordBox.Password = fileKey;
+                ApiKeyTextBox.Text = fileKey;
             }
             else
             {

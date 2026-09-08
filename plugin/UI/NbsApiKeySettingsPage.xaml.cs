@@ -56,6 +56,9 @@ namespace revit_mcp_plugin.UI
                 StatusSourceText.Text = "(from environment variable)";
                 EnvVarRadio.IsChecked = true;
                 ProjectIdTextBox.Text = envProjectId ?? string.Empty;
+                currentApiKey = envKey;
+                ApiKeyPasswordBox.Password = envKey;
+                ApiKeyTextBox.Text = envKey;
             }
             else if (!string.IsNullOrEmpty(fileKey))
             {
@@ -64,6 +67,9 @@ namespace revit_mcp_plugin.UI
                 StatusSourceText.Text = "(from file)";
                 FileRadio.IsChecked = true;
                 ProjectIdTextBox.Text = fileProjectId ?? string.Empty;
+                currentApiKey = fileKey;
+                ApiKeyPasswordBox.Password = fileKey;
+                ApiKeyTextBox.Text = fileKey;
             }
             else
             {
