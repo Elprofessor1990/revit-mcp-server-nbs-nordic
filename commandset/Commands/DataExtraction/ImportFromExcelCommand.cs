@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands.DataExtraction
 {
     public class ImportFromExcelCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private ImportFromExcelEventHandler _handler => (ImportFromExcelEventHandler)Handler;
         public override string CommandName => "import_from_excel";
 
@@ -16,22 +17,25 @@ namespace RevitMCPCommandSet.Commands.DataExtraction
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                _handler.SetParameters(
-                    filePath: parameters?["filePath"]?.ToString() ?? "",
-                    sheetName: parameters?["sheetName"]?.ToString() ?? "",
-                    dryRun: parameters?["dryRun"]?.Value<bool>() ?? false
-                );
+                try
+                {
+                    _handler.SetParameters(
+                        filePath: parameters?["filePath"]?.ToString() ?? "",
+                        sheetName: parameters?["sheetName"]?.ToString() ?? "",
+                        dryRun: parameters?["dryRun"]?.Value<bool>() ?? false
+                    );
 
-                if (RaiseAndWaitForCompletion(120000))
-                    return _handler.Result;
+                    if (RaiseAndWaitForCompletion(120000))
+                        return _handler.Result;
 
-                throw new TimeoutException("Import from Excel timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Import from Excel failed: {ex.Message}");
+                    throw new TimeoutException("Import from Excel timed out");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Import from Excel failed: {ex.Message}");
+                }
             }
         }
     }

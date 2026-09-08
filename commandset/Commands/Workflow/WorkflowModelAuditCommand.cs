@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands.Workflow
 {
     public class WorkflowModelAuditCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private WorkflowModelAuditEventHandler _handler => (WorkflowModelAuditEventHandler)Handler;
         public override string CommandName => "workflow_model_audit";
 
@@ -16,20 +17,23 @@ namespace RevitMCPCommandSet.Commands.Workflow
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                _handler.SetParameters(
-                    includeWarnings: parameters?["includeWarnings"]?.Value<bool>() ?? true,
-                    includeFamilies: parameters?["includeFamilies"]?.Value<bool>() ?? true,
-                    maxWarnings: parameters?["maxWarnings"]?.Value<int>() ?? 50
-                );
-                if (RaiseAndWaitForCompletion(120000))
-                    return _handler.Result;
-                throw new TimeoutException("Workflow model audit timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Workflow model audit failed: {ex.Message}");
+                try
+                {
+                    _handler.SetParameters(
+                        includeWarnings: parameters?["includeWarnings"]?.Value<bool>() ?? true,
+                        includeFamilies: parameters?["includeFamilies"]?.Value<bool>() ?? true,
+                        maxWarnings: parameters?["maxWarnings"]?.Value<int>() ?? 50
+                    );
+                    if (RaiseAndWaitForCompletion(120000))
+                        return _handler.Result;
+                    throw new TimeoutException("Workflow model audit timed out");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Workflow model audit failed: {ex.Message}");
+                }
             }
         }
     }

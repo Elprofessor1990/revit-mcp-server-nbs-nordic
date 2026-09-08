@@ -13,6 +13,7 @@ namespace RevitMCPCommandSet.Commands
 {
     public class OperateElementCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private OperateElementEventHandler _handler => (OperateElementEventHandler)Handler;
 
         /// <summary>
@@ -31,30 +32,33 @@ namespace RevitMCPCommandSet.Commands
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                OperationSetting data = new OperationSetting();
-                // Parse parameters
-                data = parameters?["data"]?.ToObject<OperationSetting>();
-                if (data == null)
-                    throw new ArgumentNullException(nameof(data), "AI input data is null");
-
-                // Set operation parameters
-                _handler.SetParameters(data);
-
-                // Raise external event and wait for completion
-                if (RaiseAndWaitForCompletion(10000))
+                try
                 {
-                    return _handler.Result;
+                    OperationSetting data = new OperationSetting();
+                    // Parse parameters
+                    data = parameters?["data"]?.ToObject<OperationSetting>();
+                    if (data == null)
+                        throw new ArgumentNullException(nameof(data), "AI input data is null");
+
+                    // Set operation parameters
+                    _handler.SetParameters(data);
+
+                    // Raise external event and wait for completion
+                    if (RaiseAndWaitForCompletion(10000))
+                    {
+                        return _handler.Result;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Element operation timed out");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new TimeoutException("Element operation timed out");
+                    throw new Exception($"Element operation failed: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Element operation failed: {ex.Message}");
             }
         }
     }

@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands
 {
     public class CreateSurfaceElementCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private CreateSurfaceElementEventHandler _handler => (CreateSurfaceElementEventHandler)Handler;
 
         /// <summary>
@@ -26,30 +27,33 @@ namespace RevitMCPCommandSet.Commands
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                List<SurfaceElement> data = new List<SurfaceElement>();
-                // Parse parameters
-                data = parameters?["data"]?.ToObject<List<SurfaceElement>>();
-                if (data == null)
-                    throw new ArgumentNullException(nameof(data), "AI input data is null");
-
-                // Set surface-based element parameters
-                _handler.SetParameters(data);
-
-                // Raise external event and wait for completion
-                if (RaiseAndWaitForCompletion(10000))
+                try
                 {
-                    return _handler.Result;
+                    List<SurfaceElement> data = new List<SurfaceElement>();
+                    // Parse parameters
+                    data = parameters?["data"]?.ToObject<List<SurfaceElement>>();
+                    if (data == null)
+                        throw new ArgumentNullException(nameof(data), "AI input data is null");
+
+                    // Set surface-based element parameters
+                    _handler.SetParameters(data);
+
+                    // Raise external event and wait for completion
+                    if (RaiseAndWaitForCompletion(10000))
+                    {
+                        return _handler.Result;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Surface-based element creation timed out");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new TimeoutException("Surface-based element creation timed out");
+                    throw new Exception($"Failed to create surface-based element: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to create surface-based element: {ex.Message}");
             }
         }
     }

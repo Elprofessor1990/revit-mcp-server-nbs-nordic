@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands.Workflow
 {
     public class WorkflowClashReviewCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private WorkflowClashReviewEventHandler _handler => (WorkflowClashReviewEventHandler)Handler;
         public override string CommandName => "workflow_clash_review";
 
@@ -16,21 +17,24 @@ namespace RevitMCPCommandSet.Commands.Workflow
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                _handler.SetParameters(
-                    categoryA: parameters?["categoryA"]?.Value<string>() ?? "",
-                    categoryB: parameters?["categoryB"]?.Value<string>() ?? "",
-                    tolerance: parameters?["tolerance"]?.Value<double>() ?? 0,
-                    createSectionBox: parameters?["createSectionBox"]?.Value<bool>() ?? true
-                );
-                if (RaiseAndWaitForCompletion(120000))
-                    return _handler.Result;
-                throw new TimeoutException("Workflow clash review timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Workflow clash review failed: {ex.Message}");
+                try
+                {
+                    _handler.SetParameters(
+                        categoryA: parameters?["categoryA"]?.Value<string>() ?? "",
+                        categoryB: parameters?["categoryB"]?.Value<string>() ?? "",
+                        tolerance: parameters?["tolerance"]?.Value<double>() ?? 0,
+                        createSectionBox: parameters?["createSectionBox"]?.Value<bool>() ?? true
+                    );
+                    if (RaiseAndWaitForCompletion(120000))
+                        return _handler.Result;
+                    throw new TimeoutException("Workflow clash review timed out");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Workflow clash review failed: {ex.Message}");
+                }
             }
         }
     }

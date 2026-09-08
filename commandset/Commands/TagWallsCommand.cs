@@ -7,6 +7,7 @@ namespace RevitMCPCommandSet.Commands
 {
     public class TagWallsCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private TagWallsEventHandler _handler => (TagWallsEventHandler)Handler;
 
         /// <summary>
@@ -25,37 +26,40 @@ namespace RevitMCPCommandSet.Commands
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                // Parse parameters
-                bool useLeader = false;
-                if (parameters["useLeader"] != null)
+                try
                 {
-                    useLeader = parameters["useLeader"].ToObject<bool>();
-                }
+                    // Parse parameters
+                    bool useLeader = false;
+                    if (parameters["useLeader"] != null)
+                    {
+                        useLeader = parameters["useLeader"].ToObject<bool>();
+                    }
 
-                string tagTypeId = null;
-                if (parameters["tagTypeId"] != null)
-                {
-                    tagTypeId = parameters["tagTypeId"].ToString();
-                }
+                    string tagTypeId = null;
+                    if (parameters["tagTypeId"] != null)
+                    {
+                        tagTypeId = parameters["tagTypeId"].ToString();
+                    }
 
-                // Set tag parameters
-                _handler.SetParameters(useLeader, tagTypeId);
+                    // Set tag parameters
+                    _handler.SetParameters(useLeader, tagTypeId);
 
-                // Raise external event and wait for completion
-                if (RaiseAndWaitForCompletion(10000))
-                {
-                    return _handler.TaggingResults;
+                    // Raise external event and wait for completion
+                    if (RaiseAndWaitForCompletion(10000))
+                    {
+                        return _handler.TaggingResults;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Tag walls operation timed out");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new TimeoutException("Tag walls operation timed out");
+                    throw new Exception($"Failed to tag walls: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to tag walls: {ex.Message}");
             }
         }
     }

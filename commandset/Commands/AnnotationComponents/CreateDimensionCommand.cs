@@ -34,6 +34,7 @@ namespace RevitMCPCommandSet.Commands.AnnotationComponents;
 /// </summary>
 public class CreateDimensionCommand : ExternalEventCommandBase
 {
+        private static readonly object _executionLock = new object();
     /// <summary>
     ///     Constructor
     /// </summary>
@@ -58,25 +59,28 @@ public class CreateDimensionCommand : ExternalEventCommandBase
     /// <returns>Execution result</returns>
     public override object Execute(JObject parameters, string requestId)
     {
-        try
-        {
-            // Parse parameters
-            var dimensions = parameters["dimensions"]?.ToObject<List<DimensionCreationInfo>>();
+            lock (_executionLock)
+            {
+            try
+            {
+                // Parse parameters
+                var dimensions = parameters["dimensions"]?.ToObject<List<DimensionCreationInfo>>();
 
-            if (dimensions == null || dimensions.Count == 0)
-                throw new ArgumentException("Dimension list cannot be empty");
+                if (dimensions == null || dimensions.Count == 0)
+                    throw new ArgumentException("Dimension list cannot be empty");
 
-            // Set parameters and execute
-            _handler.SetParameters(dimensions);
+                // Set parameters and execute
+                _handler.SetParameters(dimensions);
 
-            // Raise event and wait for completion
-            if (RaiseAndWaitForCompletion(20000)) // 20 seconds timeout
-                return _handler.Result;
-            throw new TimeoutException("Dimension creation operation timed out");
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Error creating dimensions: {ex.Message}", ex);
-        }
+                // Raise event and wait for completion
+                if (RaiseAndWaitForCompletion(20000)) // 20 seconds timeout
+                    return _handler.Result;
+                throw new TimeoutException("Dimension creation operation timed out");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error creating dimensions: {ex.Message}", ex);
+            }
+            }
     }
 }

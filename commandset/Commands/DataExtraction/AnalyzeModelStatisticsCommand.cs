@@ -7,6 +7,7 @@ namespace RevitMCPCommandSet.Commands.DataExtraction
 {
     public class AnalyzeModelStatisticsCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private AnalyzeModelStatisticsEventHandler _handler => (AnalyzeModelStatisticsEventHandler)Handler;
 
         public override string CommandName => "analyze_model_statistics";
@@ -18,27 +19,30 @@ namespace RevitMCPCommandSet.Commands.DataExtraction
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                // Parse parameters
-                bool includeDetailedTypes = parameters?["includeDetailedTypes"]?.Value<bool>() ?? true;
-
-                // Set parameters
-                _handler.SetParameters(includeDetailedTypes);
-
-                // Execute and wait
-                if (RaiseAndWaitForCompletion(120000)) // 120 second timeout for large models
+                try
                 {
-                    return _handler.ResultInfo;
+                    // Parse parameters
+                    bool includeDetailedTypes = parameters?["includeDetailedTypes"]?.Value<bool>() ?? true;
+
+                    // Set parameters
+                    _handler.SetParameters(includeDetailedTypes);
+
+                    // Execute and wait
+                    if (RaiseAndWaitForCompletion(120000)) // 120 second timeout for large models
+                    {
+                        return _handler.ResultInfo;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Model statistics analysis timed out");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new TimeoutException("Model statistics analysis timed out");
+                    throw new Exception($"Failed to analyze model statistics: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to analyze model statistics: {ex.Message}");
             }
         }
     }

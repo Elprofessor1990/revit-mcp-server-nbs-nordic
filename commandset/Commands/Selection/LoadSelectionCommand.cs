@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands.Selection
 {
     public class LoadSelectionCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private LoadSelectionEventHandler _handler => (LoadSelectionEventHandler)Handler;
 
         public override string CommandName => "load_selection";
@@ -17,21 +18,24 @@ namespace RevitMCPCommandSet.Commands.Selection
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                _handler.SelectionName = parameters?["name"]?.Value<string>() ?? "";
-                _handler.SelectInView = parameters?["selectInView"]?.Value<bool>() ?? true;
+                try
+                {
+                    _handler.SelectionName = parameters?["name"]?.Value<string>() ?? "";
+                    _handler.SelectInView = parameters?["selectInView"]?.Value<bool>() ?? true;
 
-                _handler.SetParameters();
+                    _handler.SetParameters();
 
-                if (RaiseAndWaitForCompletion(10000))
-                    return _handler.Result;
+                    if (RaiseAndWaitForCompletion(10000))
+                        return _handler.Result;
 
-                throw new TimeoutException("Load selection timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Load selection failed: {ex.Message}");
+                    throw new TimeoutException("Load selection timed out");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Load selection failed: {ex.Message}");
+                }
             }
         }
     }

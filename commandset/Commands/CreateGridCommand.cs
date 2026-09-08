@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands
 {
     public class CreateGridCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private CreateGridEventHandler _handler => (CreateGridEventHandler)Handler;
 
         /// <summary>
@@ -26,36 +27,39 @@ namespace RevitMCPCommandSet.Commands
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                // Parse parameters
-                GridCreationInfo data = parameters.ToObject<GridCreationInfo>();
-
-                if (data == null)
-                    throw new ArgumentNullException(nameof(data), "Grid creation data is null");
-
-                // Validate before processing
-                if (!data.Validate(out string validationError))
+                try
                 {
-                    throw new ArgumentException($"Invalid grid parameters: {validationError}");
-                }
+                    // Parse parameters
+                    GridCreationInfo data = parameters.ToObject<GridCreationInfo>();
 
-                // Set parameters and trigger event
-                _handler.SetParameters(data);
+                    if (data == null)
+                        throw new ArgumentNullException(nameof(data), "Grid creation data is null");
 
-                // Wait for completion with 10 second timeout
-                if (RaiseAndWaitForCompletion(10000))
-                {
-                    return _handler.Result;
+                    // Validate before processing
+                    if (!data.Validate(out string validationError))
+                    {
+                        throw new ArgumentException($"Invalid grid parameters: {validationError}");
+                    }
+
+                    // Set parameters and trigger event
+                    _handler.SetParameters(data);
+
+                    // Wait for completion with 10 second timeout
+                    if (RaiseAndWaitForCompletion(10000))
+                    {
+                        return _handler.Result;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Grid creation operation timed out");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new TimeoutException("Grid creation operation timed out");
+                    throw new Exception($"Failed to create grid system: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to create grid system: {ex.Message}");
             }
         }
     }

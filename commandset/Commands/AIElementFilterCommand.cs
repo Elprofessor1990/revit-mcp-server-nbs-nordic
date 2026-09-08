@@ -13,6 +13,7 @@ namespace RevitMCPCommandSet.Commands
 {
     public class AIElementFilterCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private AIElementFilterEventHandler _handler => (AIElementFilterEventHandler)Handler;
 
         /// <summary>
@@ -31,30 +32,33 @@ namespace RevitMCPCommandSet.Commands
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                FilterSetting data = new FilterSetting();
-                // Parse parameters
-                data = parameters?["data"]?.ToObject<FilterSetting>();
-                if (data == null)
-                    throw new ArgumentNullException(nameof(data), "AI input data is null — expected: {\"data\": {\"filterCategory\": \"OST_Walls\", ...}}");
-
-                // Set AI filter parameters
-                _handler.SetParameters(data);
-
-                // Raise external event and wait for completion
-                if (RaiseAndWaitForCompletion(120000)) // 2-minute timeout for large model scans
+                try
                 {
-                    return _handler.Result;
+                    FilterSetting data = new FilterSetting();
+                    // Parse parameters
+                    data = parameters?["data"]?.ToObject<FilterSetting>();
+                    if (data == null)
+                        throw new ArgumentNullException(nameof(data), "AI input data is null — expected: {\"data\": {\"filterCategory\": \"OST_Walls\", ...}}");
+
+                    // Set AI filter parameters
+                    _handler.SetParameters(data);
+
+                    // Raise external event and wait for completion
+                    if (RaiseAndWaitForCompletion(120000)) // 2-minute timeout for large model scans
+                    {
+                        return _handler.Result;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Get element info operation timed out — try adding a filterCategory to narrow the search scope");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new TimeoutException("Get element info operation timed out — try adding a filterCategory to narrow the search scope");
+                    throw new Exception($"Failed to get element info: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to get element info: {ex.Message}");
             }
         }
     }

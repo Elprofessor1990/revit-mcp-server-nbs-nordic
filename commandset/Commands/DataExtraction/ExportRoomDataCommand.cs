@@ -7,6 +7,7 @@ namespace RevitMCPCommandSet.Commands.DataExtraction
 {
     public class ExportRoomDataCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private ExportRoomDataEventHandler _handler => (ExportRoomDataEventHandler)Handler;
 
         public override string CommandName => "export_room_data";
@@ -18,32 +19,35 @@ namespace RevitMCPCommandSet.Commands.DataExtraction
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                // Parse optional parameters
-                bool includeUnplacedRooms = parameters?["includeUnplacedRooms"]?.Value<bool>() ?? false;
-                bool includeNotEnclosedRooms = parameters?["includeNotEnclosedRooms"]?.Value<bool>() ?? false;
-                int maxResults = parameters?["maxResults"]?.Value<int>() ?? 100;
-                var fields = (parameters?["fields"] as JArray)?
-                    .Select(t => t.ToString()).Where(s => !string.IsNullOrEmpty(s)).ToList()
-                    ?? new List<string>();
-
-                // Set parameters
-                _handler.SetParameters(includeUnplacedRooms, includeNotEnclosedRooms, maxResults, fields);
-
-                // Execute and wait
-                if (RaiseAndWaitForCompletion(60000)) // 60 second timeout
+                try
                 {
-                    return _handler.ResultInfo;
+                    // Parse optional parameters
+                    bool includeUnplacedRooms = parameters?["includeUnplacedRooms"]?.Value<bool>() ?? false;
+                    bool includeNotEnclosedRooms = parameters?["includeNotEnclosedRooms"]?.Value<bool>() ?? false;
+                    int maxResults = parameters?["maxResults"]?.Value<int>() ?? 100;
+                    var fields = (parameters?["fields"] as JArray)?
+                        .Select(t => t.ToString()).Where(s => !string.IsNullOrEmpty(s)).ToList()
+                        ?? new List<string>();
+
+                    // Set parameters
+                    _handler.SetParameters(includeUnplacedRooms, includeNotEnclosedRooms, maxResults, fields);
+
+                    // Execute and wait
+                    if (RaiseAndWaitForCompletion(60000)) // 60 second timeout
+                    {
+                        return _handler.ResultInfo;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Export room data operation timed out");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new TimeoutException("Export room data operation timed out");
+                    throw new Exception($"Failed to export room data: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to export room data: {ex.Message}");
             }
         }
     }

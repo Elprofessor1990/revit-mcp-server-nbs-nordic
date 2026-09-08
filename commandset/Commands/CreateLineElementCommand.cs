@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands
 {
     public class CreateLineElementCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private CreateLineElementEventHandler _handler => (CreateLineElementEventHandler)Handler;
 
         /// <summary>
@@ -26,30 +27,33 @@ namespace RevitMCPCommandSet.Commands
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                List<LineElement> data = new List<LineElement>();
-                // Parse parameters
-                data = parameters?["data"]?.ToObject<List<LineElement>>();
-                if (data == null)
-                    throw new ArgumentNullException(nameof(data), "AI input data is null");
-
-                // Set line-based element parameters
-                _handler.SetParameters(data);
-
-                // Raise external event and wait for completion
-                if (RaiseAndWaitForCompletion(10000))
+                try
                 {
-                    return _handler.Result;
+                    List<LineElement> data = new List<LineElement>();
+                    // Parse parameters
+                    data = parameters?["data"]?.ToObject<List<LineElement>>();
+                    if (data == null)
+                        throw new ArgumentNullException(nameof(data), "AI input data is null");
+
+                    // Set line-based element parameters
+                    _handler.SetParameters(data);
+
+                    // Raise external event and wait for completion
+                    if (RaiseAndWaitForCompletion(10000))
+                    {
+                        return _handler.Result;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Line-based element creation timed out");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new TimeoutException("Line-based element creation timed out");
+                    throw new Exception($"Failed to create line-based element: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to create line-based element: {ex.Message}");
             }
         }
     }

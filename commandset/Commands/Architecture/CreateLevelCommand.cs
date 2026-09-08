@@ -11,6 +11,7 @@ namespace RevitMCPCommandSet.Commands.Architecture
     /// </summary>
     public class CreateLevelCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private CreateLevelEventHandler _handler => (CreateLevelEventHandler)Handler;
 
         /// <summary>
@@ -29,29 +30,32 @@ namespace RevitMCPCommandSet.Commands.Architecture
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                // Parse parameters
-                List<LevelCreationInfo> data = parameters?["data"]?.ToObject<List<LevelCreationInfo>>();
-                if (data == null || data.Count == 0)
-                    throw new ArgumentNullException(nameof(data), "No level data provided — expected: {\"data\": [{\"name\": \"Level 2\", \"elevation\": 3000}]}");
-
-                // Set parameters for the event handler
-                _handler.SetParameters(data);
-
-                // Trigger external event and wait for completion
-                if (RaiseAndWaitForCompletion(15000)) // 15 second timeout
+                try
                 {
-                    return _handler.Result;
+                    // Parse parameters
+                    List<LevelCreationInfo> data = parameters?["data"]?.ToObject<List<LevelCreationInfo>>();
+                    if (data == null || data.Count == 0)
+                        throw new ArgumentNullException(nameof(data), "No level data provided — expected: {\"data\": [{\"name\": \"Level 2\", \"elevation\": 3000}]}");
+
+                    // Set parameters for the event handler
+                    _handler.SetParameters(data);
+
+                    // Trigger external event and wait for completion
+                    if (RaiseAndWaitForCompletion(15000)) // 15 second timeout
+                    {
+                        return _handler.Result;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Create level operation timed out");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new TimeoutException("Create level operation timed out");
+                    throw new Exception($"Failed to create level: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to create level: {ex.Message}");
             }
         }
     }

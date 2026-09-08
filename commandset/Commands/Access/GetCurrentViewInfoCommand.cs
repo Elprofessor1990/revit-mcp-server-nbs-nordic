@@ -13,6 +13,7 @@ namespace RevitMCPCommandSet.Commands.Access
 {
     public class GetCurrentViewInfoCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private GetCurrentViewInfoEventHandler _handler => (GetCurrentViewInfoEventHandler)Handler;
 
         public override string CommandName => "get_current_view_info";
@@ -24,16 +25,19 @@ namespace RevitMCPCommandSet.Commands.Access
 
         public override object Execute(JObject parameters, string requestId)
         {
-            // Raise external event and wait for completion
-            if (RaiseAndWaitForCompletion(10000)) // 10 second timeout
+            lock (_executionLock)
             {
-                if (_handler.ErrorMessage != null)
-                    throw new Exception(_handler.ErrorMessage);
-                return _handler.ResultInfo;
-            }
-            else
-            {
-                throw new TimeoutException("Get info timed out");
+                // Raise external event and wait for completion
+                if (RaiseAndWaitForCompletion(10000)) // 10 second timeout
+                {
+                    if (_handler.ErrorMessage != null)
+                        throw new Exception(_handler.ErrorMessage);
+                    return _handler.ResultInfo;
+                }
+                else
+                {
+                    throw new TimeoutException("Get info timed out");
+                }
             }
         }
     }

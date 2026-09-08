@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands.Workflow
 {
     public class WorkflowDataRoundtripCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private WorkflowDataRoundtripEventHandler _handler => (WorkflowDataRoundtripEventHandler)Handler;
         public override string CommandName => "workflow_data_roundtrip";
 
@@ -16,21 +17,24 @@ namespace RevitMCPCommandSet.Commands.Workflow
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                _handler.SetParameters(
-                    categories: parameters?["categories"]?.ToObject<System.Collections.Generic.List<string>>() ?? new(),
-                    parameterNames: parameters?["parameterNames"]?.ToObject<System.Collections.Generic.List<string>>() ?? new(),
-                    includeTypeParameters: parameters?["includeTypeParameters"]?.Value<bool>() ?? false,
-                    filePath: parameters?["filePath"]?.Value<string>() ?? ""
-                );
-                if (RaiseAndWaitForCompletion(120000))
-                    return _handler.Result;
-                throw new TimeoutException("Workflow data roundtrip timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Workflow data roundtrip failed: {ex.Message}");
+                try
+                {
+                    _handler.SetParameters(
+                        categories: parameters?["categories"]?.ToObject<System.Collections.Generic.List<string>>() ?? new(),
+                        parameterNames: parameters?["parameterNames"]?.ToObject<System.Collections.Generic.List<string>>() ?? new(),
+                        includeTypeParameters: parameters?["includeTypeParameters"]?.Value<bool>() ?? false,
+                        filePath: parameters?["filePath"]?.Value<string>() ?? ""
+                    );
+                    if (RaiseAndWaitForCompletion(120000))
+                        return _handler.Result;
+                    throw new TimeoutException("Workflow data roundtrip timed out");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Workflow data roundtrip failed: {ex.Message}");
+                }
             }
         }
     }

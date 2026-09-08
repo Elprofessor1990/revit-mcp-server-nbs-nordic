@@ -10,6 +10,7 @@ namespace RevitMCPCommandSet.Commands.ViewManagement
 {
     public class CreateCalloutFromRoomsCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private CreateCalloutFromRoomsEventHandler _handler => (CreateCalloutFromRoomsEventHandler)Handler;
         public override string CommandName => "create_callout_from_rooms";
 
@@ -18,27 +19,30 @@ namespace RevitMCPCommandSet.Commands.ViewManagement
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                var roomIds = (parameters?["roomIds"] as JArray)?
-                    .Select(t => t.Value<long>()).ToList() ?? new List<long>();
+                try
+                {
+                    var roomIds = (parameters?["roomIds"] as JArray)?
+                        .Select(t => t.Value<long>()).ToList() ?? new List<long>();
 
-                _handler.SetParameters(
-                    roomIds: roomIds,
-                    levelName: parameters?["levelName"]?.ToString() ?? "",
-                    offset: parameters?["offset"]?.Value<double>() ?? 300,
-                    viewTemplateId: parameters?["viewTemplateId"]?.ToString() ?? "",
-                    scale: parameters?["scale"]?.Value<int>() ?? 50
-                );
+                    _handler.SetParameters(
+                        roomIds: roomIds,
+                        levelName: parameters?["levelName"]?.ToString() ?? "",
+                        offset: parameters?["offset"]?.Value<double>() ?? 300,
+                        viewTemplateId: parameters?["viewTemplateId"]?.ToString() ?? "",
+                        scale: parameters?["scale"]?.Value<int>() ?? 50
+                    );
 
-                if (RaiseAndWaitForCompletion(60000))
-                    return _handler.Result;
+                    if (RaiseAndWaitForCompletion(60000))
+                        return _handler.Result;
 
-                throw new TimeoutException("Create callout from rooms timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Create callout from rooms failed: {ex.Message}");
+                    throw new TimeoutException("Create callout from rooms timed out");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Create callout from rooms failed: {ex.Message}");
+                }
             }
         }
     }

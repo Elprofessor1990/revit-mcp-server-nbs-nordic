@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands.Selection
 {
     public class DeleteSelectionCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private DeleteSelectionEventHandler _handler => (DeleteSelectionEventHandler)Handler;
 
         public override string CommandName => "delete_selection";
@@ -17,20 +18,23 @@ namespace RevitMCPCommandSet.Commands.Selection
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                _handler.SelectionName = parameters?["name"]?.Value<string>() ?? "";
+                try
+                {
+                    _handler.SelectionName = parameters?["name"]?.Value<string>() ?? "";
 
-                _handler.SetParameters();
+                    _handler.SetParameters();
 
-                if (RaiseAndWaitForCompletion(15000))
-                    return _handler.Result;
+                    if (RaiseAndWaitForCompletion(15000))
+                        return _handler.Result;
 
-                throw new TimeoutException("Delete selection timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Delete selection failed: {ex.Message}");
+                    throw new TimeoutException("Delete selection timed out");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Delete selection failed: {ex.Message}");
+                }
             }
         }
     }

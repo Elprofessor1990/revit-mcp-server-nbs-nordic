@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands.Access
 {
     public class ExportSharedParameterFileCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private ExportSharedParameterFileEventHandler _handler => (ExportSharedParameterFileEventHandler)Handler;
         public override string CommandName => "export_shared_parameter_file";
 
@@ -16,20 +17,23 @@ namespace RevitMCPCommandSet.Commands.Access
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                _handler.SetParameters(
-                    filePath: parameters?["filePath"]?.ToString() ?? ""
-                );
+                try
+                {
+                    _handler.SetParameters(
+                        filePath: parameters?["filePath"]?.ToString() ?? ""
+                    );
 
-                if (RaiseAndWaitForCompletion(30000))
-                    return _handler.Result;
+                    if (RaiseAndWaitForCompletion(30000))
+                        return _handler.Result;
 
-                throw new TimeoutException("Export shared parameter file timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Export shared parameter file failed: {ex.Message}");
+                    throw new TimeoutException("Export shared parameter file timed out");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Export shared parameter file failed: {ex.Message}");
+                }
             }
         }
     }

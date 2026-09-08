@@ -7,6 +7,7 @@ namespace RevitMCPCommandSet.Commands.SheetManagement
 {
     public class BatchCreateSheetsCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private BatchCreateSheetsEventHandler _handler => (BatchCreateSheetsEventHandler)Handler;
 
         public override string CommandName => "batch_create_sheets";
@@ -18,32 +19,35 @@ namespace RevitMCPCommandSet.Commands.SheetManagement
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                var sheetsArray = parameters?["sheets"] as JArray;
-                if (sheetsArray == null || sheetsArray.Count == 0)
-                    throw new ArgumentException("'sheets' array is required");
-
-                var sheets = sheetsArray.Select(s => new SheetDefinition
+                try
                 {
-                    Number = s["number"]?.ToString() ?? "",
-                    Name = s["name"]?.ToString() ?? "",
-                    TitleBlockName = s["titleBlockName"]?.ToString(),
-                    ViewIds = (s["viewIds"] as JArray)?.Select(v => v.Value<long>()).ToList()
-                }).ToList();
+                    var sheetsArray = parameters?["sheets"] as JArray;
+                    if (sheetsArray == null || sheetsArray.Count == 0)
+                        throw new ArgumentException("'sheets' array is required");
 
-                string defaultTitleBlockName = parameters?["defaultTitleBlockName"]?.ToString();
+                    var sheets = sheetsArray.Select(s => new SheetDefinition
+                    {
+                        Number = s["number"]?.ToString() ?? "",
+                        Name = s["name"]?.ToString() ?? "",
+                        TitleBlockName = s["titleBlockName"]?.ToString(),
+                        ViewIds = (s["viewIds"] as JArray)?.Select(v => v.Value<long>()).ToList()
+                    }).ToList();
 
-                _handler.SetParameters(sheets, defaultTitleBlockName);
+                    string defaultTitleBlockName = parameters?["defaultTitleBlockName"]?.ToString();
 
-                if (RaiseAndWaitForCompletion(30000))
-                    return _handler.Result;
+                    _handler.SetParameters(sheets, defaultTitleBlockName);
 
-                throw new TimeoutException("Batch create sheets timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Batch create sheets failed: {ex.Message}");
+                    if (RaiseAndWaitForCompletion(30000))
+                        return _handler.Result;
+
+                    throw new TimeoutException("Batch create sheets timed out");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Batch create sheets failed: {ex.Message}");
+                }
             }
         }
     }

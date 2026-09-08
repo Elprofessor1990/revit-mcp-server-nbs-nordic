@@ -7,6 +7,7 @@ namespace RevitMCPCommandSet.Commands
 {
     public class ColorSplashCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private ColorSplashEventHandler _handler => (ColorSplashEventHandler)Handler;
 
         /// <summary>
@@ -25,57 +26,60 @@ namespace RevitMCPCommandSet.Commands
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                // Parse parameters
-                string categoryName = null;
-                if (parameters["categoryName"] != null)
+                try
                 {
-                    categoryName = parameters["categoryName"].ToString();
-                }
-                else
-                {
-                    throw new ArgumentException("Category name is required");
-                }
+                    // Parse parameters
+                    string categoryName = null;
+                    if (parameters["categoryName"] != null)
+                    {
+                        categoryName = parameters["categoryName"].ToString();
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Category name is required");
+                    }
 
-                string parameterName = null;
-                if (parameters["parameterName"] != null)
-                {
-                    parameterName = parameters["parameterName"].ToString();
-                }
-                else
-                {
-                    throw new ArgumentException("Parameter name is required");
-                }
+                    string parameterName = null;
+                    if (parameters["parameterName"] != null)
+                    {
+                        parameterName = parameters["parameterName"].ToString();
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Parameter name is required");
+                    }
 
-                bool useGradient = false;
-                if (parameters["useGradient"] != null)
-                {
-                    useGradient = parameters["useGradient"].ToObject<bool>();
-                }
+                    bool useGradient = false;
+                    if (parameters["useGradient"] != null)
+                    {
+                        useGradient = parameters["useGradient"].ToObject<bool>();
+                    }
 
-                JArray customColors = null;
-                if (parameters["customColors"] != null)
-                {
-                    customColors = parameters["customColors"] as JArray;
-                }
+                    JArray customColors = null;
+                    if (parameters["customColors"] != null)
+                    {
+                        customColors = parameters["customColors"] as JArray;
+                    }
 
-                // Set parameters for the event handler
-                _handler.SetParameters(categoryName, parameterName, useGradient, customColors);
+                    // Set parameters for the event handler
+                    _handler.SetParameters(categoryName, parameterName, useGradient, customColors);
 
-                // Trigger external event and wait for completion
-                if (RaiseAndWaitForCompletion(20000)) // 20 second timeout
-                {
-                    return _handler.ColoringResults;
+                    // Trigger external event and wait for completion
+                    if (RaiseAndWaitForCompletion(20000)) // 20 second timeout
+                    {
+                        return _handler.ColoringResults;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Color splash operation timed out");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new TimeoutException("Color splash operation timed out");
+                    throw new Exception($"Color splash failed: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Color splash failed: {ex.Message}");
             }
         }
     }

@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands.Workflow
 {
     public class WorkflowRoomDocumentationCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private WorkflowRoomDocumentationEventHandler _handler => (WorkflowRoomDocumentationEventHandler)Handler;
         public override string CommandName => "workflow_room_documentation";
 
@@ -16,20 +17,23 @@ namespace RevitMCPCommandSet.Commands.Workflow
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                _handler.SetParameters(
-                    levelName: parameters?["levelName"]?.Value<string>() ?? "",
-                    createSections: parameters?["createSections"]?.Value<bool>() ?? true,
-                    offset: parameters?["offset"]?.Value<double>() ?? 300
-                );
-                if (RaiseAndWaitForCompletion(120000))
-                    return _handler.Result;
-                throw new TimeoutException("Workflow room documentation timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Workflow room documentation failed: {ex.Message}");
+                try
+                {
+                    _handler.SetParameters(
+                        levelName: parameters?["levelName"]?.Value<string>() ?? "",
+                        createSections: parameters?["createSections"]?.Value<bool>() ?? true,
+                        offset: parameters?["offset"]?.Value<double>() ?? 300
+                    );
+                    if (RaiseAndWaitForCompletion(120000))
+                        return _handler.Result;
+                    throw new TimeoutException("Workflow room documentation timed out");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Workflow room documentation failed: {ex.Message}");
+                }
             }
         }
     }

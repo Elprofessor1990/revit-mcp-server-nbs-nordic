@@ -7,6 +7,7 @@ namespace RevitMCPCommandSet.Commands.DataExtraction
 {
     public class CheckModelHealthCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private CheckModelHealthEventHandler _handler => (CheckModelHealthEventHandler)Handler;
 
         public override string CommandName => "check_model_health";
@@ -18,19 +19,22 @@ namespace RevitMCPCommandSet.Commands.DataExtraction
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                _handler.SetParameters();
-
-                if (RaiseAndWaitForCompletion(30000))
+                try
                 {
-                    return _handler.Result;
+                    _handler.SetParameters();
+
+                    if (RaiseAndWaitForCompletion(30000))
+                    {
+                        return _handler.Result;
+                    }
+                    throw new TimeoutException("Check model health timed out");
                 }
-                throw new TimeoutException("Check model health timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Check model health failed: {ex.Message}");
+                catch (Exception ex)
+                {
+                    throw new Exception($"Check model health failed: {ex.Message}");
+                }
             }
         }
     }

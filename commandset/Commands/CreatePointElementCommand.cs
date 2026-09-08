@@ -8,6 +8,7 @@ namespace RevitMCPCommandSet.Commands
 {
     public class CreatePointElementCommand :    ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private CreatePointElementEventHandler _handler => (CreatePointElementEventHandler)Handler;
 
         /// <summary>
@@ -26,30 +27,33 @@ namespace RevitMCPCommandSet.Commands
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                List<PointElement> data = new List<PointElement>();
-                // Parse parameters
-                data = parameters?["data"]?.ToObject<List<PointElement>>();
-                if (data == null)
-                    throw new ArgumentNullException(nameof(data), "AI input data is null");
-
-                // Set point-based element parameters
-                _handler.SetParameters(data);
-
-                // Raise external event and wait for completion
-                if (RaiseAndWaitForCompletion(10000))
+                try
                 {
-                    return _handler.Result;
+                    List<PointElement> data = new List<PointElement>();
+                    // Parse parameters
+                    data = parameters?["data"]?.ToObject<List<PointElement>>();
+                    if (data == null)
+                        throw new ArgumentNullException(nameof(data), "AI input data is null");
+
+                    // Set point-based element parameters
+                    _handler.SetParameters(data);
+
+                    // Raise external event and wait for completion
+                    if (RaiseAndWaitForCompletion(10000))
+                    {
+                        return _handler.Result;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Point-based element creation timed out");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new TimeoutException("Point-based element creation timed out");
+                    throw new Exception($"Failed to create point-based element: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to create point-based element: {ex.Message}");
             }
         }
     }

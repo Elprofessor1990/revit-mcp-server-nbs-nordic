@@ -10,6 +10,7 @@ namespace RevitMCPCommandSet.Commands.Workflow
 {
     public class WorkflowSheetSetCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private WorkflowSheetSetEventHandler _handler => (WorkflowSheetSetEventHandler)Handler;
         public override string CommandName => "workflow_sheet_set";
 
@@ -18,34 +19,37 @@ namespace RevitMCPCommandSet.Commands.Workflow
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                var sheetsArray = parameters?["sheets"] as JArray;
-                var sheetDefs = new List<WorkflowSheetSetEventHandler.SheetDefinition>();
-
-                if (sheetsArray != null)
+                try
                 {
-                    foreach (var item in sheetsArray)
-                    {
-                        sheetDefs.Add(new WorkflowSheetSetEventHandler.SheetDefinition
-                        {
-                            Number = item["number"]?.Value<string>() ?? "",
-                            Name = item["name"]?.Value<string>() ?? ""
-                        });
-                    }
-                }
+                    var sheetsArray = parameters?["sheets"] as JArray;
+                    var sheetDefs = new List<WorkflowSheetSetEventHandler.SheetDefinition>();
 
-                _handler.SetParameters(
-                    sheets: sheetDefs,
-                    titleBlockName: parameters?["titleBlockName"]?.Value<string>() ?? ""
-                );
-                if (RaiseAndWaitForCompletion(60000))
-                    return _handler.Result;
-                throw new TimeoutException("Workflow sheet set timed out");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Workflow sheet set failed: {ex.Message}");
+                    if (sheetsArray != null)
+                    {
+                        foreach (var item in sheetsArray)
+                        {
+                            sheetDefs.Add(new WorkflowSheetSetEventHandler.SheetDefinition
+                            {
+                                Number = item["number"]?.Value<string>() ?? "",
+                                Name = item["name"]?.Value<string>() ?? ""
+                            });
+                        }
+                    }
+
+                    _handler.SetParameters(
+                        sheets: sheetDefs,
+                        titleBlockName: parameters?["titleBlockName"]?.Value<string>() ?? ""
+                    );
+                    if (RaiseAndWaitForCompletion(60000))
+                        return _handler.Result;
+                    throw new TimeoutException("Workflow sheet set timed out");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Workflow sheet set failed: {ex.Message}");
+                }
             }
         }
     }

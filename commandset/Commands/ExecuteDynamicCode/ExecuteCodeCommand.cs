@@ -9,6 +9,7 @@ namespace RevitMCPCommandSet.Commands.ExecuteDynamicCode
     /// </summary>
     public class ExecuteCodeCommand : ExternalEventCommandBase
     {
+        private static readonly object _executionLock = new object();
         private ExecuteCodeEventHandler _handler => (ExecuteCodeEventHandler)Handler;
 
         public override string CommandName => "send_code_to_revit";
@@ -20,36 +21,39 @@ namespace RevitMCPCommandSet.Commands.ExecuteDynamicCode
 
         public override object Execute(JObject parameters, string requestId)
         {
-            try
+            lock (_executionLock)
             {
-                // Parameter validation
-                if (!parameters.ContainsKey("code"))
+                try
                 {
-                    throw new ArgumentException("Missing required parameter: 'code'");
+                    // Parameter validation
+                    if (!parameters.ContainsKey("code"))
+                    {
+                        throw new ArgumentException("Missing required parameter: 'code'");
+                    }
+
+                    // Parse code, parameters, and transaction mode
+                    string code = parameters["code"].Value<string>();
+                    JArray parametersArray = parameters["parameters"] as JArray;
+                    object[] executionParameters = parametersArray?.ToObject<object[]>() ?? Array.Empty<object>();
+                    string transactionMode = parameters["transactionMode"]?.Value<string>() ?? "auto";
+
+                    // Set execution parameters
+                    _handler.SetExecutionParameters(code, executionParameters, transactionMode);
+
+                    // Raise external event and wait for completion
+                    if (RaiseAndWaitForCompletion(300000)) // 5 minute timeout for complex queries
+                    {
+                        return _handler.ResultInfo;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Code execution timed out");
+                    }
                 }
-
-                // Parse code, parameters, and transaction mode
-                string code = parameters["code"].Value<string>();
-                JArray parametersArray = parameters["parameters"] as JArray;
-                object[] executionParameters = parametersArray?.ToObject<object[]>() ?? Array.Empty<object>();
-                string transactionMode = parameters["transactionMode"]?.Value<string>() ?? "auto";
-
-                // Set execution parameters
-                _handler.SetExecutionParameters(code, executionParameters, transactionMode);
-
-                // Raise external event and wait for completion
-                if (RaiseAndWaitForCompletion(300000)) // 5 minute timeout for complex queries
+                catch (Exception ex)
                 {
-                    return _handler.ResultInfo;
+                    throw new Exception($"Failed to execute code: {ex.Message}", ex);
                 }
-                else
-                {
-                    throw new TimeoutException("Code execution timed out");
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to execute code: {ex.Message}", ex);
             }
         }
     }
