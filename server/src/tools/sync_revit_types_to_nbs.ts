@@ -100,10 +100,12 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
         // avoids paying a separate TCP connect/mutex-wait cycle per command.
         const { instances, familyTypes, existingParams } = await withRevitConnection(async (revitClient) => {
           const filterResult = (await revitClient.sendCommand("ai_element_filter", {
-            filterCategory: args.category,
-            includeInstances: true,
-            includeTypes: false,
-            maxElements: Math.min(args.maxTypes * 50, 1000),
+            data: {
+              filterCategory: args.category,
+              includeInstances: true,
+              includeTypes: false,
+              maxElements: Math.min(args.maxTypes * 50, 1000),
+            },
           })) as RevitAIResult<RevitElementInstanceInfo[]>;
 
           const types = (await revitClient.sendCommand("get_available_family_types", {
