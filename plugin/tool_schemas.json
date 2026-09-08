@@ -6399,7 +6399,7 @@
   },
   {
     "name": "sync_revit_types_to_nbs",
-    "description": "Match Revit types in a category against NBS Nordic components, then (unless dryRun) write high-confidence matches back to Revit type parameters (NBS Component Type Id / NBS Classificationcode / NBS Component Name). Groups by Revit TYPE, not instance — 400 walls of 4 types produces 4 matches, not 400. Only id/explicit/unique-classificationcode matches (confidence >= 0.9) are ever auto-written; name and fuzzy family+type matches are returned as proposals only. Does NOT create missing NBS components — review proposedCreates and call nbs_create_component explicitly per type you approve. dryRun defaults to true.",
+    "description": "Match Revit types in a category against NBS Nordic components, then (unless dryRun) write high-confidence matches back to Revit — to BOTH the type (NBS Component Type Id / NBS Classificationcode / NBS Component Name / NBS Date) AND every instance of that type (NBS Component Instance Id / NBS Instance Classificationcode / NBS Instance Component Name / NBS Instance Date), so the link and when it happened are visible on an instance immediately, not just the type. Matching itself groups by Revit TYPE, not instance — 400 walls of 4 types produces 4 matches, not 400. Only id/explicit/unique-classificationcode matches (confidence >= 0.9) are ever auto-written; name and fuzzy family+type matches are returned as proposals only. Does NOT create missing NBS components — review proposedCreates and call nbs_create_component explicitly per type you approve. dryRun defaults to true.",
     "input_schema": {
       "type": "object",
       "properties": {

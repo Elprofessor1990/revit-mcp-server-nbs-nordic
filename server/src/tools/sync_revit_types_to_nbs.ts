@@ -53,9 +53,33 @@ interface RevitElementParametersResult {
   parameters: RevitParamData[];
 }
 
+interface RevitSetParameterResult {
+  elementId: number;
+  parameterName: string;
+  success: boolean;
+  message: string;
+}
+
+// Type-level (written once per matched type).
 const NBS_TYPE_ID_PARAM = "NBS Component Type Id";
 const NBS_CLASSIFICATIONCODE_PARAM = "NBS Classificationcode";
 const NBS_COMPONENT_NAME_PARAM = "NBS Component Name";
+const NBS_DATE_PARAM = "NBS Date";
+
+// Instance-level (written to every instance of a matched type, so the link
+// and its timestamp are visible on the instance immediately — not just the
+// type). Names taken from NBS Nordic's own shared parameter file, verified
+// live on a real element earlier in this project.
+const NBS_INSTANCE_ID_PARAM = "NBS Component Instance Id";
+const NBS_INSTANCE_CLASSIFICATIONCODE_PARAM = "NBS Instance Classificationcode";
+const NBS_INSTANCE_COMPONENT_NAME_PARAM = "NBS Instance Component Name";
+const NBS_INSTANCE_DATE_PARAM = "NBS Instance Date";
+
+function nbsTimestamp(): string {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
 
 // Only these match methods/confidence levels are ever written back to Revit
 // automatically. Name/fuzzy matches stay proposals — never auto-applied.
@@ -73,8 +97,11 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
   server.tool(
     "sync_revit_types_to_nbs",
     "Match Revit types in a category against NBS Nordic components, then (unless dryRun) write high-confidence " +
-      "matches back to Revit type parameters (NBS Component Type Id / NBS Classificationcode / NBS Component Name). " +
-      "Groups by Revit TYPE, not instance — 400 walls of 4 types produces 4 matches, not 400. " +
+      "matches back to Revit — to BOTH the type (NBS Component Type Id / NBS Classificationcode / NBS Component " +
+      "Name / NBS Date) AND every instance of that type (NBS Component Instance Id / NBS Instance " +
+      "Classificationcode / NBS Instance Component Name / NBS Instance Date), so the link and when it happened " +
+      "are visible on an instance immediately, not just the type. " +
+      "Matching itself groups by Revit TYPE, not instance — 400 walls of 4 types produces 4 matches, not 400. " +
       "Only id/explicit/unique-classificationcode matches (confidence >= 0.9) are ever auto-written; " +
       "name and fuzzy family+type matches are returned as proposals only. " +
       "Does NOT create missing NBS components — review proposedCreates and call nbs_create_component explicitly " +
@@ -134,10 +161,15 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
           });
         }
 
-        // 2. Instance count per type.
+        // 2. Instance count + instance ElementIds per type — the latter is
+        // needed to write instance-level parameters, not just type-level.
         const countByTypeId = new Map<number, number>();
+        const instanceIdsByTypeId = new Map<number, number[]>();
         for (const inst of instances) {
           countByTypeId.set(inst.TypeId, (countByTypeId.get(inst.TypeId) ?? 0) + 1);
+          const list = instanceIdsByTypeId.get(inst.TypeId);
+          if (list) list.push(inst.Id);
+          else instanceIdsByTypeId.set(inst.TypeId, [inst.Id]);
         }
 
         function findParam(elementId: number, name: string): string | undefined {
@@ -214,19 +246,37 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
           return rawToolResponse("sync_revit_types_to_nbs", summary);
         }
 
-        // 6. Write auto-writable matches back to Revit. Never creates NBS
-        // components and never writes ambiguous/fuzzy/name-only matches.
+        // 6. Write auto-writable matches back to Revit — to the TYPE and to
+        // every INSTANCE of that type, so the link and its timestamp are
+        // visible on an instance immediately, not just on the type. Never
+        // creates NBS components and never writes ambiguous/fuzzy/name-only
+        // matches.
         const writeRequests: { elementId: number; parameterName: string; value: string }[] = [];
         const now = Date.now();
+        const timestamp = nbsTimestamp();
+        let instancesWritten = 0;
 
         for (const r of autoWritable) {
           const component = r.match.component!;
           writeRequests.push(
             { elementId: r.typeId, parameterName: NBS_TYPE_ID_PARAM, value: String(component.id) },
-            { elementId: r.typeId, parameterName: NBS_COMPONENT_NAME_PARAM, value: component.name }
+            { elementId: r.typeId, parameterName: NBS_COMPONENT_NAME_PARAM, value: component.name },
+            { elementId: r.typeId, parameterName: NBS_DATE_PARAM, value: timestamp }
           );
           if (component.classificationcode) {
             writeRequests.push({ elementId: r.typeId, parameterName: NBS_CLASSIFICATIONCODE_PARAM, value: component.classificationcode });
+          }
+
+          for (const instanceId of instanceIdsByTypeId.get(r.typeId) ?? []) {
+            instancesWritten++;
+            writeRequests.push(
+              { elementId: instanceId, parameterName: NBS_INSTANCE_ID_PARAM, value: String(component.id) },
+              { elementId: instanceId, parameterName: NBS_INSTANCE_COMPONENT_NAME_PARAM, value: component.name },
+              { elementId: instanceId, parameterName: NBS_INSTANCE_DATE_PARAM, value: timestamp }
+            );
+            if (component.classificationcode) {
+              writeRequests.push({ elementId: instanceId, parameterName: NBS_INSTANCE_CLASSIFICATIONCODE_PARAM, value: component.classificationcode });
+            }
           }
 
           dbRun(
@@ -246,17 +296,44 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
           );
         }
 
-        let writeResult: unknown = null;
+        // Check what actually succeeded — set_element_parameters reports
+        // per-request success/failure (e.g. "Parameter not found" when the
+        // NBS shared parameters aren't bound to this document yet, which
+        // happens on any document NBS Nordic's own plugin has never synced).
+        // Previously this was ignored and typesWritten/instancesWritten were
+        // reported as if every write succeeded regardless.
+        let writeFailures: { elementId: number; parameterName: string; message: string }[] = [];
+        let confirmedTypesWritten = 0;
+        let confirmedInstancesWritten = 0;
         if (writeRequests.length > 0) {
-          writeResult = await withRevitConnection(async (revitClient) => {
+          const result = (await withRevitConnection(async (revitClient) => {
             return revitClient.sendCommand("set_element_parameters", { requests: writeRequests });
-          }, 60000);
+          }, 60000)) as RevitAIResult<RevitSetParameterResult[]>;
+
+          const results = result.Response ?? [];
+          writeFailures = results
+            .filter((r) => !r.success)
+            .map((r) => ({ elementId: r.elementId, parameterName: r.parameterName, message: r.message }));
+
+          const succeededTypeIds = new Set(
+            results.filter((r) => r.success && r.parameterName === NBS_TYPE_ID_PARAM).map((r) => r.elementId)
+          );
+          const succeededInstanceIds = new Set(
+            results.filter((r) => r.success && r.parameterName === NBS_INSTANCE_ID_PARAM).map((r) => r.elementId)
+          );
+          confirmedTypesWritten = succeededTypeIds.size;
+          confirmedInstancesWritten = succeededInstanceIds.size;
         }
 
         return rawToolResponse("sync_revit_types_to_nbs", {
           ...summary,
-          typesWritten: autoWritable.length,
-          writeResult,
+          typesWritten: confirmedTypesWritten,
+          instancesWritten: confirmedInstancesWritten,
+          writeFailures: writeFailures.length > 0 ? writeFailures : undefined,
+          writeFailureNote:
+            writeFailures.length > 0
+              ? "Some parameter writes failed — most commonly because the NBS shared parameters aren't bound to this document yet. That happens on any document NBS Nordic's own plugin has never linked/synced at least once; link the document to an NBS project in their plugin first."
+              : undefined,
         });
       } catch (error) {
         return rawToolError("sync_revit_types_to_nbs", `Sync failed: ${errorMessage(error)}`);
