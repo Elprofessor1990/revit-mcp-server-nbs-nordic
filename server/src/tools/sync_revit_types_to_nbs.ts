@@ -95,8 +95,10 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
           return rawToolError("sync_revit_types_to_nbs", "No projectId provided and NBS_PROJECT_ID is not set.");
         }
 
-        // 1. Gather Revit instances + types (one connection, two commands).
-        const { instances, familyTypes } = await withRevitConnection(async (revitClient) => {
+        // 1. Gather Revit instances, types, and each type's existing NBS link
+        // parameters in a single connection (three sequential commands) —
+        // avoids paying a separate TCP connect/mutex-wait cycle per command.
+        const { instances, familyTypes, existingParams } = await withRevitConnection(async (revitClient) => {
           const filterResult = (await revitClient.sendCommand("ai_element_filter", {
             filterCategory: args.category,
             includeInstances: true,
@@ -109,7 +111,17 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
             limit: args.maxTypes,
           })) as RevitFamilyTypeInfo[];
 
-          return { instances: filterResult.Response ?? [], familyTypes: types ?? [] };
+          const uniqueTypeIds = [...new Set((types ?? []).map((t) => t.FamilyTypeId))];
+          let params: RevitElementParametersResult[] = [];
+          if (uniqueTypeIds.length > 0) {
+            const result = (await revitClient.sendCommand("get_element_parameters", {
+              elementIds: uniqueTypeIds,
+              includeTypeParameters: true,
+            })) as RevitAIResult<RevitElementParametersResult[]>;
+            params = result.Response ?? [];
+          }
+
+          return { instances: filterResult.Response ?? [], familyTypes: types ?? [], existingParams: params };
         }, 120000);
 
         if (familyTypes.length === 0) {
@@ -125,16 +137,6 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
         for (const inst of instances) {
           countByTypeId.set(inst.TypeId, (countByTypeId.get(inst.TypeId) ?? 0) + 1);
         }
-
-        // 3. Existing NBS link parameters on each type (batched single call).
-        const uniqueTypeIds = [...new Set(familyTypes.map((t) => t.FamilyTypeId))];
-        const existingParams = await withRevitConnection(async (revitClient) => {
-          const result = (await revitClient.sendCommand("get_element_parameters", {
-            elementIds: uniqueTypeIds,
-            includeTypeParameters: true,
-          })) as RevitAIResult<RevitElementParametersResult[]>;
-          return result.Response ?? [];
-        }, 60000);
 
         function findParam(elementId: number, name: string): string | undefined {
           const entry = existingParams.find((e) => e.elementId === elementId);

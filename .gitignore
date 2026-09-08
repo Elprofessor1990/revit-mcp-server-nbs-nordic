@@ -392,7 +392,15 @@ FodyWeavers.xsd
 # =============================================================================
 # General
 # =============================================================================
-.claude/
+.claude/*
+# ...except graft's own wiring, which is meant to be shared with teammates
+# (they still run `graft build` themselves for their own local graph).
+!.claude/settings.json
+!.claude/helpers/
+!.claude/skills/
 .DS_Store
 .mcp.json
 docs/internal/
+
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
