@@ -8,7 +8,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class ImportTableEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string FilePath { get; private set; }
         public string Delimiter { get; private set; }

@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class CadLinkCleanupEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string Action { get; set; } = "list";
         public bool DeleteImports { get; set; } = false;

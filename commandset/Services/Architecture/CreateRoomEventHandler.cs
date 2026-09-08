@@ -49,7 +49,7 @@ namespace RevitMCPCommandSet.Services.Architecture
         /// <summary>
         /// Event wait object for synchronization
         /// </summary>
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         /// <summary>
         /// Room creation data (input)

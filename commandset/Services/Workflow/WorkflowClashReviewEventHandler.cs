@@ -10,7 +10,7 @@ namespace RevitMCPCommandSet.Services.Workflow
 {
     public class WorkflowClashReviewEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string CategoryA { get; set; } = "";
         public string CategoryB { get; set; } = "";

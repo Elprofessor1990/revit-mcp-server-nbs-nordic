@@ -12,7 +12,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class RenameFamiliesEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string Operation { get; set; } = "prefix";
         public string Prefix { get; set; } = "";

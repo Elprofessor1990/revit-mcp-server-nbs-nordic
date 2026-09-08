@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class RenameWorksetEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string CurrentName { get; set; }
         public string NewName { get; set; }

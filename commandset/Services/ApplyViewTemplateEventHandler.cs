@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class ApplyViewTemplateEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public List<long> ViewIds { get; set; } = new List<long>();
         public long TemplateId { get; set; } = 0;

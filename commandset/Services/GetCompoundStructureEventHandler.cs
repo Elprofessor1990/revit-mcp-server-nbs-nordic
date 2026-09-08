@@ -8,7 +8,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class GetCompoundStructureEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public long? TypeId { get; set; }
         public string TypeName { get; set; }

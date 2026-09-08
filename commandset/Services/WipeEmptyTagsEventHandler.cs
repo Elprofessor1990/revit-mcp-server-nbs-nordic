@@ -14,7 +14,7 @@ namespace RevitMCPCommandSet.Services
         public object Result { get; private set; }
         public string ErrorMessage { get; private set; }
         public bool TaskCompleted { get; private set; }
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public bool WaitForCompletion(int timeoutMilliseconds = 10000)
         {

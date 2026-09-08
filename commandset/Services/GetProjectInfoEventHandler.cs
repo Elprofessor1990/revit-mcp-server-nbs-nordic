@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class GetProjectInfoEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public bool IncludePhases { get; set; } = true;
         public bool IncludeWorksets { get; set; } = true;

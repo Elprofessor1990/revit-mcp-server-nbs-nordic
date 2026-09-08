@@ -10,7 +10,7 @@ namespace RevitMCPCommandSet.Services.Workflow
 {
     public class WorkflowSheetSetEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public List<SheetDefinition> Sheets { get; set; } = new();
         public string TitleBlockName { get; set; } = "";

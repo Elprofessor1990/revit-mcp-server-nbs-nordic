@@ -11,7 +11,7 @@ namespace RevitMCPCommandSet.Services.Workflow
 {
     public class WorkflowModelAuditEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public bool IncludeWarnings { get; set; } = true;
         public bool IncludeFamilies { get; set; } = true;

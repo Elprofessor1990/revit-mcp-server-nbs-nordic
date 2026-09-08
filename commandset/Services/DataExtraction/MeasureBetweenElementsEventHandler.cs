@@ -15,7 +15,7 @@ namespace RevitMCPCommandSet.Services.DataExtraction
 
         public AIResult<object> Result { get; private set; }
         public bool TaskCompleted { get; private set; }
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public void SetParameters(long elementId1, long elementId2, double[] point1, double[] point2, string measureType)
         {

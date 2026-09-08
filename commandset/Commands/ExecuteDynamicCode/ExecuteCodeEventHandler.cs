@@ -26,7 +26,7 @@ namespace RevitMCPCommandSet.Commands.ExecuteDynamicCode
 
         // State synchronization
         public bool TaskCompleted { get; private set; }
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         // Set code and parameters for execution
         public void SetExecutionParameters(string code, object[] parameters = null, string transactionMode = TransactionModeAuto)

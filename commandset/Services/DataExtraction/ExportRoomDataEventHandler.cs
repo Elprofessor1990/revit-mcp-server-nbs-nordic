@@ -14,7 +14,7 @@ namespace RevitMCPCommandSet.Services.DataExtraction
 
         public object ResultInfo { get; private set; }
         public bool TaskCompleted { get; private set; }
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         // All available field names for validation
         private static readonly HashSet<string> AllFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)

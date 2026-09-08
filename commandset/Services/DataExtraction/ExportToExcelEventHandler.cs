@@ -11,7 +11,7 @@ namespace RevitMCPCommandSet.Services.DataExtraction
 {
     public class ExportToExcelEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         // Input parameters
         public List<string> Categories { get; set; } = new();

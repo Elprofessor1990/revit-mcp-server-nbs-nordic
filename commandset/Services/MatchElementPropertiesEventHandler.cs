@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class MatchElementPropertiesEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public long SourceElementId { get; set; } = 0;
         public List<long> TargetElementIds { get; set; } = new List<long>();

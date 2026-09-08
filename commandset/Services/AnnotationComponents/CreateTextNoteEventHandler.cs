@@ -8,7 +8,7 @@ namespace RevitMCPCommandSet.Services.AnnotationComponents
 {
     public class CreateTextNoteEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public List<TextNoteData> TextNotes { get; set; }
         public AIResult<List<object>> Result { get; private set; }

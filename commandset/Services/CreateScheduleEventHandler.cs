@@ -9,7 +9,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class CreateScheduleEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public ScheduleCreationInfo ScheduleInfo { get; set; }
         public AIResult<object> Result { get; private set; }

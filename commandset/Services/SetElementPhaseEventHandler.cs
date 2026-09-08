@@ -8,7 +8,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class SetElementPhaseEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public List<SetElementPhaseRequest> Requests { get; set; }
         public AIResult<List<SetElementPhaseResult>> Result { get; private set; }

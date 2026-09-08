@@ -9,7 +9,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class SetElementParametersEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public List<SetParameterRequest> Requests { get; set; }
         public AIResult<List<SetParameterResult>> Result { get; private set; }

@@ -39,7 +39,7 @@ public class CreateDimensionEventHandler : IExternalEventHandler, IWaitableExter
     private UIApplication _uiApp;
     private UIDocument UiDoc => _uiApp.ActiveUIDocument;
     private Document Doc => UiDoc.Document;
-    private readonly ManualResetEvent _resetEvent = new(false);
+    private readonly AutoResetEvent _resetEvent = new(false);
     private const double MILLIMETERS_TO_FEET = 1.0 / 304.8;
 
     #endregion

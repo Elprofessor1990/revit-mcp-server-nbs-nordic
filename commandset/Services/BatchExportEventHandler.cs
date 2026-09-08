@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class BatchExportEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string Format { get; set; } = "PDF";
         public List<long> SheetIds { get; set; } = new List<long>();

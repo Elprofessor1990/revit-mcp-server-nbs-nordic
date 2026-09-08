@@ -8,7 +8,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class DeleteWorksetEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string WorksetName { get; set; }
         public string MoveToWorksetName { get; set; }

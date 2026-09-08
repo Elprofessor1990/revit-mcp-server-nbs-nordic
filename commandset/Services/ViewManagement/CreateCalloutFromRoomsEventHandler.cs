@@ -11,7 +11,7 @@ namespace RevitMCPCommandSet.Services.ViewManagement
 {
     public class CreateCalloutFromRoomsEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public List<long> RoomIds { get; set; } = new();
         public string LevelName { get; set; } = "";

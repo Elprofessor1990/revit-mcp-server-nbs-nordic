@@ -11,7 +11,7 @@ namespace RevitMCPCommandSet.Services.ViewManagement
 {
     public class ManageUnplacedViewsEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string Action { get; private set; } = "list";
         public List<string> ViewTypes { get; private set; } = new List<string>();

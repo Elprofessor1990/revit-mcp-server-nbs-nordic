@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class AddSharedParameterEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string ParameterName { get; set; }
         public string GroupName { get; set; }

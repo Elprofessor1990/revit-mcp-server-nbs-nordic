@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class ExportFamiliesEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string OutputDirectory { get; set; } = "";
         public List<string> Categories { get; set; } = new List<string>();

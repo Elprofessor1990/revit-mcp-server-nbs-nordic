@@ -10,7 +10,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class GetLinkedElementsEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string LinkName { get; set; } = "";
         public List<string> Categories { get; set; } = new();

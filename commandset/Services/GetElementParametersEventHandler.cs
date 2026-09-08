@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class GetElementParametersEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public long[] ElementIds { get; set; }
         public bool IncludeTypeParameters { get; set; } = true;

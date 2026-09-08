@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class ModifyElementEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public ModifyElementSetting Settings { get; set; }
         public AIResult<object> Result { get; private set; }

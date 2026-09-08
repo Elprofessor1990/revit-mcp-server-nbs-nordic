@@ -11,7 +11,7 @@ namespace RevitMCPCommandSet.Services.Workflow
 {
     public class WorkflowRoomDocumentationEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string LevelName { get; set; } = "";
         public bool CreateSections { get; set; } = true;

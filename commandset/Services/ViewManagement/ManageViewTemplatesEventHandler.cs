@@ -10,7 +10,7 @@ namespace RevitMCPCommandSet.Services.ViewManagement
 {
     public class ManageViewTemplatesEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string Action { get; set; } = "list";
         public List<long> TemplateIds { get; set; } = new();

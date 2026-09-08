@@ -22,7 +22,7 @@ namespace RevitMCPCommandSet.Services.DataExtraction
 
         public AIResult<object> Result { get; private set; }
         public bool TaskCompleted { get; private set; }
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public void SetParameters(string action, string parameterName, string dataType, string groupUnder,
             bool isInstance, List<string> categories, bool isShared)

@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class CreateArrayEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public List<long> ElementIds { get; set; } = new List<long>();
         public string ArrayType { get; set; } = "linear";

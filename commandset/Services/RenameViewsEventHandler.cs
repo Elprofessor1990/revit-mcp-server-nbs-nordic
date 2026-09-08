@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class RenameViewsEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string Operation { get; set; } = "find_replace";
         public string Prefix { get; set; } = "";

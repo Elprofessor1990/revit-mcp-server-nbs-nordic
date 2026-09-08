@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class GetMaterialsEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string MaterialClass { get; set; }
         public string NameFilter { get; set; }

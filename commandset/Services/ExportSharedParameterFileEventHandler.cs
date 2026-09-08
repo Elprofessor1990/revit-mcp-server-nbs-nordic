@@ -10,7 +10,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class ExportSharedParameterFileEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string FilePath { get; set; } = "";
         public object Result { get; private set; }

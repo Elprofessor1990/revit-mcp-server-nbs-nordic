@@ -14,7 +14,7 @@ namespace RevitMCPCommandSet.Services
         /// <summary>
         /// Event wait object
         /// </summary>
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         /// <summary>
         /// Results data

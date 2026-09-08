@@ -11,7 +11,7 @@ namespace RevitMCPCommandSet.Services.DataExtraction
 {
     public class ImportFromExcelEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public string FilePath { get; set; } = "";
         public string SheetName { get; set; } = "";

@@ -22,7 +22,7 @@ namespace RevitMCPCommandSet.Services
 
         // State synchronization object
         public bool TaskCompleted { get; private set; }
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
         // Element ID array to delete
         public string[] ElementIds { get; set; }
         // If true, only preview what would be deleted without actually deleting

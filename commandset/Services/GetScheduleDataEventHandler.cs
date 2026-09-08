@@ -7,7 +7,7 @@ namespace RevitMCPCommandSet.Services
 {
     public class GetScheduleDataEventHandler : IExternalEventHandler, IWaitableExternalEventHandler
     {
-        private readonly ManualResetEvent _resetEvent = new ManualResetEvent(false);
+        private readonly AutoResetEvent _resetEvent = new AutoResetEvent(false);
 
         public long ScheduleId { get; set; }
         public int MaxRows { get; set; } = 500;
