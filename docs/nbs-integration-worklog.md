@@ -5,6 +5,11 @@ kun op der for fulde kommandoer og API-svar bag en konklusion.
 
 ## Status til næste udvikler (Codex)
 
+- Trin 4: `orchestrate_workflow` er en tynd plan-only wrapper om IntentRouter, kun registreret med agent-flag on (default off).
+- Ingen Revit/NBS-kald eller execution; execute og manglende mode afvises eksplicit.
+- Verificeret: build:check rent; NBS 25/25, foundation 4/4 (151 uændrede kontrakter), routing 10/10 og entrypoint 3/3.
+- Afventer review uden commit/push; næste trin er confirmed execution, ikke implementeret i denne runde.
+
 - Trin 3: additiv RuleEngine og deterministisk routing for væghøjde, vægschedule, typeomdøbning og NBS-sync; dansk/engelsk normalisering.
 - Allow-list, 20-step-grænse og faste validate/verify-templates håndhæves; NBS genbruger ét atomisk sync-write med preview.
 - Verificeret: build:check, NBS 25/25, foundation 4/4 (151 uændrede tool-kontrakter), routing 10/10.
