@@ -29,6 +29,29 @@
                         IsEnabled="False" HorizontalAlignment="Left" Padding="16,9" Background="#1674BC" Foreground="White"/>
                 <TextBlock Text="Projektkoblingen gemmes i modellen. NBS-felterne oprettes automatisk på typer og instanser. Gem RVT-filen bagefter."
                            TextWrapping="Wrap" FontSize="12" Foreground="#666666" Margin="0,10,0,18"/>
+
+                <Border BorderBrush="#DDE3E9" BorderThickness="0,1,0,0" Margin="0,0,0,14"/>
+                <TextBlock Text="Synkronisering for denne model" FontSize="16" FontWeight="SemiBold"/>
+                <TextBlock Text="Samme valg som i NBS Nordic's eget plugin. Din AI bruger disse som standard, når du beder den synkronisere; den kan stadig vælge anderledes for ét kald, hvis du beder om det."
+                           TextWrapping="Wrap" Foreground="#555555" Margin="0,6,0,12"/>
+                <TextBlock Text="Koblingstype" FontWeight="SemiBold"/>
+                <StackPanel Margin="0,6,0,12">
+                    <RadioButton x:Name="LinkTypeOnlyRadio" GroupName="LinkMode" Content="Type Only — skriv kun til typer" Margin="0,2"/>
+                    <RadioButton x:Name="LinkInstanceOnlyRadio" GroupName="LinkMode" Content="Instance Only — skriv kun til instanser" Margin="0,2"/>
+                    <RadioButton x:Name="LinkTypeAndInstanceRadio" GroupName="LinkMode" Content="Type and Instance — begge, hver med sin egen kobling" Margin="0,2"/>
+                </StackPanel>
+                <TextBlock Text="NBS-felter der må opdateres" FontWeight="SemiBold"/>
+                <StackPanel Margin="0,6,0,8">
+                    <CheckBox x:Name="FieldIdCheck" Content="NBS Component Id (anbefales — bruges til at genkende koblingen næste gang)" Margin="0,2"/>
+                    <CheckBox x:Name="FieldCodeCheck" Content="NBS Classificationcode (fuld kode, fx [L]%AD.003)" Margin="0,2"/>
+                    <CheckBox x:Name="FieldNameCheck" Content="NBS Component Name" Margin="0,2"/>
+                    <CheckBox x:Name="FieldDateCheck" Content="NBS Date (bygningsdelens seneste ændring i NBS)" Margin="0,2"/>
+                    <CheckBox x:Name="FieldDocLinkCheck" Content="NBS Doc Link (publicerede beskrivelser)" Margin="0,2"/>
+                </StackPanel>
+                <TextBlock x:Name="NativeLinkTypeText" TextWrapping="Wrap" FontSize="12" Foreground="#666666" Margin="0,0,0,10"/>
+                <Button x:Name="SaveSyncButton" Content="Gem synkroniseringsvalg for denne model" Click="SaveSync_Click"
+                        IsEnabled="False" HorizontalAlignment="Left" Padding="14,8" Margin="0,0,0,18"/>
+
                 <Expander Header="Opret et projekt fra en eksisterende skabelon">
                     <StackPanel Margin="0,10,0,0">
                         <TextBlock Text="NBS API'et kan oprette en kopi af det valgte projekt og dets opsætning. Det kræver NBS' Pro-adgang. Kopien forbindes først, når du vælger Forbind projekt."

@@ -29,6 +29,18 @@ namespace revit_mcp_plugin.Core
 
         public static bool IsProjectParameter(string name) => ProjectParameterNames.Contains(name);
 
+        /// <summary>Read-only lookup of one key in the native settings string; null when absent or malformed.</summary>
+        public static string ReadValue(string current, string key)
+        {
+            if (string.IsNullOrEmpty(current)) return null;
+            foreach (var entry in current.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                int separator = entry.IndexOf('=');
+                if (separator > 0 && entry.Substring(0, separator) == key) return entry.Substring(separator + 1);
+            }
+            return null;
+        }
+
         public static string EnsureInitialized(string current)
         {
             var entries = (current ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();

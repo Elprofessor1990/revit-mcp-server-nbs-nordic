@@ -1,5 +1,6 @@
 import type { NbsComponent, NbsProject } from "../NbsTypes.js";
 import { matchType, type NbsComponentLite } from "./TypeMatcher.js";
+import { NBS_SYNC_FIELDS, type SyncField } from "../ModelSettings.js";
 
 export interface SyncElement {
   uniqueId: string;
@@ -23,6 +24,8 @@ export interface SyncOptions {
   linkMode?: LinkMode;
   explicitInstanceMapping?: Record<string, number>;
   inheritTypeForUnlinkedInstances?: boolean;
+  /** Which NBS fields may be written. Omitted = all. An empty list is rejected. */
+  fields?: SyncField[];
 }
 
 export function fullClassification(component: NbsComponent, project: Pick<NbsProject, "classificationcode_separator">): string {
@@ -43,6 +46,9 @@ export function buildSyncPlan(snapshot: SyncSnapshot, components: NbsComponent[]
   if (!includeTypes && Object.keys(explicitMapping ?? {}).length) throw new Error("Type mappings cannot be used in Instance Only mode.");
   if (!includeInstances && Object.keys(options.explicitInstanceMapping ?? {}).length) throw new Error("Instance mappings cannot be used in Type Only mode.");
   if (options.inheritTypeForUnlinkedInstances && linkMode !== "typeAndInstance") throw new Error("Type inheritance requires Type and Instance mode.");
+  const fields = new Set<SyncField>(options.fields ?? NBS_SYNC_FIELDS);
+  if (fields.size === 0) throw new Error("At least one NBS field must be selected for synchronization.");
+  for (const f of fields) if (!(NBS_SYNC_FIELDS as readonly string[]).includes(f)) throw new Error(`Unknown NBS sync field: ${f}`);
   const usable = components.filter((c): c is NbsComponent & { id: number } => c.id != null && c.active !== 0 && c.active !== false);
   const byId = new Map(usable.map(c => [c.id, c]));
   for (const [id, componentId] of Object.entries(explicitMapping ?? {})) {
@@ -58,17 +64,16 @@ export function buildSyncPlan(snapshot: SyncSnapshot, components: NbsComponent[]
   const append = (element: SyncElement, instance: boolean, component: NbsComponent & { id: number }) => {
     const before = requests.length;
     const prefix = instance ? "NBS Instance " : "NBS ";
-    const desired: Record<string, string> = {
-      [instance ? "NBS Component Instance Id" : "NBS Component Type Id"]: String(component.id),
-      [prefix + "Classificationcode"]: fullClassification(component, project),
-      [prefix + "Component Name"]: component.name,
-    };
-    if (component.updated_at) desired[prefix + "Date"] = component.updated_at;
+    const desired: Record<string, string> = {};
+    if (fields.has("id")) desired[instance ? "NBS Component Instance Id" : "NBS Component Type Id"] = String(component.id);
+    if (fields.has("classificationcode")) desired[prefix + "Classificationcode"] = fullClassification(component, project);
+    if (fields.has("name")) desired[prefix + "Component Name"] = component.name;
+    if (fields.has("date") && component.updated_at) desired[prefix + "Date"] = component.updated_at;
     const urls = component.published_document_urls?.filter(u => {
       try { const url = new URL(u); return url.protocol === "https:" && (url.hostname === "nbsnordic.net" || url.hostname.endsWith(".nbsnordic.net")); }
       catch { return false; }
     });
-    if (urls !== undefined) desired[prefix + "Doc Link"] = urls.join(", ");
+    if (fields.has("docLink") && urls !== undefined) desired[prefix + "Doc Link"] = urls.join(", ");
     for (const [parameterName, value] of Object.entries(desired)) {
       const previousValue = element.parameters[parameterName] ?? "";
       if (previousValue !== value) requests.push({ uniqueId: element.uniqueId, parameterName, previousValue, value });
@@ -110,5 +115,5 @@ export function buildSyncPlan(snapshot: SyncSnapshot, components: NbsComponent[]
     }
     return { id: instance.id, uniqueId: instance.uniqueId, typeId: instance.typeId, inheritedFromType, match };
   }) : [];
-  return { linkMode, rows, instanceRows, requests, updatedTypes, updatedInstances };
+  return { linkMode, fields: [...fields], rows, instanceRows, requests, updatedTypes, updatedInstances };
 }

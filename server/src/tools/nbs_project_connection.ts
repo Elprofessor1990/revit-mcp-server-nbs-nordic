@@ -1,18 +1,20 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getModelContext, connectProject, cloneProject } from "../integrations/nbs/ProjectConnection.js";
+import { readModelSettings } from "../integrations/nbs/ModelSettings.js";
 import { nbsClient } from "../integrations/nbs/NbsClient.js";
 import type { NbsProject } from "../integrations/nbs/NbsTypes.js";
 import { rawToolResponse, rawToolError } from "../utils/compactTool.js";
 import { errorMessage } from "../utils/errorUtils.js";
 
 export function registerNbsProjectConnectionTools(server: McpServer) {
-  server.tool("get_connection_status", "Read connection status, active Revit model identity, NBS project and missing parameter bindings. Never returns API keys.", {}, async () => {
+  server.tool("get_connection_status", "Read connection status, active Revit model identity, NBS project, missing parameter bindings, and the sync defaults (link mode, fields) the user saved for this model in Revit Settings > NBS Nordic. Never returns API keys.", {}, async () => {
     const [revit, nbs] = await Promise.allSettled([getModelContext(), nbsClient.request<NbsProject[]>("/projects")]);
     const model = revit.status === "fulfilled" ? revit.value : undefined;
     const projects = nbs.status === "fulfilled" ? nbs.value : [];
     return rawToolResponse("get_connection_status", {
       revit: model ?? { connected: false, error: errorMessage(revit.status === "rejected" ? revit.reason : "Unknown error") },
+      modelSyncSettings: model ? readModelSettings(model.modelKey) : null,
       nbs: nbs.status === "fulfilled" ? {
         connected: true, accessibleProjects: projects.length,
         project: projects.filter(p => String(p.id) === model?.projectId).map(p => ({ id: p.id, name: p.project_name, classification: p.classification_system_name }))[0] ?? null,

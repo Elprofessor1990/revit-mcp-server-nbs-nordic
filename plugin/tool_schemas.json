@@ -3651,7 +3651,7 @@
   },
   {
     "name": "get_connection_status",
-    "description": "Read connection status, active Revit model identity, NBS project and missing parameter bindings. Never returns API keys.",
+    "description": "Read connection status, active Revit model identity, NBS project, missing parameter bindings, and the sync defaults (link mode, fields) the user saved for this model in Revit Settings > NBS Nordic. Never returns API keys.",
     "input_schema": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "type": "object",
@@ -6458,7 +6458,7 @@
   },
   {
     "name": "sync_revit_types_to_nbs",
-    "description": "On-demand NBS-to-Revit parameter sync. Explicitly choose Type Only, Instance Only or Type and Instance. Type and instance links are independent; never overwrite an instance link from its type. Uses the NBS project saved in the active model. Writes existing NBS component IDs, full classification, name, date and published document links. NOT the official NBS addin's two-way Sync Now: does not upload models/quantities, create components, allocate .001-.050 numbers or change native addin settings. Defaults to preview; writes are model-guarded, verified and atomic.",
+    "description": "On-demand NBS-to-Revit parameter sync. Link mode (Type Only / Instance Only / Type and Instance) and the set of NBS fields to write default to what the user saved for this model in Revit Settings > NBS Nordic; pass them explicitly to override for one call. Type and instance links are independent; never overwrite an instance link from its type. Uses the NBS project saved in the active model. Can write NBS component IDs, full classification, name, date and published document links. NOT the official NBS addin's two-way Sync Now: does not upload models/quantities, create components, allocate .001-.050 numbers or change native addin settings. Defaults to preview; writes are model-guarded, verified and atomic.",
     "input_schema": {
       "type": "object",
       "properties": {
@@ -6473,7 +6473,22 @@
             "instanceOnly",
             "typeAndInstance"
           ],
-          "description": "Required sync target: Type Only, Instance Only, or Type and Instance. Independent of the official NBS addin's UI setting."
+          "description": "Sync target. Omit to use the link mode the user saved for this model in Revit Settings; if none is saved, the call fails and the user must choose."
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "id",
+              "classificationcode",
+              "name",
+              "date",
+              "docLink"
+            ]
+          },
+          "minItems": 1,
+          "description": "NBS fields to write: id, classificationcode, name, date, docLink. Omit to use the user's saved selection for this model (default: all)."
         },
         "projectId": {
           "type": [
@@ -6515,8 +6530,7 @@
         }
       },
       "required": [
-        "category",
-        "linkMode"
+        "category"
       ],
       "additionalProperties": false,
       "$schema": "http://json-schema.org/draft-07/schema#"

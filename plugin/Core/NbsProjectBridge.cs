@@ -181,6 +181,9 @@ namespace revit_mcp_plugin.Core
                 missingParameters = RequiredNames.Where(n => !bound.Contains(n)).ToArray(),
                 instanceParametersNeedingGroupVariation = groupSettings.ToArray(),
                 nativeSettingsReady = settingsReady,
+                // Raw value of the official addin's own link-type setting. Shown read-only;
+                // its numeric meaning is not verified, so it is never written or interpreted here.
+                nativeLinkType = NbsNativeSettings.ReadValue(settings, "NBSLinkType"),
                 parameterFileAvailable = File.Exists(DefinitionPath(version)),
                 isReadOnly = doc.IsReadOnly
             };

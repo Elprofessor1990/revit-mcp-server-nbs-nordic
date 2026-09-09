@@ -52,6 +52,7 @@ namespace revit_mcp_plugin.UI
             LoadProjectsButton.IsEnabled = !value;
             ProjectsComboBox.IsEnabled = !value;
             CloneNameTextBox.IsEnabled = !value;
+            SaveSyncButton.IsEnabled = !value && model != null;
             UpdateButtons();
         }
 
@@ -96,7 +97,55 @@ namespace revit_mcp_plugin.UI
                     (string.IsNullOrWhiteSpace(projectId) ? "Modellen er ikke koblet til NBS endnu." : "Koblet til NBS-projekt #" + projectId);
             }
             catch (Exception ex) { model = null; ModelText.Text = ex.Message; }
+            LoadSyncSettings();
             UpdateButtons();
+        }
+
+        private void LoadSyncSettings()
+        {
+            string modelKey = (string)model?["modelKey"];
+            string linkMode = null;
+            string[] fields = null;
+            try { NbsUserSettings.ReadModelSettings(modelKey, out linkMode, out fields); }
+            catch { /* unreadable settings read as unset; the user simply chooses again */ }
+
+            LinkTypeOnlyRadio.IsChecked = linkMode == "typeOnly";
+            LinkInstanceOnlyRadio.IsChecked = linkMode == "instanceOnly";
+            LinkTypeAndInstanceRadio.IsChecked = linkMode == "typeAndInstance";
+            // No saved selection means "all fields" — the same default the server applies.
+            var selected = new HashSet<string>(fields ?? NbsUserSettings.SyncFields);
+            FieldIdCheck.IsChecked = selected.Contains("id");
+            FieldCodeCheck.IsChecked = selected.Contains("classificationcode");
+            FieldNameCheck.IsChecked = selected.Contains("name");
+            FieldDateCheck.IsChecked = selected.Contains("date");
+            FieldDocLinkCheck.IsChecked = selected.Contains("docLink");
+
+            string native = (string)model?["nativeLinkType"];
+            NativeLinkTypeText.Text = model == null ? ""
+                : native == null ? "NBS Nordic's eget plugin har ikke gemt en koblingstype i denne model endnu."
+                : "Til orientering: NBS Nordic's eget plugin har gemt NBSLinkType=" + native + " i modellen. Talkoden er ikke dokumenteret, så den læses kun — vælg din koblingstype ovenfor.";
+            SaveSyncButton.IsEnabled = !busy && model != null;
+        }
+
+        private void SaveSync_Click(object sender, RoutedEventArgs e)
+        {
+            string modelKey = (string)model?["modelKey"];
+            if (string.IsNullOrEmpty(modelKey)) { StatusText.Text = "Åbn en Revit-model, og hent status igen, før valgene kan gemmes."; return; }
+            string linkMode = LinkTypeOnlyRadio.IsChecked == true ? "typeOnly"
+                : LinkInstanceOnlyRadio.IsChecked == true ? "instanceOnly"
+                : LinkTypeAndInstanceRadio.IsChecked == true ? "typeAndInstance" : null;
+            var fields = new List<string>();
+            if (FieldIdCheck.IsChecked == true) fields.Add("id");
+            if (FieldCodeCheck.IsChecked == true) fields.Add("classificationcode");
+            if (FieldNameCheck.IsChecked == true) fields.Add("name");
+            if (FieldDateCheck.IsChecked == true) fields.Add("date");
+            if (FieldDocLinkCheck.IsChecked == true) fields.Add("docLink");
+            try
+            {
+                NbsUserSettings.SaveModelSettings(modelKey, linkMode, fields);
+                StatusText.Text = "Synkroniseringsvalg gemt for denne model. Din AI bruger dem fra næste kald.";
+            }
+            catch (Exception ex) { StatusText.Text = ex.Message; }
         }
 
         private async Task<bool> LoadProjects(string selectId = null)

@@ -139,7 +139,7 @@ set_view_crop(viewId:number, cropActive:boolean, cropVisible:boolean, elementIds
 store_project_data(project_name:string!, project_path:string, project_number:string, project_address:string, client_name:string, project_status:string, author:string, metadata:object)
 store_room_data(project_name:string!, rooms:array!)
 sync_csv_parameters(data:array!, dryRun:boolean)
-sync_revit_types_to_nbs(category:string!, linkMode:typeOnly|instanceOnly|typeAndInstance!, projectId:string,number, maxTypes:integer, dryRun:boolean, explicitMapping:object, explicitInstanceMapping:object, inheritTypeForUnlinkedInstances:boolean)
+sync_revit_types_to_nbs(category:string!, linkMode:typeOnly|instanceOnly|typeAndInstance, fields:array, projectId:string,number, maxTypes:integer, dryRun:boolean, explicitMapping:object, explicitInstanceMapping:object, inheritTypeForUnlinkedInstances:boolean)
 tag_all_rooms(useLeader:boolean, tagTypeId:string, roomIds:array)
 tag_all_walls(useLeader:boolean, tagTypeId:string)
 transfer_parameters(sourceElementId:number!, targetElementIds:array!, parameterNames:array, includeType:boolean, dryRun:boolean)

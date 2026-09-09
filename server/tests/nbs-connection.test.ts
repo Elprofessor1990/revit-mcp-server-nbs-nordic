@@ -8,6 +8,10 @@ import { nbsClient } from "../src/integrations/nbs/NbsClient.js";
 import { createComponent } from "../src/integrations/nbs/components/ComponentService.js";
 import { pushSheet } from "../src/integrations/nbs/sheets/SheetService.js";
 import { pushQuantities } from "../src/integrations/nbs/quantities/QuantityService.js";
+import { readModelSettings, NBS_SYNC_FIELDS } from "../src/integrations/nbs/ModelSettings.js";
+import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import type { NbsProject, NbsComponent } from "../src/integrations/nbs/NbsTypes.js";
 
 const project: NbsProject = { id: 10, project_name: "Test", project_id: "P1", plan: "free", classificationcode_separator: "." };
@@ -220,6 +224,35 @@ test("project connection checks API access, guards model identity, and does not 
     if (oldDefault === undefined) delete process.env.NBS_PROJECT_ID; else process.env.NBS_PROJECT_ID = oldDefault;
     await new Promise<void>(resolve => server.close(() => resolve()));
   }
+});
+
+test("field selection limits which NBS parameters are written, and never silently drops to none", () => {
+  const all = buildSyncPlan(snapshot(), [component], project, undefined, { inheritTypeForUnlinkedInstances: true });
+  assert.deepEqual(all.fields, [...NBS_SYNC_FIELDS]);
+  const only = buildSyncPlan(snapshot(), [component], project, undefined, { inheritTypeForUnlinkedInstances: true, fields: ["classificationcode", "name"] });
+  assert.deepEqual(only.fields, ["classificationcode", "name"]);
+  const names = new Set(only.requests.map(r => r.parameterName));
+  assert.deepEqual([...names].sort(), ["NBS Classificationcode", "NBS Component Name", "NBS Instance Classificationcode", "NBS Instance Component Name"]);
+  assert.ok(only.requests.every(r => !r.parameterName.includes(" Id") && !r.parameterName.includes("Date") && !r.parameterName.includes("Doc Link")));
+  assert.throws(() => buildSyncPlan(snapshot(), [component], project, undefined, { fields: [] }), /At least one/);
+  assert.throws(() => buildSyncPlan(snapshot(), [component], project, undefined, { fields: ["mark" as any] }), /Unknown NBS sync field/);
+});
+
+test("per-model sync defaults are read from the shared settings file and malformed values are ignored, not guessed", () => {
+  const dir = mkdtempSync(join(tmpdir(), "nbs-settings-"));
+  const file = join(dir, "nbs-config.json");
+  try {
+    assert.deepEqual(readModelSettings("model-a", file), {});
+    writeFileSync(file, JSON.stringify({ apiKey: "secret", models: {
+      "model-a": { linkMode: "instanceOnly", fields: ["id", "classificationcode"] },
+      "model-b": { linkMode: "everything", fields: ["id", "mark"] },
+    } }));
+    assert.deepEqual(readModelSettings("model-a", file), { linkMode: "instanceOnly", fields: ["id", "classificationcode"] });
+    assert.deepEqual(readModelSettings("model-b", file), {});
+    assert.deepEqual(readModelSettings("model-c", file), {});
+    writeFileSync(file, "{ not json");
+    assert.deepEqual(readModelSettings("model-a", file), {});
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 // Live probe 2026-09-09: these three POST routes only exist under /api/v1 even

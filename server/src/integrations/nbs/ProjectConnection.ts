@@ -10,6 +10,9 @@ export interface RevitNbsContext {
   missingParameters: string[];
   parameterFileAvailable: boolean;
   isReadOnly: boolean;
+  /** Raw NBSLinkType value from the official addin's "NBS Override" setting, shown read-only; its numeric mapping is not verified. */
+  nativeLinkType?: string | null;
+  nativeSettingsReady?: boolean;
 }
 
 export function validateProjectId(id: string | number): string {
