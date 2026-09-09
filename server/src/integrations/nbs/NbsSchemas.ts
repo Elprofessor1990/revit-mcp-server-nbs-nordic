@@ -1,6 +1,11 @@
 import { z } from "zod";
 
 // Fields per the official /projects/[id]/component POST documentation.
+// Live create 2026-09-09 (v1, project 10973, component 343153): name and
+// classificationcode were applied and NBS assigned the next free
+// classificationserial itself. discipline_id and measure_id were silently
+// IGNORED (subject "-" / measure "" on the created row), so callers must not
+// rely on them — set fag/målemetode in the NBS web UI afterwards.
 export const NbsComponentCreateSchema = z.object({
   name: z.string(),
   structure: z.string().optional(),
