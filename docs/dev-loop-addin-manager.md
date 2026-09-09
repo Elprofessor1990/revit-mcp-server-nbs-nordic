@@ -33,3 +33,17 @@ Skift kategori ved at ændre `Category` i `plugin/Core/NbsBridgeSmokeTest.cs`.
 Ribbon, TCP-serveren (SocketService), ExternalEvent-registrering og statisk
 tilstand i IExternalApplication. Efter sådanne ændringer: luk Revit, byg uden
 `SkipAddinCopy`, start Revit.
+
+## Kendt begrænsning: Settings-vinduet fejler, mens DLL'en er indlæst i Add-In Manager
+
+Når Add-In Manager har indlæst `RevitMCPPlugin.dll`, findes assemblyen to gange i
+Revit: den, Revit indlæste ved opstart (ribbon, socket), og Add-In Managers kopi.
+WPF slår XAML-ressourcer op efter assembly-navn og kan så ramme den forkerte kopi.
+Symptom ved klik på ribbonens Settings:
+
+    The component 'revit_mcp_plugin.UI.SettingsWindow' does not have a resource
+    identified by the URI '/RevitMCPPlugin;component/ui/settingswindow.xaml'.
+
+Afhjælpning: tryk **Remove** på DLL'en i Add-In Manager, før ribbonens Settings
+eller MCP Panel bruges. Hjælper det ikke, gem modellen og genstart Revit.
+Smoke-testen selv bygger sit vindue i kode og rammes ikke.

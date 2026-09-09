@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using revit_mcp_plugin.Core;
+using Newtonsoft.Json.Linq;
 
 static void Assert(bool condition, string message)
 {
@@ -30,3 +31,14 @@ foreach (var value in new[] { "NBSOverride=99", "NBSOverride=0,NBSOverride=1", "
 Assert(NbsNativeSettings.IsProjectParameter("NBS Override") && NbsNativeSettings.IsProjectParameter("NBS Project Date")
     && NbsNativeSettings.IsProjectParameter("NBS Project Id") && !NbsNativeSettings.IsProjectParameter("NBS Instance Classificationcode"),
     "Project settings are excluded from ordinary element parameter sync");
+
+// Live 2026-09-09: Newtonsoft's default date parsing turned an NBS updated_at into a
+// DateTime and wrote "09/09/2026 02:38:14" to "NBS Date"; later previews then failed
+// their concurrency check against the ISO text Revit actually held.
+var rpc = "{\"jsonrpc\":\"2.0\",\"id\":\"7\",\"method\":\"nbs_project\",\"params\":{\"operation\":\"write_parameters\",\"requests\":[{\"parameterName\":\"NBS Date\",\"previousValue\":\"2026-01-31T10:00:00.000000Z\",\"value\":\"2026-09-09T02:38:14.000000Z\"}]}}";
+var prm = RpcJson.Params(rpc);
+var req = (JObject)prm["requests"][0];
+Assert(req["value"].Type == JTokenType.String && (string)req["value"] == "2026-09-09T02:38:14.000000Z", "ISO date strings in socket requests stay strings, byte-for-byte");
+Assert((string)req["previousValue"] == "2026-01-31T10:00:00.000000Z", "previousValue survives unchanged for the optimistic concurrency check");
+Assert(JObject.Parse(rpc)["params"]["requests"][0]["value"].Type == JTokenType.Date, "Default parsing would have converted it (documents why RpcJson exists)");
+Assert(RpcJson.Params("{\"jsonrpc\":\"2.0\",\"id\":\"8\",\"method\":\"x\"}") == null, "Missing params reads as null, not an exception");

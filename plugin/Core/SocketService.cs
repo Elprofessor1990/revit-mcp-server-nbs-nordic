@@ -316,7 +316,7 @@ namespace revit_mcp_plugin.Core
 
         private string ProcessJsonRPCRequest(string requestJson)
         {
-            JsonRPCRequest request;
+            JsonRPCRequest request = null;
 
             try
             {
@@ -338,7 +338,8 @@ namespace revit_mcp_plugin.Core
                 if (request.Method == "nbs_project")
                 {
                     if (NbsProjects == null) throw new InvalidOperationException("Revit connection is not initialized.");
-                    var result = NbsProjects.RequestAsync(request.GetParamsObject() ?? new JObject()).GetAwaiter().GetResult();
+                    // Re-read params with date parsing off: parameter values must reach Revit byte-for-byte.
+                    var result = NbsProjects.RequestAsync(RpcJson.Params(requestJson) ?? new JObject()).GetAwaiter().GetResult();
                     return CreateSuccessResponse(request.Id, result);
                 }
 
@@ -395,8 +396,10 @@ namespace revit_mcp_plugin.Core
             {
                 // Catch other errors produced when processing requests.
                 McpLogger.Error("SocketService", "Request processing failed", ex);
+                // Keep the request id: without it the client cannot match the error to its
+                // pending call and only reports a timeout (seen live 2026-09-09).
                 return CreateErrorResponse(
-                    null,
+                    request?.Id,
                     JsonRPCErrorCodes.InternalError,
                     $"Request processing failed: {ex.Message}. Check the MCP log for details."
                 );

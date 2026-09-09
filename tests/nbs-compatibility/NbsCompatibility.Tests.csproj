@@ -5,5 +5,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../../plugin/Core/NbsNativeSettings.cs" Link="NbsNativeSettings.cs" />
+    <Compile Include="../../plugin/Core/RpcJson.cs" Link="RpcJson.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 </Project>
