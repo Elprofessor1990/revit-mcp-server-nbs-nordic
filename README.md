@@ -1,20 +1,26 @@
-[![Cover Image](./assets/cover.png?v=2)](https://github.com/LuDattilo/revit-mcp-server)
+[![Cover Image](./assets/cover.png?v=2)](https://github.com/Elprofessor1990/revit-mcp-server-nbs-nordic)
 
-# mcp-servers-for-revit
+# Revit MCP + NBS Nordic
 
-**Connect AI assistants to Autodesk Revit via the Model Context Protocol.**
+**Connect AI assistants to Revit models and NBS Nordic projects through one MCP server.**
+
+**Dansk:** [Kom godt i gang — trin for trin](docs/kom-godt-i-gang.md).
 
 ---
 
-mcp-servers-for-revit enables AI clients like Claude, Cline, and other MCP-compatible tools to read, create, modify, and delete elements in Revit projects in real time. It exposes 138 tools covering project info, model analysis, element creation, batch operations, data export, and more.
+This edition extends Revit automation with model-specific NBS project connections, classification lookup, and controlled type/instance linking. Codex, Claude and other local MCP clients can use the same server. The current tool schema contains **151 tools** (September 2026); the client-discovered tool list is authoritative.
 
 > [!NOTE]
-> This is a fork of the original [revit-mcp](https://github.com/mcp-servers-for-revit/revit-mcp) project with additional tools and functionality improvements.
+> Based on [LuDattilo/revit-mcp-server](https://github.com/LuDattilo/revit-mcp-server) and the original [revit-mcp](https://github.com/mcp-servers-for-revit/revit-mcp) project. This is an independent integration, not an official NBS Nordic product. Upstream installers and the upstream npm package are not a verified distribution of this edition.
 
 ## Key Features
 
-- **124 MCP tools** — project info, model health, clash detection, element CRUD, batch operations, data export (PDF/DWG/IFC/CSV)
-- **Revit 2023, 2024, 2025, 2026, 2027** — fully tested on all five versions
+- **Revit tools** — project info, model health, clash detection, element CRUD, batch operations, data export (PDF/DWG/IFC/CSV)
+- **NBS setup inside Revit** — save your NBS key, choose a project, and prepare the model's NBS fields under Settings → NBS Nordic
+- **Connection starts automatically by default** — optional manual start/stop; this does not automatically synchronize data
+- **Explicit linking modes** — Type Only, Instance Only, or Type and Instance, with a dry run before changes
+- **Native NBS compatibility** — prepares 13 core parameters, including project settings; preserves existing native options
+- **Revit 2027 verified for this update** — older build targets remain in the codebase but have not been revalidated for these NBS changes
 - **Language-independent** — works with any Revit UI language (English, Italian, French, German, etc.) using BuiltInCategory resolution
 - **Built-in Claude chat panel** — dockable panel inside Revit with direct AI access (Anthropic API, extended thinking enabled)
 - **Real-time execution** — AI requests are executed immediately on the active model via TCP/JSON-RPC 2.0
@@ -24,22 +30,25 @@ mcp-servers-for-revit enables AI clients like Claude, Cline, and other MCP-compa
 
 ```mermaid
 flowchart LR
-    Client["MCP Client<br/>(Claude, Cline, etc.)"]
+    Client["MCP Client<br/>(Codex, Claude, etc.)"]
     Server["MCP Server<br/><code>server/</code>"]
     Plugin["Revit Plugin<br/><code>plugin/</code>"]
     CommandSet["Command Set<br/><code>commandset/</code>"]
     Revit["Revit API"]
+    NBS["NBS Nordic API"]
 
     Client <-->|stdio| Server
-    Server <-->|TCP :8080| Plugin
+    Server <-->|local TCP, default :8080| Plugin
+    Server <-->|HTTPS, NBS API key| NBS
     Plugin -->|loads| CommandSet
     CommandSet -->|executes| Revit
+    Plugin -->|NBS project bridge, ExternalEvent| Revit
 ```
 
 | Component | Language | Role |
 |-----------|----------|------|
-| **MCP Server** (`server/`) | TypeScript | Translates AI tool calls into JSON-RPC messages over TCP |
-| **Revit Plugin** (`plugin/`) | C# | Runs inside Revit, listens on `localhost:8080`, dispatches commands |
+| **MCP Server** (`server/`) | TypeScript | Revit tool calls over local TCP; NBS API calls over HTTPS |
+| **Revit Plugin** (`plugin/`) | C# | Automatic connection, settings UI, command dispatch and model-specific NBS parameter bridge |
 | **Command Set** (`commandset/`) | C# | Implements Revit API operations, returns structured results |
 
 ## Requirements
@@ -49,9 +58,12 @@ flowchart LR
 | Requirement | Details |
 |-------------|---------|
 | **Node.js** | 18+ (for the MCP server) |
-| **Autodesk Revit** | 2023, 2024, 2025, 2026, or 2027 |
+| **Autodesk Revit** | Use 2027 for the currently verified NBS update |
 | **OS** | Windows 10/11 (Revit is Windows-only) |
 | **Anthropic API key** (optional) | Required only for the built-in chat panel. Set via `%USERPROFILE%\.claude\api_key.txt` or env `ANTHROPIC_API_KEY` |
+| **NBS Nordic** (for NBS features) | NBS account/API key with project access, plus the official NBS Revit addin and its shared-parameter file for model setup |
+
+An external MCP client uses its own AI authentication. It does not need an Anthropic key merely to use this server. Never put an NBS key in chat, screenshots, model files or Git. Settings saves it locally in `%USERPROFILE%\.mcp-revit\nbs-config.json`; treat that file as a secret.
 
 ### To build from source
 
@@ -60,7 +72,7 @@ flowchart LR
 | **Visual Studio 2022** | With .NET desktop development workload |
 | **.NET Framework 4.8 SDK** | For Revit 2023-2024 builds |
 | **.NET 8 SDK** | For Revit 2025-2026 builds |
-| **.NET 10 SDK** (preview) | For Revit 2027 builds |
+| **.NET 10-compatible SDK** | For the Revit 2027 target; see the project's build configuration |
 | **Node.js 18+** | For the MCP server |
 | **Revit API assemblies** | Installed with Revit (referenced automatically via NuGet) |
 
@@ -68,39 +80,35 @@ flowchart LR
 
 ### 1. Install the Revit plugin
 
-#### Option A: Automatic install (recommended)
+#### Use this edition, not the upstream one-line installer
 
-Open PowerShell and paste this command:
+The September 2026 NBS changes were built and installed locally on Revit 2027. A successful Git push is **not** evidence that an updated ZIP or npm package has been published. Do not use the upstream installer to obtain this edition.
 
-```powershell
-powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/LuDattilo/revit-mcp-server/main/scripts/install.ps1 | iex"
-```
-
-The script:
-- Detects installed Revit versions automatically
-- Downloads the correct pre-built Release from GitHub
-- Extracts to the right folder and unblocks all DLLs
-- Verifies all dependencies are present
-- Checks for Node.js (required for MCP server) and offers to install it
-- Configures Claude Desktop if installed
+For a source checkout, first build the local server from this repository:
 
 ```powershell
-# Install for a specific Revit version
-.\install.ps1 -RevitVersion 2025
-
-# Install a specific release
-.\install.ps1 -Tag v1.2.0
-
-# Uninstall
-.\install.ps1 -Uninstall
+git clone https://github.com/Elprofessor1990/revit-mcp-server-nbs-nordic.git
+cd revit-mcp-server-nbs-nordic/server
+npm ci
+npm run build:local
+cd ..
 ```
 
-#### Option B: Manual install
+For an **existing complete Revit 2027 installation**, save and close Revit, build the updated plugin, then run the checked update script from the repository root:
+
+```powershell
+dotnet build plugin/RevitMCPPlugin.csproj -c "Release R27"
+.\scripts\install-nbs-update.ps1
+```
+
+The updater backs up and hash-checks six existing files (plugin DLL/PDB, tool schema and three server runtime files). It preserves the command registry and does not replace the official NBS addin. `-PluginOnly` updates only the MCP DLL/PDB; `-ServerOnly` updates only the server and schema. It is **not a first-time installer** and does not update commandset DLLs. Restart Revit after a DLL update and restart/reconnect the AI client's MCP server after a server/schema update.
+
+#### First-time installation
 
 > [!IMPORTANT]
-> **Download the pre-built ZIP from the [Releases](https://github.com/LuDattilo/revit-mcp-server/releases) page.** Do NOT clone the repository or copy the source code — the source contains `.cs` files, not compiled `.dll` files. The plugin will not work without compiled binaries.
+> A complete deployment needs the compiled plugin, command set, dependencies and manifests. Source `.cs` files alone cannot load in Revit. Use a complete build from this repository; see [Development](#development). The incremental updater above cannot create a missing base installation. First-time deployment of this NBS edition on a clean machine has not yet been smoke-tested.
 
-Extract the ZIP to:
+Place a complete, version-matched deployment in:
 
 ```
 %AppData%\Autodesk\Revit\Addins\<your Revit version>\
@@ -111,10 +119,10 @@ To open this folder quickly, press `Win+R` and type:
 %AppData%\Autodesk\Revit\Addins
 ```
 
-After extraction your folder **must** look like this:
+The core layout is illustrated below for Revit 2027 (additional dependencies must also be included):
 
 ```
-Addins/2025/
+Addins/2027/
 ├── mcp-servers-for-revit.addin          <-- manifest file (required)
 └── revit_mcp_plugin/                    <-- subfolder (required)
     ├── RevitMCPPlugin.dll               <-- main plugin (required)
@@ -125,7 +133,7 @@ Addins/2025/
         ├── commandRegistry.json
         └── RevitMCPCommandSet/
             ├── command.json
-            └── 2025/
+            └── 2027/
                 ├── RevitMCPCommandSet.dll
                 └── ...
 ```
@@ -135,10 +143,28 @@ Addins/2025/
 
 ### 2. Configure the MCP server
 
+Point the client to **this checkout's built `server/build/index.js`**, not `npx -y mcp-server-for-revit`. Replace `C:/Projects/revit-mcp-server-nbs-nordic` in the examples with your actual checkout path. `node` must be available to the client; use its absolute executable path if needed. Keep `index.js`, `sql-wasm.wasm` and `cci-hierarchy.json` together in `server/build/`.
+
+**Codex**
+
+```powershell
+codex mcp add revit-mcp-nbs -- node "C:/Projects/revit-mcp-server-nbs-nordic/server/build/index.js"
+```
+
+Alternatively, merge this entry into `%USERPROFILE%\.codex\config.toml` without replacing your other settings:
+
+```toml
+[mcp_servers.revit-mcp-nbs]
+command = "node"
+args = ["C:/Projects/revit-mcp-server-nbs-nordic/server/build/index.js"]
+```
+
+Use one configuration method, not both. See [OpenAI's MCP documentation](https://learn.chatgpt.com/docs/extend/mcp?surface=cli) for client configuration.
+
 **Claude Code**
 
 ```bash
-claude mcp add mcp-server-for-revit -- npx -y mcp-server-for-revit
+claude mcp add revit-mcp-nbs -- node "C:/Projects/revit-mcp-server-nbs-nordic/server/build/index.js"
 ```
 
 **Claude Desktop**
@@ -148,9 +174,9 @@ Claude Desktop → Settings → Developer → Edit Config → `claude_desktop_co
 ```json
 {
     "mcpServers": {
-        "mcp-server-for-revit": {
-            "command": "npx",
-            "args": ["-y", "mcp-server-for-revit"]
+        "revit-mcp-nbs": {
+            "command": "node",
+            "args": ["C:/Projects/revit-mcp-server-nbs-nordic/server/build/index.js"]
         }
     }
 }
@@ -158,34 +184,83 @@ Claude Desktop → Settings → Developer → Edit Config → `claude_desktop_co
 
 ### 3. Start Revit
 
+Restart/reconnect the MCP client after configuring it. Open Revit and save a test model before making changes. The local Revit connection starts automatically by default. You can disable this in Settings → Forbindelse using **“Start forbindelsen automatisk, når Revit åbner”**.
+
 The plugin loads automatically. In the **Add-Ins** ribbon tab you should see **three buttons** in the "Revit MCP Plugin" panel:
 
 | Button | Function |
 |--------|----------|
-| **Revit MCP Switch** | Start/stop the TCP server |
+| **Revit MCP Switch** | Manually toggle the local connection; clicking while connected stops it |
 | **MCP Panel** | Show/hide the built-in chat panel |
-| **Settings** | Plugin settings |
+| **Settings** | Connection settings, NBS key/project setup, and command selection |
 
-Click **"Revit MCP Switch"** to start the TCP server. When the status indicator turns green, the connection is active.
+Do not click the Switch just because an older guide says to: automatic startup may already have connected it. Ask the AI to run `get_connection_status` and verify the active model. Revit connectivity and NBS account/project connectivity are separate checks.
 
 > [!TIP]
 > If you only see the **Switch** button but not **MCP Panel** or **Settings**, the plugin did not load correctly. See [Troubleshooting](#troubleshooting) below.
 
-![Architecture](./assets/architecture.svg)
+### 4. Connect the model to NBS Nordic
+
+1. Install the official NBS Nordic addin for your Revit version if it is not already installed. Its official shared-parameter definitions are required by the MCP model setup.
+2. In **MCP Settings → NBS Nordic**, enter the NBS API key and click **“Forbind NBS og hent projekter”**.
+3. Choose the intended NBS project and click **“Forbind projekt og klargør NBS-felter”**.
+4. Save the RVT. The project ID belongs to this model, not a global default.
+5. Run `get_connection_status` again. Check the model, project and missing parameter bindings. Empty element values are normal until elements are linked to actual NBS components.
+
+Setup provisions 13 core project/type/instance fields, including `NBS Override` and `NBS Project Date`. It preserves valid native settings. It does not create building components or automatically run native Sync Now. Existing linked models are not silently migrated to another project.
+
+### 5. Preview before synchronizing
+
+Ask: **“Show a dry run for the walls using Type and Instance. Do not change anything yet.”**
+
+The tool is `sync_revit_types_to_nbs`, with required `linkMode` and `dryRun: true`:
+
+| Mode | What is updated after approval |
+|---|---|
+| `typeOnly` | NBS type parameters only |
+| `instanceOnly` | NBS instance parameters only; instances of one type can have separate links |
+| `typeAndInstance` | Both levels, preserving independently linked instances |
+
+Unlinked instances do not inherit a type link unless `inheritTypeForUnlinkedInstances` is explicitly requested. Ambiguous matches need an explicit mapping. Preview first, confirm the target model/project and mappings, then request `dryRun: false`.
+
+**MCP linking is not NBS' native Sync Now.** The MCP tool reads NBS component data and writes supported Revit parameters; it does not perform the native addin's full model upload/two-way workflow. Native settings are controlled by NBS' own UI. Upload tools such as `nbs_push_quantities` and `nbs_push_schedule` are separate external writes. Automatic MCP connection does not enable periodic synchronization.
+
+## NBS tools and current status
+
+| Tools | Purpose / limitation |
+|---|---|
+| `get_connection_status` | Check Revit, active model, NBS access/project and bindings without exposing keys |
+| `nbs_list_projects`, `nbs_get_project` | Read accessible projects and their classification settings |
+| `nbs_connect_project` | Set the model's project and prepare official fields; save the RVT afterwards |
+| `nbs_list_components`, `nbs_list_instances` | Read existing NBS records |
+| `sync_revit_types_to_nbs` | Preview/apply explicit type and instance linking |
+| `nbs_lookup_classification` | Search a static CCI reference; not a code allocator or a project-validated result |
+| `nbs_clone_project` | Clone an existing NBS project (documented Pro operation); mock-tested, not live creation-tested |
+| `nbs_create_component` | Works via `/api/v1` (the documented v2 route 404s). Rejects a classificationcode with a serial embedded (e.g. `[L]%AD130`) before sending — NBS silently truncates those instead of erroring. `classificationserial` cannot be set; NBS assigns it and duplicates across quick successive creates are possible — check the returned serial. |
+| `nbs_get_documents` | Read NBS documents; not document/section authoring |
+| `nbs_push_quantities`, `nbs_push_schedule` | Separate uploads; require an intentional request |
+
+Native Sync Now succeeded in an existing repaired Revit 2027 model before the permanent plugin update. The updated DLL/PDB installation is hash-verified. **The clean/new-project test after restart remains pending.** See the [NBS integration worklog](docs/nbs-integration-worklog.md) for current status, and [update history](docs/archive/2026-09-09-nbs/nbs-update-2026-09-09.md) / [native-sync repair](docs/archive/2026-09-09-nbs/nbs-native-sync-repair-2026-09-09.md) for the raw verification records.
+
+### Classification and student naming
+
+The bundled lookup has 240 groups and 922 entries derived from Region Syddanmark's IKT list dated 2023-07-12. It is a specific reference, not a universal naming policy. Check the NBS project's classification system and separator before using a result. For example, reference main type `[L]%AD230` means “Skillevæg, Skeletkonstruktion”; it is not wall instance number 230.
+
+Keep classification/main type, descriptive Revit type name, and individual element ID separate. Do not generate `.001`–`.050` as purported NBS links unless the corresponding NBS components actually exist. A student-facing naming wizard, model checker and practice mode are **proposals, not implemented features**. See the [Danish guide](docs/kom-godt-i-gang.md#navngivning-og-klassifikation).
 
 ## Supported Revit Versions
 
 | Version | .NET Target | Status | Notes |
 |---------|-------------|--------|-------|
-| **Revit 2023** | .NET Framework 4.8 | Fully tested | Italian localization verified |
-| **Revit 2024** | .NET Framework 4.8 | Built & compatible | Same codebase as R23 |
-| **Revit 2025** | .NET 8 | Fully tested | Structural model (Snowdon Towers) |
-| **Revit 2026** | .NET 8 | Fully tested | Primary development target |
-| **Revit 2027** | .NET 10 | Fully tested | .NET 10 SDK (preview) required |
+| **Revit 2023** | .NET Framework 4.8 | Build target retained | NBS changes not revalidated |
+| **Revit 2024** | .NET Framework 4.8 | Build target retained | NBS changes not revalidated |
+| **Revit 2025** | .NET 8 | Build target retained | NBS changes not revalidated |
+| **Revit 2026** | .NET 8 | Build target retained | NBS changes not revalidated |
+| **Revit 2027** | .NET 10 | Build and scoped tests passed | New-project/post-restart smoke test pending |
 
-All tools work across all versions. The command set uses compile-time constants (`REVIT2023`, `REVIT2024`, etc.) to handle API differences between versions (e.g., `ElementId` is `long` in R24+, `int` in R23).
+The command set uses compile-time constants for API differences. A retained build configuration does not establish that every tool or NBS workflow has been tested on that version.
 
-## Supported Tools (124)
+## Revit tool reference
 
 ### Project & Model Info
 
@@ -322,8 +397,8 @@ The Revit plugin includes a dockable chat panel that connects directly to the An
 |------------|---------|
 | **Windows only** | Revit runs only on Windows; macOS/Linux are not supported |
 | **Single model** | The plugin operates on the active document only; background documents are not accessible |
-| **TCP port 8080** | The plugin listens on `localhost:8080`; if the port is occupied, the server won't start |
-| **No undo integration** | Operations executed by AI tools create standard Revit transactions but are not grouped into a single undo step |
+| **Local TCP connection** | Default port 8080, with fallback to the next nine ports; the client reads the plugin's port file. Multiple running Revit sessions require care to avoid targeting the wrong model |
+| **Undo scope** | Revit parameter sync uses a transaction, but there is no universal undo across a sequence of tools or external NBS API writes |
 | **`send_code_to_revit`** | May fail if third-party addins cause assembly conflicts (e.g., duplicate DLL references) |
 | **Parameter names are localized** | Revit parameter names depend on UI language. Use BuiltInCategory names (e.g., `OST_Walls`) for categories. The command set resolves categories automatically, but parameter names must match the Revit language |
 | **No streaming** | Tool results are returned as a single response; large results (e.g., exporting thousands of elements) may take time |
@@ -333,14 +408,14 @@ The Revit plugin includes a dockable chat panel that connects directly to the An
 
 ### Only the Switch button appears (no MCP Panel or Settings)
 
-**Cause:** The plugin was not installed correctly — usually because source code was copied instead of the pre-built Release, or files are missing.
+**Possible cause:** Missing dependencies, a mixed-version installation or a startup error. Check the plugin log before changing files.
 
 **Fix:**
 
 1. Close Revit
-2. Delete the old installation from `%AppData%\Autodesk\Revit\Addins\<version>\`
-3. Download the correct ZIP from the [Releases](https://github.com/LuDattilo/revit-mcp-server/releases) page
-4. Extract and verify the folder structure matches the one shown in [Step 1](#1-install-the-revit-plugin)
+2. Back up only this plugin's manifest, `revit_mcp_plugin` folder and command settings; do not delete the version's entire Addins folder
+3. Obtain a complete build of this edition for the correct Revit version
+4. Verify the folder structure against [Step 1](#1-install-the-revit-plugin), preserving other addins and local settings
 5. Restart Revit
 
 ### Plugin does not appear in Add-Ins tab
@@ -349,10 +424,21 @@ The Revit plugin includes a dockable chat panel that connects directly to the An
 - Verify the ZIP version matches your Revit version (e.g., Revit2025 ZIP for Revit 2025)
 - Check that Revit did not block the DLLs: right-click each `.dll` → Properties → if you see "Unblock" at the bottom, check it and click OK
 
-### "Connection refused" when using Claude Desktop or Claude Code
+### Connection refused or the new NBS tools are missing
 
-- Ensure Revit is open and the MCP Switch is **ON** (green indicator)
-- Check that port 8080 is not used by another application: `netstat -an | findstr 8080`
+- Ensure Revit is open and check whether automatic connection is enabled. Do not toggle an already running connection off.
+- Confirm the MCP client starts this checkout's `server/build/index.js`, not the upstream npm package.
+- Restart the client's MCP connection after updating the server/schema. Check for `get_connection_status` and `nbs_connect_project`.
+- If a manual `REVIT_MCP_PORT` override is configured, verify it matches the intended Revit instance. Otherwise let the server discover the port file.
+- Use `get_connection_status` to distinguish Revit connection failures from NBS API/access errors.
+
+### NBS says “Check the log for more information”
+
+That message is generic; inspect the current log instead of assuming every occurrence has the same cause. Our verified case involved missing native project settings. Install the updated MCP plugin while Revit is closed, reopen the model, and use the NBS project connection to prepare missing fields. Save the RVT. Do not overwrite `NBS Override` through an ordinary element-parameter operation. See [the repair report](docs/archive/2026-09-09-nbs/nbs-native-sync-repair-2026-09-09.md).
+
+### NBS fields are present but empty
+
+Project connection prepares fields; it does not invent component links. List NBS components, inspect the type/instance links and run a dry run. Component creation returning HTTP 404 is a separate unresolved API problem, not proof that model connection failed.
 
 ### Other common issues
 
@@ -370,11 +456,12 @@ The Revit plugin includes a dockable chat panel that connects directly to the An
 
 ```bash
 cd server
-npm install
-npm run build
+npm ci
+npm run build:check
+npm run build:local
 ```
 
-The server compiles TypeScript to `server/build/`. During development you can run it directly with `npx tsx server/src/index.ts`.
+`build:local` bundles the server and copies its WASM/CCI runtime files without invoking the addins deployment script. The broader `npm run build` also runs deployment steps; review them before use. No npm publication is needed for the local MCP configuration above.
 
 ### Revit Plugin + Command Set
 
@@ -390,7 +477,28 @@ Open `mcp-servers-for-revit.sln` in Visual Studio. The solution contains both th
 
 Building the solution automatically assembles the complete deployable layout in `plugin/bin/AddIn <year> <config>/` — the command set is copied into the plugin's `Commands/` folder as part of the build.
 
+**Debug builds also deploy to the user's Revit Addins directory and can replace the command registry.** Save and close Revit and back up the existing plugin/settings first. Release builds assemble output without installing it into that active directory. To assemble the R27 binaries explicitly, build both projects in order:
+
+```powershell
+dotnet build plugin/RevitMCPPlugin.csproj -c "Release R27"
+dotnet build commandset/RevitMCPCommandSet.csproj -c "Release R27"
+```
+
+Keep the compiled server from [Step 2](#2-configure-the-mcp-server) at the path configured in the AI client. The incremental updater preserves installed commandset binaries; it does not substitute for deploying a complete first-time build or updating changed command handlers.
+
 ## Testing
+
+The NBS checks run without changing live Revit/NBS data:
+
+```powershell
+cd server
+npm run test:nbs
+npm run build:check
+cd ..
+dotnet run --project tests/nbs-compatibility/NbsCompatibility.Tests.csproj
+```
+
+Latest run: 19 NBS tests and 10 native-settings checks passed. These do not certify all 151 tools. For a new-model smoke test, follow the [Danish checklist](docs/kom-godt-i-gang.md#test-i-et-nyt-projekt). External uploads and project/component creation require separate approval and verification.
 
 The test project uses [Nice3point.TUnit.Revit](https://github.com/Nice3point/RevitUnit) to run integration tests against a live Revit instance.
 
@@ -411,7 +519,7 @@ mcp-servers-for-revit/
 ├── mcp-servers-for-revit.sln    # Combined solution (plugin + commandset + tests)
 ├── command.json                 # Command set manifest
 ├── server/                      # MCP server (TypeScript) - tools exposed to AI clients
-│   └── src/tools/               # One .ts file per tool (138 tools)
+│   └── src/tools/               # Tool registrations, including NBS
 ├── plugin/                      # Revit add-in (C#) - TCP bridge + chat panel
 │   └── UI/                      # Dockable chat panel (XAML + code-behind)
 ├── commandset/                  # Command implementations (C#) - Revit API operations
@@ -427,11 +535,13 @@ mcp-servers-for-revit/
 
 ## Releasing
 
-A single `v*` tag drives the entire release. The [release workflow](.github/workflows/release.yml) automatically:
+A commit on `main` is not a packaged release. The inherited [release workflow](.github/workflows/release.yml) is intended to:
 
 - Builds the Revit plugin + command set for Revit 2023-2027
 - Creates a GitHub release with `mcp-servers-for-revit-vX.Y.Z-Revit<year>.zip` assets
 - Publishes the MCP server to npm as [`mcp-server-for-revit`](https://www.npmjs.com/package/mcp-server-for-revit)
+
+This edition has not verified publication of the latest NBS update through that pipeline. Repository permissions, Actions configuration and ownership of the npm package must be checked before tagging. Do not assume this repository can publish to the upstream package name. Use the local build instructions for the current version.
 
 ```powershell
 # Bump version, commit, and tag
@@ -448,7 +558,8 @@ git push origin main --tags
 | **Original concept** | **Roman Zarkhin** — created the first MCP server for Revit (15 tools) | [romanzarkhin/revit-mcp](https://github.com/romanzarkhin/revit-mcp) |
 | **Expansion to 80+ tools** | **[mcp-servers-for-revit](https://github.com/mcp-servers-for-revit) community** — lisiting01, jmcouffin, huyan1458, bobbyg603, chuongmep and others expanded the project across three repos | [revit-mcp](https://github.com/mcp-servers-for-revit/revit-mcp), [revit-mcp-plugin](https://github.com/mcp-servers-for-revit/revit-mcp-plugin), [revit-mcp-commandset](https://github.com/mcp-servers-for-revit/revit-mcp-commandset) |
 | **Consolidated repo** | **[sparx-fire](https://sparx-fire.com)** (Bobby Galli) — merged the three repos into a single solution | [mcp-servers-for-revit/mcp-servers-for-revit](https://github.com/mcp-servers-for-revit/mcp-servers-for-revit) |
-| **Current maintainer** | **LuDattilo** — language-independent operation, embedded Claude chat panel, PowerShell installer | [LuDattilo/revit-mcp-server](https://github.com/LuDattilo/revit-mcp-server) |
+| **Upstream maintainer** | **LuDattilo** — language-independent operation, embedded Claude chat panel, PowerShell installer | [LuDattilo/revit-mcp-server](https://github.com/LuDattilo/revit-mcp-server) |
+| **NBS Nordic integration edition** | **Elprofessor1990** — model/project connection and NBS integration | [This repository](https://github.com/Elprofessor1990/revit-mcp-server-nbs-nordic) |
 
 ## License
 

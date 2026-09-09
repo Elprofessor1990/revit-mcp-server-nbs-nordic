@@ -1,7 +1,7 @@
 # Plan: samlet Revit–NBS-forbindelse og CCI i egenskaber
 
 Dato: 2026-09-09. Undersøgt checkout: `793b0da`.
-Status: løsningen er implementeret lokalt og dækket af 11 automatiske tests. Installation og livekontrol er beskrevet i `../nbs-update-2026-09-09.md`. Analysen nedenfor er bevaret som beslutningsgrundlag; den beskriver også tilstanden før ændringerne.
+Status: løsningen er implementeret lokalt og dækket af 11 automatiske tests. Installation og livekontrol er beskrevet i `../archive/2026-09-09-nbs/nbs-update-2026-09-09.md`; samlet, opdateret status står i `../nbs-integration-worklog.md`. Analysen nedenfor er bevaret som beslutningsgrundlag; den beskriver også tilstanden før ændringerne.
 
 ## Det ønskede resultat
 
