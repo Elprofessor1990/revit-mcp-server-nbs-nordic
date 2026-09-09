@@ -51,6 +51,31 @@ flowchart LR
 | **Revit Plugin** (`plugin/`) | C# | Automatic connection, settings UI, command dispatch and model-specific NBS parameter bridge |
 | **Command Set** (`commandset/`) | C# | Implements Revit API operations, returns structured results |
 
+## Tool-Agent architecture (in progress)
+
+The next layer being built on top of the MCP server: a routing/planning step that maps a natural-language intent (Danish or English) to one of a small set of reviewed, deterministic workflows built from the *existing* 151 tools — instead of an AI client picking tools ad hoc for every request. It never invents a tool, never runs `send_code_to_revit` automatically, and never expands what it was asked to do.
+
+```mermaid
+flowchart LR
+    Intent["Intent<br/>(dansk/engelsk fritekst)"] --> Normalizer["IntentNormalizer"]
+    Normalizer --> Router["IntentRouter"]
+    Router --> Rules["RuleEngine<br/>allow-list · deny send_code_to_revit · template-pinning"]
+    Rules --> Plan["WorkflowPlan<br/>executable: false"]
+    Plan -.ikke bygget endnu.-> Orchestrator["WorkflowOrchestrator"]
+    Orchestrator -.-> ExistingTools["151 eksisterende MCP-tools<br/>(uændrede, fx sync_revit_types_to_nbs)"]
+    Orchestrator -.-> Audit["Audit log<br/>(SQLite, append-only)"]
+    Plan -.-> Cache["Workflow cache<br/>(SQLite, TTL + LRU)"]
+```
+
+Solid arrows are implemented; dashed arrows are designed but not built yet.
+
+| Status | What |
+|---|---|
+| **Implemented, behind a feature flag** (`REVIT_MCP_TOOL_AGENT_ENABLED`, default **off**) | Intent normalization for four reference workflows (wall height, wall schedule, type renaming, NBS classification sync), a rule engine that pins each plan to its reviewed template and denies anything else, a tool-contract snapshot test that proves the flag being off leaves all 151 existing tools byte-for-byte unchanged, and separate SQLite-backed workflow-cache/audit-log stores. |
+| **Designed, not built** | An agent entrypoint that can actually be called by an MCP client, execution of a plan against live tools, cache feedback from real runs, and a live Revit end-to-end test. |
+
+No client can reach this today — there is no registered tool for it yet, and the flag defaults off. Full design, gap analysis against the target architecture, and file-level references: [`docs/revit-nbs-agent-phase1-analysis.md`](docs/revit-nbs-agent-phase1-analysis.md). Running status: [`docs/nbs-integration-worklog.md`](docs/nbs-integration-worklog.md).
+
 ## Requirements
 
 ### To use
