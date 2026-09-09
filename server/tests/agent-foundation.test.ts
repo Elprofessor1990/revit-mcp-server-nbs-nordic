@@ -34,11 +34,15 @@ function canonicalize(value: unknown): unknown {
 async function captureToolContract(): Promise<ContractSnapshot> {
   const server = new McpServer({ name: "tool-contract-test", version: "1.0.0" });
   const originalError = console.error;
+  const previousFlag = process.env.REVIT_MCP_TOOL_AGENT_ENABLED;
+  process.env.REVIT_MCP_TOOL_AGENT_ENABLED = "false";
   console.error = () => undefined;
   try {
     await registerTools(server);
   } finally {
     console.error = originalError;
+    if (previousFlag === undefined) delete process.env.REVIT_MCP_TOOL_AGENT_ENABLED;
+    else process.env.REVIT_MCP_TOOL_AGENT_ENABLED = previousFlag;
   }
   const client = new Client({ name: "tool-contract-client", version: "1.0.0" });
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();

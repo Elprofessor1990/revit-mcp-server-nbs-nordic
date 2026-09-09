@@ -1,4 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { readAgentConfig } from "../agent/AgentConfig.js";
+import { registerOrchestrateWorkflowTool } from "./orchestrate_workflow.js";
 import * as NbsProjectConnection from "./nbs_project_connection.js";
 
 import * as AddPrefixSuffix from "./add_prefix_suffix.js";
@@ -319,4 +321,5 @@ export async function registerTools(server: McpServer) {
       console.error(`Error registering tool ${name}:`, error);
     }
   }
+  if (readAgentConfig().enabled) registerOrchestrateWorkflowTool(server);
 }
