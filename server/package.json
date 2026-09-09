@@ -8,6 +8,7 @@
         "mcp-server-for-revit": "./build/index.js"
     },
     "scripts": {
+        "test:agent-foundation": "node test-agent-foundation.mjs",
         "test:nbs": "node test-nbs.mjs",
         "clean": "rimraf build",
         "prebuild": "npm run clean",
