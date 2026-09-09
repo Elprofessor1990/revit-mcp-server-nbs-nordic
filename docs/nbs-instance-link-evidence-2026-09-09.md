@@ -78,3 +78,50 @@ et nyere addin-tidsstempel stå.
   `NBS Component Instance Id`.
 - Der er intet at rette i vores kode for dette. Ingen kodeændringer i dette
   commit.
+
+## Tillæg: direkte bevis fra NBS' eksport, og test af unikke navne (kl. 11:41)
+
+### Instanskoblingen ligger i NBS' tabel Model-Instances, nøglet på Revit UniqueId
+
+`GET /api/v2/export-backup/10973` er et zip-arkiv (central directory-offset er
+ugyldigt for standardværktøjer; local headers kan inflates manuelt) med bl.a.
+`csv/Model-Instances.csv` og `csv/Model-Categories.csv`, som det offentlige
+instans-endpoint ikke viser:
+
+| Tabel | Kolonner |
+|---|---|
+| Model-Instances | id, **vendor_id**, name, category_id, **component_id**, created_at, updated_at, deleted_at, last_batch_id |
+| Model-Categories | id, model_id, parent_id, component_id, name, …, vendor_id, vendor_id_secondary |
+
+For Project1 (model 10156): 96 rækker, `vendor_id` = Revit-elementets
+**UniqueId**, `name` = typenavnet "Generic - 200mm", `component_id` = NULL
+(koblingen ligger på kategorien 2169262 med component_id 343153; kategorien
+"Walls" 2169261 har vendor_id −2000011 = BuiltInCategory.OST_Walls).
+
+Match mod Revit: 96 af 96 UniqueId'er fundet, 0 umatchede, og rækkefølgen efter
+ElementId er identisk med rækkefølgen efter NBS instans-id i alle 96
+positioner. Væg 1674273 (…-00198c21) ↔ instans 57491592, som forudsagt.
+
+Kolonnen `component_id` pr. instans findes altså i NBS' skema: det er den,
+"Type and Instance" kan udfylde, når et element kobles til en anden bygningsdel
+end sin type.
+
+### Unikke navne pr. væg: NBS Instance Manual Tag uploades ikke
+
+Feltvalg: addin'ets parameterfil grupperer felterne i "# Instance Parameters"
+(skrives af addin'et fra NBS: Tag, Tender, Contract, GWP …) og
+"# Instance Parameters Manual" (brugerens egne: Manual Doc Link, Manual Doc
+Name, **Manual Tag**). Det eneste instansnavnefelt, addin'et ikke selv
+overskriver, er `NBS Instance Manual Tag` (TEXT, GUID e60844a6-…).
+
+| Trin | Revit | NBS |
+|---|---|---|
+| Før | feltet ikke bundet | Model-Instances.name = "Generic - 200mm" × 96 |
+| Skrivning | bundet til Walls fra addin'ets fil; MCP-Væg-001 … 096 efter ElementId; kode `[L]%AD.003` og id 343153 uændrede | – |
+| Sync Now 11:41:56 | de 96 navne står urørt; NBSSyncModelDate 11:41:58 | name uændret, intet nyt felt i instanser, bygningsdel 343153 og extra_fields uændrede, "MCP-Væg" findes ikke i eksporten |
+| Tilbagerulning | værdier slettet, binding fjernet; kode og id fortsat uændrede; kun de 5 oprindelige instansfelter bundet | – |
+
+Konklusion: 1:1-koblingen er direkte bevist på UniqueId. Et unikt navn pr. væg
+kan holdes i Revit i `NBS Instance Manual Tag`, men addin'et sender det ikke
+til NBS, og NBS' instansrække har intet fritekstfelt ud over `name`, som
+addin'et sætter til typenavnet. Ingen kodeændringer.
