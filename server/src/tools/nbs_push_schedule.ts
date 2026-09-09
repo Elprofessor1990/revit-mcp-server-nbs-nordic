@@ -2,7 +2,7 @@ import { errorMessage } from "../utils/errorUtils.js";
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { pushSheet } from "../integrations/nbs/sheets/SheetService.js";
-import { resolveProjectId } from "../integrations/nbs/NbsConfig.js";
+import { resolveNbsProjectId } from "../integrations/nbs/ProjectConnection.js";
 import { rawToolResponse, rawToolError } from "../utils/compactTool.js";
 
 export function registerNbsPushScheduleTool(server: McpServer) {
@@ -14,17 +14,14 @@ export function registerNbsPushScheduleTool(server: McpServer) {
       projectId: z
         .union([z.string(), z.number()])
         .optional()
-        .describe("NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."),
+        .describe("NBS database project ID. Omit to use the project connected to the active Revit model."),
       name: z.string().describe("Sheet name in NBS"),
       revitId: z.string().describe("Identifier of the source Revit schedule/view"),
       rows: z.array(z.record(z.string(), z.unknown())).describe("Schedule rows (from get_schedule_data)."),
     },
     async (args) => {
       try {
-        const projectId = resolveProjectId(args.projectId);
-        if (!projectId) {
-          return rawToolError("nbs_push_schedule", "No projectId provided and NBS_PROJECT_ID is not set.");
-        }
+        const projectId = await resolveNbsProjectId(args.projectId);
         const result = await pushSheet({
           name: args.name,
           revit_id: args.revitId,

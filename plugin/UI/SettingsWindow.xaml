@@ -17,16 +17,16 @@
             <ListBox x:Name="NavListBox" BorderThickness="0" Background="Transparent" 
                      SelectionChanged="NavListBox_SelectionChanged">
                 <ListBoxItem x:Name="GeneralItem" IsSelected="True" Padding="10,8">
-                    <TextBlock Text="General" FontSize="14"/>
+                    <TextBlock Text="Forbindelse" FontSize="14"/>
                 </ListBoxItem>
                 <ListBoxItem x:Name="ApiKeyItem" Padding="10,8">
-                    <TextBlock Text="API Key" FontSize="14"/>
+                    <TextBlock Text="Indbygget chat (valgfri)" FontSize="14"/>
                 </ListBoxItem>
                 <ListBoxItem x:Name="NbsItem" Padding="10,8">
                     <TextBlock Text="NBS Nordic" FontSize="14"/>
                 </ListBoxItem>
                 <ListBoxItem x:Name="CommandSetItem" Padding="10,8">
-                    <TextBlock Text="Commands" FontSize="14"/>
+                    <TextBlock Text="Kommandoer (avanceret)" FontSize="14"/>
                 </ListBoxItem>
             </ListBox>
         </Border>

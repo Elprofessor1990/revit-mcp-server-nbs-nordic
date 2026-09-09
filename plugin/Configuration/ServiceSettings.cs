@@ -7,6 +7,9 @@ namespace revit_mcp_plugin.Configuration
     /// </summary>
     public class ServiceSettings
     {
+        [JsonProperty("autoStart")]
+        public bool AutoStart { get; set; } = true;
+
         /// <summary>
         /// <para>Log level.</para>
         /// </summary>

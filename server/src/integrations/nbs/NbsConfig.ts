@@ -40,8 +40,19 @@ function readFileConfig(): { apiKey?: string; projectId?: string } {
 }
 
 export function getNbsConfig(): NbsConfig {
+  // Settings in Revit writes this file atomically. Read on every request so
+  // changing the key does not require restarting Codex or Claude.
+  const sharedPath = join(homedir(), ".mcp-revit", "nbs-config.json");
+  let shared: { apiKey?: string } = {};
+  try {
+    shared = existsSync(sharedPath) ? JSON.parse(readFileSync(sharedPath, "utf-8")) : {};
+    if (shared.apiKey !== undefined && typeof shared.apiKey !== "string") throw new Error("Invalid config");
+  } catch {
+    // JSON parser errors may quote the credential. Do not pass them to an AI response.
+    throw new Error("The saved NBS settings could not be read. Save your API key again in Revit Settings > NBS Nordic.");
+  }
   const fileConfig = readFileConfig();
-  const apiKey = process.env.NBS_API_KEY || fileConfig.apiKey;
+  const apiKey = shared.apiKey?.trim() || process.env.NBS_API_KEY || fileConfig.apiKey;
   if (!apiKey) {
     throw new Error(
       "NBS_API_KEY is not set. Configure it as an environment variable, or via the NBS Nordic settings page in the Revit plugin."

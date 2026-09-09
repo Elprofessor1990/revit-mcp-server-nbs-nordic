@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using revit_mcp_plugin.Configuration;
 using revit_mcp_plugin.Utils;
 using System;
@@ -38,6 +39,7 @@ namespace revit_mcp_plugin.UI
                     if (config?.Settings != null)
                     {
                         PortTextBox.Text = config.Settings.Port.ToString();
+                        AutoStartCheckBox.IsChecked = config.Settings.AutoStart;
                         SetLogLevelSelection(config.Settings.LogLevel ?? DefaultLogLevel);
                     }
                     else
@@ -95,6 +97,7 @@ namespace revit_mcp_plugin.UI
         private void SetDefaults()
         {
             PortTextBox.Text = DefaultPort.ToString();
+            AutoStartCheckBox.IsChecked = true;
             SetLogLevelSelection(DefaultLogLevel);
         }
 
@@ -128,10 +131,12 @@ namespace revit_mcp_plugin.UI
             {
                 string registryPath = PathManager.GetCommandRegistryFilePath();
                 FrameworkConfig config;
+                JObject registryDocument = new JObject();
 
                 if (File.Exists(registryPath))
                 {
                     string json = File.ReadAllText(registryPath);
+                    registryDocument = JObject.Parse(json);
                     config = JsonConvert.DeserializeObject<FrameworkConfig>(json) ?? new FrameworkConfig();
                 }
                 else
@@ -145,9 +150,11 @@ namespace revit_mcp_plugin.UI
                 }
 
                 config.Settings.Port = port;
+                config.Settings.AutoStart = AutoStartCheckBox.IsChecked == true;
                 config.Settings.LogLevel = logLevel;
 
-                string updatedJson = JsonConvert.SerializeObject(config, Formatting.Indented);
+                registryDocument["settings"] = JObject.FromObject(config.Settings);
+                string updatedJson = registryDocument.ToString(Formatting.Indented);
                 File.WriteAllText(registryPath, updatedJson);
 
                 MessageBox.Show("Settings saved successfully. A Revit restart may be required for port changes to take effect.",

@@ -3,6 +3,7 @@
 # =============================================================================
 server/node_modules/
 server/build/
+server/.test-build/
 server/revit-data.db
 
 # Environment variables
@@ -11,6 +12,7 @@ server/revit-data.db
 !.env.example
 
 # Temp/report files
+/tmp/
 review_diff.txt
 *_REPORT.md
 *_report.md

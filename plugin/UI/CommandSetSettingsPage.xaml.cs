@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using revit_mcp_plugin.Configuration;
 using revit_mcp_plugin.Utils;
 using System;
@@ -207,7 +208,7 @@ namespace revit_mcp_plugin.UI
                                         Description = command.Description,
                                         // Use path with version placeholder
                                         AssemblyPath = dllBasePath,
-                                        Enabled = false,
+                                        Enabled = true,
                                         // Record all supported versions
                                         SupportedRevitVersions = supportedCommandVersions.ToArray()
                                     };
@@ -233,6 +234,16 @@ namespace revit_mcp_plugin.UI
                     var registry = JsonConvert.DeserializeObject<CommandRegistryJson>(registryJson);
                     if (registry?.Commands != null)
                     {
+                        var root = JObject.Parse(registryJson);
+                        // Older versions saved only enabled entries. Preserve omitted
+                        // choices during migration, rather than re-enabling them.
+                        if ((int?)root["commandSelectionVersion"] != 2 && registry.Commands.Count > 0)
+                        {
+                            var savedNames = new HashSet<string>(registry.Commands.Select(c => c.CommandName));
+                            foreach (var set in availableCommandSets.Values)
+                                foreach (var item in set.Commands)
+                                    if (!savedNames.Contains(item.CommandName)) item.Enabled = false;
+                        }
                         // Keep only valid commands
                         List<CommandConfig> validCommands = new List<CommandConfig>();
                         foreach (var registryItem in registry.Commands)
@@ -257,7 +268,8 @@ namespace revit_mcp_plugin.UI
                         if (availableCommandSets.Count > 0 && validCommands.Count != registry.Commands.Count)
                         {
                             registry.Commands = validCommands;
-                            string updatedJson = JsonConvert.SerializeObject(registry, Formatting.Indented);
+                            root["commands"] = JArray.FromObject(registry.Commands);
+                            string updatedJson = root.ToString(Formatting.Indented);
                             File.WriteAllText(registryFilePath, updatedJson);
                         }
                     }
@@ -365,9 +377,11 @@ namespace revit_mcp_plugin.UI
                 string registryFilePath = PathManager.GetCommandRegistryFilePath();
                 // Read existing registry to preserve complete command information
                 Dictionary<string, CommandConfig> existingCommandsDict = new Dictionary<string, CommandConfig>();
+                JObject registryDocument = new JObject();
                 if (File.Exists(registryFilePath))
                 {
                     string registryJson = File.ReadAllText(registryFilePath);
+                    registryDocument = JObject.Parse(registryJson);
                     var existingRegistry = JsonConvert.DeserializeObject<CommandRegistryJson>(registryJson);
                     if (existingRegistry?.Commands != null)
                     {
@@ -403,8 +417,7 @@ namespace revit_mcp_plugin.UI
 
                     foreach (var command in commandSet.Commands)
                     {
-                        // Only add enabled commands to the registry
-                        if (command.Enabled)
+                        // Persist disabled entries too; otherwise the next load loses the choice.
                         {
                             CommandConfig newConfig;
                             // Check if the command already exists in the previous registry
@@ -412,7 +425,7 @@ namespace revit_mcp_plugin.UI
                             {
                                 // If it exists, preserve original info, only update enabled status and path template
                                 newConfig = existingCommandsDict[command.CommandName];
-                                newConfig.Enabled = true;
+                                newConfig.Enabled = command.Enabled;
                                 newConfig.AssemblyPath = command.AssemblyPath;
                                 newConfig.SupportedRevitVersions = command.SupportedRevitVersions;
                             }
@@ -423,7 +436,7 @@ namespace revit_mcp_plugin.UI
                                 {
                                     CommandName = command.CommandName,
                                     AssemblyPath = command.AssemblyPath ?? "",
-                                    Enabled = true,
+                                    Enabled = command.Enabled,
                                     Description = command.Description,
                                     SupportedRevitVersions = command.SupportedRevitVersions,
                                     Developer = commandSetDeveloper
@@ -435,8 +448,8 @@ namespace revit_mcp_plugin.UI
                 }
                 // Build summary for display
                 string enabledFeaturesText = "";
-                int enabledCount = registry.Commands.Count;
-                foreach (var command in registry.Commands)
+                int enabledCount = registry.Commands.Count(c => c.Enabled);
+                foreach (var command in registry.Commands.Where(c => c.Enabled))
                 {
                     string commandSetName = commandSets
                         .FirstOrDefault(cs => cs.Commands.Any(c => c.CommandName == command.CommandName))?.Name ?? "Unknown";
@@ -446,7 +459,9 @@ namespace revit_mcp_plugin.UI
                     enabledFeaturesText += $"• {commandSetName}: {command.CommandName}\n";
                 }
                 // Serialize and save to file
-                string json = JsonConvert.SerializeObject(registry, Formatting.Indented);
+                registryDocument["commands"] = JArray.FromObject(registry.Commands);
+                registryDocument["commandSelectionVersion"] = 2;
+                string json = registryDocument.ToString(Formatting.Indented);
                 File.WriteAllText(registryFilePath, json);
                 MessageBox.Show($"Command set settings successfully saved!\n\nEnabled {enabledCount} commands:\n{enabledFeaturesText}",
                               "Settings Saved", MessageBoxButton.OK, MessageBoxImage.Information);

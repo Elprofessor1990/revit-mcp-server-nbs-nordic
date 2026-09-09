@@ -1,4 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import * as NbsProjectConnection from "./nbs_project_connection.js";
 
 import * as AddPrefixSuffix from "./add_prefix_suffix.js";
 import * as AddSharedParameter from "./add_shared_parameter.js";
@@ -249,6 +250,7 @@ export async function registerTools(server: McpServer) {
     { name: "manage_links", module: ManageLinks },
     { name: "navigate_view", module: NavigateView },
     { name: "nbs_list_projects", module: NbsListProjects },
+    { name: "nbs_project_connection", module: NbsProjectConnection },
     { name: "nbs_get_project", module: NbsGetProject },
     { name: "nbs_list_components", module: NbsListComponents },
     { name: "nbs_create_component", module: NbsCreateComponent },

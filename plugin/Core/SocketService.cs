@@ -55,10 +55,14 @@ namespace revit_mcp_plugin.Core
 
         public int Port => _port;
 
+        public NbsProjectBridge NbsProjects { get; private set; }
+
         // Initialization.
         public void Initialize(UIApplication uiApp)
         {
             _uiApp = uiApp;
+            if (_isRunning && NbsProjects != null) return;
+            if (NbsProjects == null) NbsProjects = new NbsProjectBridge();
 
             // Initialize ExternalEventManager
             ExternalEventManager.Instance.Initialize(uiApp, _logger);
@@ -80,7 +84,7 @@ namespace revit_mcp_plugin.Core
             //{
             //    _port = configManager.Config.Settings.Port;
             //}
-            _port = 8080; // Hard-wired port number.
+            _port = configManager.Config?.Settings?.Port ?? 8080;
 
             // Load commands.
             CommandManager commandManager = new CommandManager(
@@ -153,12 +157,12 @@ namespace revit_mcp_plugin.Core
 
             try
             {
-                int port = FindAvailablePort(8080, 8089);
+                int port = FindAvailablePort(_port, Math.Min(_port + 9, 65535));
                 if (port == -1)
                 {
-                    McpLogger.Error("SocketService", "No available port found in range 8080-8089");
+                    McpLogger.Error("SocketService", $"No available port found near {_port}");
                     System.Windows.Forms.MessageBox.Show(
-                        "No available port (8080-8089). Please close other applications using these ports and try again.",
+                        $"No available port near {_port}. Please close other applications using these ports and try again.",
                         "MCP Server - Port Error",
                         System.Windows.Forms.MessageBoxButtons.OK,
                         System.Windows.Forms.MessageBoxIcon.Error);
@@ -327,6 +331,15 @@ namespace revit_mcp_plugin.Core
                         JsonRPCErrorCodes.InvalidRequest,
                         "Invalid JSON-RPC request"
                     );
+                }
+
+                // Model context/connection is a built-in plugin capability. The same
+                // ExternalEvent is used by Settings and MCP, always on Revit's UI thread.
+                if (request.Method == "nbs_project")
+                {
+                    if (NbsProjects == null) throw new InvalidOperationException("Revit connection is not initialized.");
+                    var result = NbsProjects.RequestAsync(request.GetParamsObject() ?? new JObject()).GetAwaiter().GetResult();
+                    return CreateSuccessResponse(request.Id, result);
                 }
 
                 // Search for the command in the registry.

@@ -8,9 +8,11 @@
         "mcp-server-for-revit": "./build/index.js"
     },
     "scripts": {
+        "test:nbs": "node test-nbs.mjs",
         "clean": "rimraf build",
         "prebuild": "npm run clean",
-        "build": "node esbuild.config.mjs && node generate-tool-schemas.mjs && node deploy-addins.mjs",
+        "build:local": "node esbuild.config.mjs && node generate-tool-schemas.mjs",
+        "build": "npm run build:local && node deploy-addins.mjs",
         "build:check": "tsc --noEmit",
         "prepublishOnly": "npm run build"
     },

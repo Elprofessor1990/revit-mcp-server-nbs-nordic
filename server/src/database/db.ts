@@ -58,6 +58,11 @@ export async function getDatabase(): Promise<SqlJsDatabase> {
 
 // Initialize database schema
 function initializeDatabase(database: SqlJsDatabase) {
+  database.run(`CREATE TABLE IF NOT EXISTS nbs_model_type_mappings (
+    model_key TEXT NOT NULL, revit_type_id INTEGER NOT NULL, nbs_project_id TEXT NOT NULL,
+    nbs_component_id TEXT NOT NULL, matched_by TEXT NOT NULL, confidence REAL, timestamp INTEGER NOT NULL,
+    UNIQUE(model_key, revit_type_id, nbs_project_id)
+  )`);
   database.run(`
     CREATE TABLE IF NOT EXISTS projects (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

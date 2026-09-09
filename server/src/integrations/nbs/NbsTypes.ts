@@ -19,6 +19,10 @@ export interface NbsComponent {
   name: string;
   structure?: string;
   classificationcode?: string;
+  classificationserial?: string;
+  classificationcode_separator?: string;
+  published_document_urls?: string[];
+  updated_at?: string;
   discipline_id?: number;
   measure_id?: number;
   active?: number | boolean;

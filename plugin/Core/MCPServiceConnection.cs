@@ -18,13 +18,15 @@ namespace revit_mcp_plugin.Core
                 if (service.IsRunning)
                 {
                     service.Stop();
-                    TaskDialog.Show("revitMCP", "Close Server");
+                    TaskDialog.Show("Revit MCP", "Forbindelsen er afbrudt. Klik igen for at forbinde.");
                 }
                 else
                 {
                     service.Initialize(commandData.Application);
                     service.Start();
-                    TaskDialog.Show("revitMCP", "Open Server");
+                    TaskDialog.Show("Revit MCP", service.IsRunning
+                        ? "Revit er forbundet. Vælg dit NBS-projekt under Settings → NBS Nordic."
+                        : "Forbindelsen kunne ikke startes. Se loggen under Settings.");
                 }
 
                 return Result.Succeeded;

@@ -10,6 +10,7 @@ namespace revit_mcp_plugin.Core
     {
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            SocketService.Instance.Initialize(commandData.Application);
             SettingsWindow window = new SettingsWindow();
             _ = new System.Windows.Interop.WindowInteropHelper(window)
             {

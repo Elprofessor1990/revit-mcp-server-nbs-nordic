@@ -1,175 +1,188 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
+using Newtonsoft.Json.Linq;
+using revit_mcp_plugin.Configuration;
+using revit_mcp_plugin.Core;
 
 namespace revit_mcp_plugin.UI
 {
-    /// <summary>
-    /// Interaction logic for NbsApiKeySettingsPage.xaml
-    /// </summary>
     public partial class NbsApiKeySettingsPage : Page
     {
-        private const string ApiKeyDocsUrl = "https://support.nbsnordic.dk/article/138-hvor-finder-jeg-min-api-kode";
+        private bool loaded;
+        private bool busy;
+        private string verifiedKey;
+        private JObject model;
+        private static readonly HttpClient Client = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false })
+        { Timeout = TimeSpan.FromSeconds(30) };
 
-        private bool isPasswordVisible = false;
-        private string currentApiKey = string.Empty;
+        public sealed class ProjectChoice
+        {
+            public string Id { get; set; }
+            public string Name { get; set; }
+            public string Classification { get; set; }
+            public string Label => Name + " — " + Classification + " (#" + Id + ")";
+        }
 
         public NbsApiKeySettingsPage()
         {
             InitializeComponent();
-            DetectCurrentSettings();
-
-            EnvVarRadio.IsChecked = true;
+            try { ApiKeyPasswordBox.Password = NbsUserSettings.ReadApiKey(); }
+            catch { StatusText.Text = "Den gemte nøgle kunne ikke læses. Indtast din NBS-nøgle igen."; }
         }
 
-        private void DetectCurrentSettings()
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            string envKey = Environment.GetEnvironmentVariable("NBS_API_KEY");
-            string envProjectId = Environment.GetEnvironmentVariable("NBS_PROJECT_ID");
-            string filePath = GetApiKeyFilePath();
-            string fileKey = null;
-            string fileProjectId = null;
-
-            if (File.Exists(filePath))
-            {
-                try
-                {
-                    var lines = File.ReadAllLines(filePath);
-                    if (lines.Length > 0) fileKey = lines[0].Trim();
-                    if (lines.Length > 1) fileProjectId = lines[1].Trim();
-                    if (string.IsNullOrEmpty(fileKey)) fileKey = null;
-                }
-                catch
-                {
-                    fileKey = null;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(envKey))
-            {
-                StatusText.Text = "Configured";
-                StatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4CAF50"));
-                StatusSourceText.Text = "(from environment variable)";
-                EnvVarRadio.IsChecked = true;
-                ProjectIdTextBox.Text = envProjectId ?? string.Empty;
-                currentApiKey = envKey;
-                ApiKeyPasswordBox.Password = envKey;
-                ApiKeyTextBox.Text = envKey;
-            }
-            else if (!string.IsNullOrEmpty(fileKey))
-            {
-                StatusText.Text = "Configured";
-                StatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4CAF50"));
-                StatusSourceText.Text = "(from file)";
-                FileRadio.IsChecked = true;
-                ProjectIdTextBox.Text = fileProjectId ?? string.Empty;
-                currentApiKey = fileKey;
-                ApiKeyPasswordBox.Password = fileKey;
-                ApiKeyTextBox.Text = fileKey;
-            }
-            else
-            {
-                StatusText.Text = "Not configured";
-                StatusText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F44336"));
-                StatusSourceText.Text = string.Empty;
-            }
+            if (loaded) return;
+            loaded = true;
+            if (!string.IsNullOrWhiteSpace(ApiKeyPasswordBox.Password)) await LoadProjects();
+            else await RefreshModel();
         }
 
-        private static string GetApiKeyFilePath()
+        private void SetBusy(bool value)
         {
-            string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            return Path.Combine(userProfile, ".claude", "nbs_api_key.txt");
+            busy = value;
+            ApiKeyPasswordBox.IsEnabled = !value;
+            LoadProjectsButton.IsEnabled = !value;
+            ProjectsComboBox.IsEnabled = !value;
+            CloneNameTextBox.IsEnabled = !value;
+            UpdateButtons();
         }
 
-        private void ToggleVisibilityButton_Click(object sender, RoutedEventArgs e)
+        private void UpdateButtons()
         {
-            isPasswordVisible = !isPasswordVisible;
-
-            if (isPasswordVisible)
-            {
-                ApiKeyTextBox.Text = currentApiKey;
-                ApiKeyPasswordBox.Visibility = Visibility.Collapsed;
-                ApiKeyTextBox.Visibility = Visibility.Visible;
-                ToggleVisibilityButton.Content = "Hide";
-            }
-            else
-            {
-                ApiKeyPasswordBox.Password = currentApiKey;
-                ApiKeyTextBox.Visibility = Visibility.Collapsed;
-                ApiKeyPasswordBox.Visibility = Visibility.Visible;
-                ToggleVisibilityButton.Content = "Show";
-            }
+            if (ConnectButton == null || CloneButton == null) return;
+            bool selected = !busy && verifiedKey != null && ProjectsComboBox.SelectedItem is ProjectChoice;
+            ConnectButton.IsEnabled = selected && model != null;
+            CloneButton.IsEnabled = selected;
         }
 
         private void ApiKeyPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            currentApiKey = ApiKeyPasswordBox.Password;
+            verifiedKey = null;
+            UpdateButtons();
         }
 
-        private void ApiKeyTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private async Task<JToken> Request(string key, string path, bool post = false)
         {
-            currentApiKey = ApiKeyTextBox.Text;
+            using (var request = new HttpRequestMessage(post ? HttpMethod.Post : HttpMethod.Get, "https://nbsnordic.net/api/v2" + path))
+            {
+                request.Headers.Add("api-key", key);
+                using (var response = await Client.SendAsync(request))
+                {
+                    if (!response.IsSuccessStatusCode)
+                        throw new InvalidOperationException(response.StatusCode == System.Net.HttpStatusCode.Unauthorized
+                            ? "NBS afviste nøglen. Kontrollér din personlige NBS API-nøgle."
+                            : "NBS svarede HTTP " + (int)response.StatusCode + ". Kontrollér projektadgang og eventuelle Pro-rettigheder.");
+                    return JToken.Parse(await response.Content.ReadAsStringAsync());
+                }
+            }
+        }
+
+        private async Task RefreshModel()
+        {
+            try
+            {
+                if (SocketService.Instance.NbsProjects == null) throw new InvalidOperationException("Åbn Settings igen fra Revit.");
+                model = JObject.FromObject(await SocketService.Instance.NbsProjects.RequestAsync(new JObject { ["operation"] = "status" }));
+                var projectId = (string)model["projectId"];
+                ModelText.Text = "Revit: " + (string)model["documentTitle"] + "\n" +
+                    (string.IsNullOrWhiteSpace(projectId) ? "Modellen er ikke koblet til NBS endnu." : "Koblet til NBS-projekt #" + projectId);
+            }
+            catch (Exception ex) { model = null; ModelText.Text = ex.Message; }
+            UpdateButtons();
+        }
+
+        private async Task<bool> LoadProjects(string selectId = null)
+        {
+            SetBusy(true);
+            StatusText.Text = "Kontrollerer NBS-adgang…";
+            try
+            {
+                string key = ApiKeyPasswordBox.Password.Trim();
+                if (string.IsNullOrEmpty(key)) throw new InvalidOperationException("Indtast din NBS API-nøgle først.");
+                var response = await Request(key, "/projects") as JArray;
+                if (response == null) throw new InvalidOperationException("NBS returnerede ikke en projektliste.");
+                var projects = response.Where(p => (int?)p["active"] != 0).Select(p => new ProjectChoice {
+                    Id = (string)p["id"], Name = (string)p["project_name"], Classification = (string)p["classification_system_name"]
+                }).OrderBy(p => p.Name).ToList();
+                NbsUserSettings.SaveApiKey(key);
+                verifiedKey = key;
+                ProjectsComboBox.ItemsSource = projects;
+                await RefreshModel();
+                ProjectsComboBox.SelectedValue = selectId ?? (string)model?["projectId"];
+                StatusText.Text = "NBS forbundet — " + projects.Count + " aktive projekter. Nøglen er gemt til din AI.";
+                return true;
+            }
+            catch (Exception ex) { verifiedKey = null; StatusText.Text = ex.Message; return false; }
+            finally { SetBusy(false); }
+        }
+
+        private async void LoadProjects_Click(object sender, RoutedEventArgs e) { await LoadProjects(); }
+
+        private void Project_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var project = ProjectsComboBox.SelectedItem as ProjectChoice;
+            ProjectDetailsText.Text = project == null ? "Vælg et projekt fra listen." : "Klassifikationssystem: " + project.Classification;
+            UpdateButtons();
+        }
+
+        private async void Connect_Click(object sender, RoutedEventArgs e)
+        {
+            var project = ProjectsComboBox.SelectedItem as ProjectChoice;
+            if (project == null || model == null || verifiedKey == null) return;
+            string expectedModel = (string)model["modelKey"];
+            SetBusy(true);
+            try
+            {
+                StatusText.Text = "Kontrollerer projektet og klargør NBS-felter…";
+                await Request(verifiedKey, "/projects/" + project.Id);
+                model = JObject.FromObject(await SocketService.Instance.NbsProjects.RequestAsync(new JObject {
+                    ["operation"] = "connect", ["projectId"] = project.Id, ["expectedModelKey"] = expectedModel
+                }));
+                SocketService.Instance.Start();
+                if (!SocketService.Instance.IsRunning)
+                    throw new InvalidOperationException("NBS-projektet er tilknyttet modellen, men MCP-forbindelsen kunne ikke starte. Gem modellen og kontrollér forbindelsen.");
+                await RefreshModel();
+                StatusText.Text = "Forbundet til " + project.Name + ". NBS-felterne er klar. Gem Revit-filen; din AI kan nu synkronisere klassifikationerne.";
+            }
+            catch (Exception ex) { StatusText.Text = ex.Message; }
+            finally { SetBusy(false); }
+        }
+
+        private async void Clone_Click(object sender, RoutedEventArgs e)
+        {
+            var template = ProjectsComboBox.SelectedItem as ProjectChoice;
+            string name = CloneNameTextBox.Text.Trim();
+            if (template == null || verifiedKey == null) return;
+            if (name.Length == 0) { StatusText.Text = "Skriv navnet på det nye projekt først."; return; }
+            SetBusy(true);
+            try
+            {
+                StatusText.Text = "Opretter projektkopien i NBS…";
+                var result = await Request(verifiedKey, "/projects/" + template.Id + "?project_name=" + Uri.EscapeDataString(name), true);
+                string id = result is JObject obj ? (string)(obj["id"] ?? obj["project"]?["id"]) : null;
+                if (!await LoadProjects(id))
+                {
+                    StatusText.Text = "NBS har modtaget oprettelsen, men listen kunne ikke genindlæses. " + StatusText.Text + " Kontrollér projektlisten før et nyt forsøg.";
+                    return;
+                }
+                StatusText.Text = "NBS har modtaget oprettelsen. Vælg det nye projekt og tryk Forbind projekt. Kontrollér listen før et nyt forsøg.";
+            }
+            catch (Exception ex) { StatusText.Text = ex.Message + " Kontrollér projektlisten før et nyt forsøg; oprettelsen kan være gennemført."; }
+            finally { SetBusy(false); }
         }
 
         private void WhereDoIFindMyApiKey_Click(object sender, MouseButtonEventArgs e)
         {
-            try
-            {
-                Process.Start(new ProcessStartInfo(ApiKeyDocsUrl) { UseShellExecute = true });
-            }
-            catch
-            {
-                // Best-effort — do not crash the settings page if no default browser is registered.
-            }
-        }
-
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
-        {
-            string apiKey = currentApiKey?.Trim();
-            string projectId = ProjectIdTextBox.Text?.Trim() ?? string.Empty;
-
-            if (string.IsNullOrEmpty(apiKey))
-            {
-                MessageBox.Show("Please enter an API key.", "Missing API Key",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            try
-            {
-                if (EnvVarRadio.IsChecked == true)
-                {
-                    Environment.SetEnvironmentVariable("NBS_API_KEY", apiKey, EnvironmentVariableTarget.User);
-                    Environment.SetEnvironmentVariable("NBS_PROJECT_ID", projectId, EnvironmentVariableTarget.User);
-                    MessageBox.Show(
-                        "NBS Nordic settings saved to environment variables NBS_API_KEY / NBS_PROJECT_ID.\nA Revit restart may be needed for changes to take effect.",
-                        "Settings Saved", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else if (FileRadio.IsChecked == true)
-                {
-                    string filePath = GetApiKeyFilePath();
-                    string directory = Path.GetDirectoryName(filePath);
-                    if (!Directory.Exists(directory))
-                    {
-                        Directory.CreateDirectory(directory);
-                    }
-                    File.WriteAllLines(filePath, new[] { apiKey, projectId });
-                    MessageBox.Show(
-                        $"NBS Nordic settings saved to {filePath}.\nA Revit restart may be needed for changes to take effect.",
-                        "Settings Saved", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-
-                DetectCurrentSettings();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Failed to save NBS Nordic settings: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            try { Process.Start(new ProcessStartInfo("https://support.nbsnordic.dk/article/138-hvor-finder-jeg-min-api-kode") { UseShellExecute = true }); }
+            catch (Exception ex) { StatusText.Text = ex.Message; }
         }
     }
 }

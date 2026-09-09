@@ -15,6 +15,11 @@ const BACKOFF_MS = [1000, 2000, 4000];
  * Falls back to 8080 if no valid port file is found.
  */
 function readPortFromFile(): number {
+  if (process.env.REVIT_MCP_PORT) {
+    const port = Number(process.env.REVIT_MCP_PORT);
+    if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("REVIT_MCP_PORT must be a valid TCP port.");
+    return port;
+  }
   const appData = process.env.APPDATA || "";
   const years = ["2027", "2026", "2025", "2024", "2023"];
   for (const year of years) {
@@ -22,7 +27,7 @@ function readPortFromFile(): number {
     if (existsSync(portFile)) {
       try {
         const port = parseInt(readFileSync(portFile, "utf-8").trim(), 10);
-        if (port >= 8080 && port <= 8089) return port;
+        if (port >= 1 && port <= 65535) return port;
       } catch { /* ignore, try next */ }
     }
   }
@@ -45,13 +50,16 @@ async function attemptConnection<T>(
     // Connect to Revit client
     if (!revitClient.isConnected) {
       await new Promise<void>((resolve, reject) => {
+        let timer: ReturnType<typeof setTimeout>;
         const onConnect = () => {
+          clearTimeout(timer);
           revitClient.socket.removeListener("connect", onConnect);
           revitClient.socket.removeListener("error", onError);
           resolve();
         };
 
         const onError = (error: any) => {
+          clearTimeout(timer);
           revitClient.socket.removeListener("connect", onConnect);
           revitClient.socket.removeListener("error", onError);
           reject(new Error("Connect to Revit client failed"));
@@ -60,13 +68,12 @@ async function attemptConnection<T>(
         revitClient.socket.on("connect", onConnect);
         revitClient.socket.on("error", onError);
 
-        revitClient.connect();
-
-        setTimeout(() => {
+        timer = setTimeout(() => {
           revitClient.socket.removeListener("connect", onConnect);
           revitClient.socket.removeListener("error", onError);
           reject(new Error("Connection to Revit client timed out"));
         }, 5000);
+        revitClient.connect();
       });
     }
 
@@ -98,9 +105,8 @@ export async function withRevitConnection<T>(
   });
   await previousMutex;
 
-  const port = readPortFromFile();
-
   try {
+    const port = readPortFromFile();
     for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
       try {
         return await attemptConnection(port, operation, timeoutMs);

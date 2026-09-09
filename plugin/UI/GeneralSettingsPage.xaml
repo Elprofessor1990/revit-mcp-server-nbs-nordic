@@ -15,9 +15,11 @@
 
         <!-- Header -->
         <StackPanel Grid.Row="0" Margin="0,0,0,15">
-            <TextBlock Text="General Settings" FontSize="22" FontWeight="SemiBold" Foreground="#333333"/>
-            <TextBlock Text="Configure server and plugin options"
+            <TextBlock Text="Forbindelse" FontSize="22" FontWeight="SemiBold" Foreground="#333333"/>
+            <TextBlock Text="Forbind din AI til Revit. Vælg NBS-projekt under NBS Nordic."
                        Foreground="#666666" Margin="0,5,0,0"/>
+            <CheckBox x:Name="AutoStartCheckBox" Content="Start forbindelsen automatisk, når Revit åbner"
+                      Margin="0,15,0,0" FontSize="14"/>
         </StackPanel>
 
         <!-- Settings Form -->
@@ -41,7 +43,7 @@
                 <!-- Port -->
                 <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,10,0,10" VerticalAlignment="Center">
                     <TextBlock Text="MCP Server Port" FontSize="14" FontWeight="SemiBold" Foreground="#333333"/>
-                    <TextBlock Text="TCP port for Revit-Claude communication (requires restart)"
+                    <TextBlock Text="Lokal forbindelse til din AI (avanceret; kræver genstart)"
                                FontSize="11" Foreground="#666666" TextWrapping="Wrap" Margin="0,3,0,0"/>
                 </StackPanel>
                 <TextBox x:Name="PortTextBox" Grid.Row="0" Grid.Column="1"

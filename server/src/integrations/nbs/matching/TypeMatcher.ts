@@ -41,20 +41,21 @@ export function matchType(
   if (revitType.existingNbsComponentId) {
     const component = nbsComponents.find((c) => String(c.id) === revitType.existingNbsComponentId);
     if (component) return { method: "id", component, confidence: 1, ambiguous: false };
+    // An old/deleted link must not silently attach to a different component.
+    return { method: "none", confidence: 0, ambiguous: true, candidates: [] };
+  }
+
+  // An explicit user choice can resolve code/name ambiguity for an unlinked type.
+  if (explicitMapping && Object.prototype.hasOwnProperty.call(explicitMapping, String(revitType.typeId))) {
+    const component = nbsComponents.find(c => c.id === explicitMapping[String(revitType.typeId)]);
+    return component ? { method: "explicit", component, confidence: 1, ambiguous: false }
+      : { method: "none", confidence: 0, ambiguous: true, candidates: [] };
   }
 
   if (revitType.existingClassificationcode) {
     const matches = nbsComponents.filter((c) => c.classificationcode === revitType.existingClassificationcode);
     if (matches.length === 1) return { method: "classificationcode", component: matches[0], confidence: 0.9, ambiguous: false };
     if (matches.length > 1) return { method: "classificationcode", confidence: 0.5, ambiguous: true, candidates: matches };
-  }
-
-  if (explicitMapping) {
-    const mappedId = explicitMapping[String(revitType.typeId)];
-    if (mappedId != null) {
-      const component = nbsComponents.find((c) => c.id === mappedId);
-      if (component) return { method: "explicit", component, confidence: 1, ambiguous: false };
-    }
   }
 
   const normalizedTypeName = normalizeName(revitType.typeName);

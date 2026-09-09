@@ -2,7 +2,7 @@ import { errorMessage } from "../utils/errorUtils.js";
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { pushQuantities } from "../integrations/nbs/quantities/QuantityService.js";
-import { resolveProjectId } from "../integrations/nbs/NbsConfig.js";
+import { resolveNbsProjectId } from "../integrations/nbs/ProjectConnection.js";
 import { rawToolResponse, rawToolError } from "../utils/compactTool.js";
 
 export function registerNbsPushQuantitiesTool(server: McpServer) {
@@ -15,17 +15,14 @@ export function registerNbsPushQuantitiesTool(server: McpServer) {
       projectId: z
         .union([z.string(), z.number()])
         .optional()
-        .describe("NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."),
+        .describe("NBS database project ID. Omit to use the project connected to the active Revit model."),
       rows: z
         .array(z.record(z.string(), z.unknown()))
         .describe("Quantity rows. Exact row shape is not fully documented by NBS — verify against a real response before relying on specific field names."),
     },
     async (args) => {
       try {
-        const projectId = resolveProjectId(args.projectId);
-        if (!projectId) {
-          return rawToolError("nbs_push_quantities", "No projectId provided and NBS_PROJECT_ID is not set.");
-        }
+        const projectId = await resolveNbsProjectId(args.projectId);
         const result = await pushQuantities({ project_id: projectId, json_array: args.rows });
         return rawToolResponse("nbs_push_quantities", result);
       } catch (error) {

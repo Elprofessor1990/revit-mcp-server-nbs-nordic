@@ -3650,6 +3650,15 @@
     }
   },
   {
+    "name": "get_connection_status",
+    "description": "Read connection status, active Revit model identity, NBS project and missing parameter bindings. Never returns API keys.",
+    "input_schema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
     "name": "get_current_view_elements",
     "description": "Get elements from the current active view in Revit. You can filter by model categories (like Walls, Floors) or annotation categories (like Dimensions, Text). Use includeHidden to show/hide invisible elements and limit to control the number of returned elements.\n\nGUIDANCE:\n- See what's in the active view: call with no parameters\n- Filter by category: use categoryFilter to narrow results (e.g. \"Walls\", \"Doors\")\n- Use before operate_element to find elements to select/hide/isolate\n\nTIPS:\n- Returns element IDs, names, categories — use these IDs with other tools\n- Large views may return many elements — use categoryFilter to limit results\n- Combine with get_element_parameters to inspect specific elements",
     "input_schema": {
@@ -4882,6 +4891,56 @@
     }
   },
   {
+    "name": "nbs_clone_project",
+    "description": "Create a new NBS project by cloning an existing project and its setup (documented Pro feature). Not blank-project creation. Only call when the user requested a new project with this name/template. Does not connect the Revit model. On timeout, check nbs_list_projects before retrying to avoid duplicate projects.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "templateProjectId": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "templateProjectId",
+        "name"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
+    "name": "nbs_connect_project",
+    "description": "Connect the active Revit model to an accessible NBS project and create the official NBS type/instance parameter bindings in one operation. Saves the project ID in the model; save the RVT to persist. Repeated connection to the same project is safe. Will not silently migrate an already linked model to a different project.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "expectedModelKey": {
+          "type": "string",
+          "description": "Model identity returned by get_connection_status; prevents connecting a different active model."
+        }
+      },
+      "required": [
+        "projectId"
+      ],
+      "additionalProperties": false,
+      "$schema": "http://json-schema.org/draft-07/schema#"
+    }
+  },
+  {
     "name": "nbs_create_component",
     "description": "Create a new NBS Nordic building component (bygningsdel) in a project. Do not invent structure/description values — they must come from verified Revit parameters, user input, or an approved knowledge source (see prepare_nbs_component_description).",
     "input_schema": {
@@ -4892,7 +4951,7 @@
             "string",
             "number"
           ],
-          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+          "description": "NBS database project ID. Omit to use the project connected to the active Revit model."
         },
         "name": {
           "type": "string",
@@ -4958,7 +5017,7 @@
   },
   {
     "name": "nbs_get_project",
-    "description": "Get a single NBS Nordic project by ID. Falls back to NBS_PROJECT_ID env var if projectId is omitted.",
+    "description": "Get an NBS Nordic project by ID, or the project connected to the active Revit model.",
     "input_schema": {
       "type": "object",
       "properties": {
@@ -4967,7 +5026,7 @@
             "string",
             "number"
           ],
-          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+          "description": "NBS database project ID. Omit to use the project connected to the active Revit model."
         }
       },
       "additionalProperties": false,
@@ -4976,7 +5035,7 @@
   },
   {
     "name": "nbs_list_components",
-    "description": "List NBS Nordic building components (bygningsdele) for a project. Falls back to NBS_PROJECT_ID env var if projectId is omitted.",
+    "description": "List NBS Nordic building components (bygningsdele). Defaults to the project connected to the active Revit model.",
     "input_schema": {
       "type": "object",
       "properties": {
@@ -4985,7 +5044,7 @@
             "string",
             "number"
           ],
-          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+          "description": "NBS database project ID. Omit to use the project connected to the active Revit model."
         }
       },
       "additionalProperties": false,
@@ -4994,7 +5053,7 @@
   },
   {
     "name": "nbs_list_instances",
-    "description": "List all NBS Nordic project instances (linked model elements) with their component links and instance parameters. Falls back to NBS_PROJECT_ID env var if projectId is omitted.",
+    "description": "List all NBS Nordic project instances (linked model elements) with their component links and instance parameters. Defaults to the project connected to the active Revit model.",
     "input_schema": {
       "type": "object",
       "properties": {
@@ -5003,7 +5062,7 @@
             "string",
             "number"
           ],
-          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+          "description": "NBS database project ID. Omit to use the project connected to the active Revit model."
         }
       },
       "additionalProperties": false,
@@ -5053,7 +5112,7 @@
             "string",
             "number"
           ],
-          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+          "description": "NBS database project ID. Omit to use the project connected to the active Revit model."
         },
         "rows": {
           "type": "array",
@@ -5082,7 +5141,7 @@
             "string",
             "number"
           ],
-          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+          "description": "NBS database project ID. Omit to use the project connected to the active Revit model."
         },
         "name": {
           "type": "string",
@@ -6399,34 +6458,65 @@
   },
   {
     "name": "sync_revit_types_to_nbs",
-    "description": "Match Revit types in a category against NBS Nordic components, then (unless dryRun) write high-confidence matches back to Revit — to BOTH the type (NBS Component Type Id / NBS Classificationcode / NBS Component Name / NBS Date) AND every instance of that type (NBS Component Instance Id / NBS Instance Classificationcode / NBS Instance Component Name / NBS Instance Date), so the link and when it happened are visible on an instance immediately, not just the type. Matching itself groups by Revit TYPE, not instance — 400 walls of 4 types produces 4 matches, not 400. Only id/explicit/unique-classificationcode matches (confidence >= 0.9) are ever auto-written; name and fuzzy family+type matches are returned as proposals only. Does NOT create missing NBS components — review proposedCreates and call nbs_create_component explicitly per type you approve. dryRun defaults to true.",
+    "description": "On-demand NBS-to-Revit parameter sync. Explicitly choose Type Only, Instance Only or Type and Instance. Type and instance links are independent; never overwrite an instance link from its type. Uses the NBS project saved in the active model. Writes existing NBS component IDs, full classification, name, date and published document links. NOT the official NBS addin's two-way Sync Now: does not upload models/quantities, create components, allocate .001-.050 numbers or change native addin settings. Defaults to preview; writes are model-guarded, verified and atomic.",
     "input_schema": {
       "type": "object",
       "properties": {
         "category": {
           "type": "string",
-          "description": "Revit BuiltInCategory name, e.g. 'OST_Walls', 'OST_Doors'."
+          "description": "Revit BuiltInCategory, e.g. OST_Walls or OST_Doors."
+        },
+        "linkMode": {
+          "type": "string",
+          "enum": [
+            "typeOnly",
+            "instanceOnly",
+            "typeAndInstance"
+          ],
+          "description": "Required sync target: Type Only, Instance Only, or Type and Instance. Independent of the official NBS addin's UI setting."
         },
         "projectId": {
           "type": [
             "string",
             "number"
           ],
-          "description": "NBS project ID. Omit to use the NBS_PROJECT_ID environment variable."
+          "description": "Optional assertion: must match this model's NBS project."
         },
         "maxTypes": {
-          "type": "number",
-          "default": 50,
-          "description": "Maximum distinct Revit types to process."
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2000,
+          "default": 500
         },
         "dryRun": {
           "type": "boolean",
-          "default": true,
-          "description": "If true (default), only report — no Revit writes happen."
+          "default": true
+        },
+        "explicitMapping": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "exclusiveMinimum": 0
+          },
+          "description": "User-approved Revit type ID to NBS component ID mapping for otherwise ambiguous/unmatched types."
+        },
+        "explicitInstanceMapping": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "exclusiveMinimum": 0
+          },
+          "description": "User-approved Revit instance UniqueId to existing NBS component ID. Can link different instances of one type to different NBS components. Preview lists unresolved instance UniqueIds."
+        },
+        "inheritTypeForUnlinkedInstances": {
+          "type": "boolean",
+          "default": false,
+          "description": "Only for Type and Instance: explicitly copy a reliable type link to completely unlinked instances. Existing instance IDs/codes are always preserved. Does not allocate unique numbers."
         }
       },
       "required": [
-        "category"
+        "category",
+        "linkMode"
       ],
       "additionalProperties": false,
       "$schema": "http://json-schema.org/draft-07/schema#"

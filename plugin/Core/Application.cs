@@ -6,6 +6,9 @@ using System.Windows.Media.Imaging;
 using revit_mcp_plugin.Helpers;
 using revit_mcp_plugin.UI;
 using revit_mcp_plugin.Utils;
+using Autodesk.Revit.UI.Events;
+using Newtonsoft.Json;
+using revit_mcp_plugin.Configuration;
 
 
 
@@ -15,6 +18,7 @@ namespace revit_mcp_plugin.Core
     {
         public Result OnStartup(UIControlledApplication application)
         {
+            application.Idling += StartConnectionWhenReady;
             var pluginDir = Path.GetDirectoryName(typeof(Application).Assembly.Location);
             McpLogger.Initialize(pluginDir);
             McpLogger.Info("Application", "Plugin starting");
@@ -63,6 +67,7 @@ namespace revit_mcp_plugin.Core
 
         public Result OnShutdown(UIControlledApplication application)
         {
+            application.Idling -= StartConnectionWhenReady;
             try
             {
                 if (SocketService.Instance.IsRunning)
@@ -76,6 +81,27 @@ namespace revit_mcp_plugin.Core
             }
 
             return Result.Succeeded;
+        }
+
+        private void StartConnectionWhenReady(object sender, IdlingEventArgs args)
+        {
+            var uiApp = sender as UIApplication;
+            if (uiApp == null) return;
+            uiApp.Idling -= StartConnectionWhenReady;
+            try
+            {
+                var path = PathManager.GetCommandRegistryFilePath();
+                var config = File.Exists(path)
+                    ? JsonConvert.DeserializeObject<FrameworkConfig>(File.ReadAllText(path))
+                    : new FrameworkConfig();
+                if (config?.Settings?.AutoStart == false) return;
+                SocketService.Instance.Initialize(uiApp);
+                SocketService.Instance.Start();
+            }
+            catch (Exception ex)
+            {
+                McpLogger.Error("Application", "Automatic connection failed; open Settings to retry", ex);
+            }
         }
     }
 }
