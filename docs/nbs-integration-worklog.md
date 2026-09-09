@@ -5,6 +5,11 @@ kun op der for fulde kommandoer og API-svar bag en konklusion.
 
 ## Status til næste udvikler (Codex)
 
+- Tool-Agent foundation trin 1-2 er implementeret: feature flag er default off, og 151 tool-kontrakter er frosset som snapshot.
+- Workflow-cache og audit har separate interfaces, schema migration v1 og separate filer (`workflow-cache.db` / `audit-log.db`) fra `revit-data.db`.
+- Verificeret med `tsc --noEmit`, 25/25 NBS-tests og 4/4 nye contract/cache-tests.
+- Næste skridt efter review: RuleEngine og deterministic routing; ingen agent-entrypoint er tilføjet endnu.
+
 Klassifikations-serienummer-bugget (projekt 13365, komponenter
 343271/343277/343278/343291, koder `[L]%AD130`/`[L]%AD140`) er
 **rodårsagsbestemt, rettet, testet og pushet** (`dcfd02c`, `c69e7fb`,
