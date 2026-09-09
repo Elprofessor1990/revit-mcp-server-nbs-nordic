@@ -5,6 +5,11 @@ kun op der for fulde kommandoer og API-svar bag en konklusion.
 
 ## Status til næste udvikler (Codex)
 
+- Trin 5: intern WorkflowOrchestrator genbruger reviewede handlers og NBS-planens requests; AuditSink logger hvert step og old/new med fejl/verifikation.
+- Stop ved fejl, ingen delvis workflow-success eller udokumenteret rollback; bindings og semantisk read-back kræves fra betroet kode.
+- Verificeret offline: build:check rent; NBS 25/25, foundation 4/4, routing 10/10, entrypoint 3/3 og orchestrator 17/17.
+- MCP-entrypoint er fortsat kun plan; afventer review uden commit/push før trin 6 (confirmed execution/cache feedback).
+
 - Trin 4: `orchestrate_workflow` er en tynd plan-only wrapper om IntentRouter, kun registreret med agent-flag on (default off).
 - Ingen Revit/NBS-kald eller execution; execute og manglende mode afvises eksplicit.
 - Verificeret: build:check rent; NBS 25/25, foundation 4/4 (151 uændrede kontrakter), routing 10/10 og entrypoint 3/3.
