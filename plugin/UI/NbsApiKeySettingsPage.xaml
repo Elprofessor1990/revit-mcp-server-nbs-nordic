@@ -1,4 +1,4 @@
-<Page x:Class="revit_mcp_plugin.UI.NbsApiKeySettingsPage"
+﻿<Page x:Class="revit_mcp_plugin.UI.NbsApiKeySettingsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Loaded="Page_Loaded">
     <Grid Background="White">
@@ -45,7 +45,7 @@
                     <CheckBox x:Name="FieldIdCheck" Content="NBS Component Id (anbefales — bruges til at genkende koblingen næste gang)" Margin="0,2"/>
                     <CheckBox x:Name="FieldCodeCheck" Content="NBS Classificationcode (fuld kode, fx [L]%AD.003)" Margin="0,2"/>
                     <CheckBox x:Name="FieldNameCheck" Content="NBS Component Name" Margin="0,2"/>
-                    <CheckBox x:Name="FieldDateCheck" Content="NBS Date (bygningsdelens seneste ændring i NBS)" Margin="0,2"/>
+                    <CheckBox x:Name="FieldDateCheck" Content="NBS Date (skrives kun hvis tom eller ældre end bygningsdelens ændring i NBS; addin'ets Sync Now sætter sit eget tidsstempel)" Margin="0,2"/>
                     <CheckBox x:Name="FieldDocLinkCheck" Content="NBS Doc Link (publicerede beskrivelser)" Margin="0,2"/>
                 </StackPanel>
                 <TextBlock x:Name="NativeLinkTypeText" TextWrapping="Wrap" FontSize="12" Foreground="#666666" Margin="0,0,0,10"/>

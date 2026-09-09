@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import net from "node:net";
-import { buildSyncPlan, fullClassification, type SyncSnapshot } from "../src/integrations/nbs/matching/SyncPlanner.js";
+import { buildSyncPlan, fullClassification, parseNbsDate, formatNbsDate, type SyncSnapshot } from "../src/integrations/nbs/matching/SyncPlanner.js";
 import { matchType } from "../src/integrations/nbs/matching/TypeMatcher.js";
 import { connectProject, cloneProject, resolveNbsProjectId, validateProjectId } from "../src/integrations/nbs/ProjectConnection.js";
 import { nbsClient } from "../src/integrations/nbs/NbsClient.js";
@@ -36,6 +36,28 @@ test("already linked types and newly placed instances get all supported NBS fiel
     assert.ok(plan.requests.some(r => r.uniqueId === uniqueId && r.value === "[L]%AD.001"));
   assert.ok(plan.requests.some(r => r.parameterName === "NBS Instance Doc Link" && r.value.startsWith("https://nbsnordic.net/")));
   assert.ok(plan.requests.every(r => r.parameterName !== "Mark"));
+});
+
+// Live 2026-09-09: the official addin's Sync Now writes its own sync timestamp
+// ("2026-09-09 10:57:48", local) into "NBS Date"; writing the component's ISO
+// updated_at back made the two tools rewrite the field in turns.
+test("NBS Date follows the addin's format and is never downgraded to an older NBS change", () => {
+  assert.equal(formatNbsDate(parseNbsDate("2026-09-09 10:00:00")!), "2026-09-09 10:00:00");
+  assert.equal(parseNbsDate("2026-09-09T02:38:14.000000Z"), Date.UTC(2026, 8, 9, 2, 38, 14));
+  assert.equal(parseNbsDate("09/09/2026 02:38:14"), undefined);
+  assert.equal(parseNbsDate(""), undefined);
+
+  const changed = (state: SyncSnapshot, previous?: string) => {
+    state.types[0].parameters["NBS Date"] = previous ?? null;
+    return buildSyncPlan(state, [component], project, undefined, { linkMode: "typeOnly", fields: ["date"] }).requests;
+  };
+  assert.deepEqual(changed(snapshot()).map(r => r.value), ["2026-09-09 10:00:00"], "empty field is written in the addin's format");
+  assert.equal(changed(snapshot(), "2026-09-09 10:57:48").length, 0, "the addin's newer sync stamp is left alone");
+  assert.equal(changed(snapshot(), "2026-09-09 10:00:00").length, 0, "same instant is current");
+  assert.deepEqual(changed(snapshot(), "2026-09-08 10:00:00").map(r => r.previousValue), ["2026-09-08 10:00:00"], "an older stamp is refreshed");
+  assert.equal(changed(snapshot(), "09/09/2026 02:38:14").length, 1, "an unparseable value is replaced");
+  const iso = buildSyncPlan(snapshot(), [{ ...component, updated_at: "2026-09-09T02:38:14.000000Z" }], project, undefined, { linkMode: "typeOnly", fields: ["date"] }).requests[0].value;
+  assert.equal(iso, formatNbsDate(Date.UTC(2026, 8, 9, 2, 38, 14)), "API ISO/UTC is written as local addin time");
 });
 
 test("a repeated sync is a no-op, while changed NBS data refreshes linked elements", () => {

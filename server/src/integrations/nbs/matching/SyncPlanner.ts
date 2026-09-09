@@ -37,6 +37,27 @@ export function fullClassification(component: NbsComponent, project: Pick<NbsPro
   return code + separator + serial;
 }
 
+/**
+ * Parse an NBS/addin date text. Accepts the API's ISO form ("2026-09-09T02:38:14.000000Z",
+ * UTC) and the official addin's form ("2026-09-09 10:57:48", local time, which is what
+ * its Sync Now writes into "NBS Date" as the sync timestamp). Undefined when unparseable.
+ */
+export function parseNbsDate(text: string | null | undefined): number | undefined {
+  if (!text) return undefined;
+  const t = text.trim();
+  const iso = /^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2}:\d{2})(\.\d+)?(Z|[+-]\d{2}:?\d{2})?$/.exec(t);
+  if (!iso) return undefined;
+  const ms = Date.parse(iso[4] ? t.replace(" ", "T") : `${iso[1]}T${iso[2]}`);
+  return Number.isNaN(ms) ? undefined : ms;
+}
+
+/** The official addin's "NBS Date" format: local time, "yyyy-MM-dd HH:mm:ss". */
+export function formatNbsDate(ms: number): string {
+  const d = new Date(ms);
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+}
+
 export function buildSyncPlan(snapshot: SyncSnapshot, components: NbsComponent[], project: NbsProject, explicitMapping?: Record<string, number>, options: SyncOptions = {}) {
   if (snapshot.projectId !== String(project.id)) throw new Error("The model is not linked to the requested NBS project.");
   const linkMode = options.linkMode ?? "typeAndInstance";
@@ -68,7 +89,16 @@ export function buildSyncPlan(snapshot: SyncSnapshot, components: NbsComponent[]
     if (fields.has("id")) desired[instance ? "NBS Component Instance Id" : "NBS Component Type Id"] = String(component.id);
     if (fields.has("classificationcode")) desired[prefix + "Classificationcode"] = fullClassification(component, project);
     if (fields.has("name")) desired[prefix + "Component Name"] = component.name;
-    if (fields.has("date") && component.updated_at) desired[prefix + "Date"] = component.updated_at;
+    if (fields.has("date") && component.updated_at) {
+      // Live 2026-09-09: the official addin's Sync Now overwrites "NBS Date" with its own
+      // sync timestamp ("2026-09-09 10:57:48"). Writing the component's updated_at back
+      // afterwards made the two tools ping-pong the field. Keep the addin's format and
+      // only write when the field is empty, unparseable, or older than the NBS change.
+      const changedAt = parseNbsDate(component.updated_at);
+      const current = parseNbsDate(element.parameters[prefix + "Date"]);
+      if (changedAt === undefined) desired[prefix + "Date"] = component.updated_at;
+      else if (current === undefined || current < changedAt) desired[prefix + "Date"] = formatNbsDate(changedAt);
+    }
     const urls = component.published_document_urls?.filter(u => {
       try { const url = new URL(u); return url.protocol === "https:" && (url.hostname === "nbsnordic.net" || url.hostname.endsWith(".nbsnordic.net")); }
       catch { return false; }

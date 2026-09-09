@@ -13,7 +13,7 @@ import { dbRun } from "../database/db.js";
 
 export function registerSyncRevitTypesToNbsTool(server: McpServer) {
   server.tool("sync_revit_types_to_nbs",
-    "On-demand NBS-to-Revit parameter sync. Link mode (Type Only / Instance Only / Type and Instance) and the set of NBS fields to write default to what the user saved for this model in Revit Settings > NBS Nordic, falling back to the Link Type the official NBS addin stored in the model; pass them explicitly to override for one call. Type and instance links are independent; never overwrite an instance link from its type. Uses the NBS project saved in the active model. Can write NBS component IDs, full classification, name, date and published document links. NOT the official NBS addin's two-way Sync Now: does not upload models/quantities, create components, allocate .001-.050 numbers or change native addin settings. Defaults to preview; writes are model-guarded, verified and atomic.", {
+    "On-demand NBS-to-Revit parameter sync. Link mode (Type Only / Instance Only / Type and Instance) and the set of NBS fields to write default to what the user saved for this model in Revit Settings > NBS Nordic, falling back to the Link Type the official NBS addin stored in the model; pass them explicitly to override for one call. Type and instance links are independent; never overwrite an instance link from its type. Uses the NBS project saved in the active model. Can write NBS component IDs, full classification, name, date and published document links. NOT the official NBS addin's two-way Sync Now: does not upload models/quantities, create components or change native addin settings. NBS data model (verified 2026-09-09): a building component's serial (.001, .002 ...) identifies the component, not an element; NBS links components per Revit type (category) and its instances carry only quantities, so there is no per-element numbering to allocate. Defaults to preview; writes are model-guarded, verified and atomic.", {
       category: z.string().describe("Revit BuiltInCategory, e.g. OST_Walls or OST_Doors."),
       linkMode: z.enum(["typeOnly", "instanceOnly", "typeAndInstance"]).optional().describe("Sync target. Omit to use the link mode the user saved for this model in Revit Settings, else the Link Type set in the official NBS Nordic addin; if neither exists, the call fails and the user must choose."),
       fields: z.array(z.enum(NBS_SYNC_FIELDS)).min(1).optional().describe("NBS fields to write: id, classificationcode, name, date, docLink. Omit to use the user's saved selection for this model (default: all)."),
@@ -22,7 +22,7 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
       dryRun: z.boolean().default(true),
       explicitMapping: z.record(z.number().int().positive()).optional().describe("User-approved Revit type ID to NBS component ID mapping for otherwise ambiguous/unmatched types."),
       explicitInstanceMapping: z.record(z.number().int().positive()).optional().describe("User-approved Revit instance UniqueId to existing NBS component ID. Can link different instances of one type to different NBS components. Preview lists unresolved instance UniqueIds."),
-      inheritTypeForUnlinkedInstances: z.boolean().default(false).describe("Only for Type and Instance: explicitly copy a reliable type link to completely unlinked instances. Existing instance IDs/codes are always preserved. Does not allocate unique numbers."),
+      inheritTypeForUnlinkedInstances: z.boolean().default(false).describe("Only for Type and Instance: explicitly copy a reliable type link to completely unlinked instances. Existing instance IDs/codes are always preserved. Instances get the type's component; NBS has no per-element numbering."),
     }, async args => {
       try {
         const context = await getModelContext();
@@ -50,6 +50,17 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
           inheritTypeForUnlinkedInstances: args.inheritTypeForUnlinkedInstances,
         });
         const inScopeRows = plan.rows.filter(r => r.inScope);
+        // Instances that simply carry their existing component id are the common case
+        // (96 identical rows = 75 kB live); report them as a count and list only the rest.
+        const routineInstance = (r: (typeof plan.instanceRows)[number]) => r.match.method === "id" && !r.inheritedFromType && !r.match.ambiguous;
+        const instanceSummary = {
+          total: plan.instanceRows.length,
+          linkedById: plan.instanceRows.filter(routineInstance).length,
+          inheritedFromType: plan.instanceRows.filter(r => r.inheritedFromType).length,
+          explicit: plan.instanceRows.filter(r => r.match.method === "explicit").length,
+          ambiguous: plan.instanceRows.filter(r => r.match.ambiguous).length,
+          unresolved: plan.instanceRows.filter(r => r.match.method === "none" && !r.match.ambiguous).length,
+        };
         const summary = {
           projectId, modelKey: snapshot.modelKey, category: args.category,
           linkMode: plan.linkMode, linkModeSource, fields: plan.fields, fieldsSource,
@@ -62,7 +73,8 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
           unresolvedTypes: inScopeRows.filter(r => r.match.method === "none" && !r.match.ambiguous),
           nameMatchProposals: inScopeRows.filter(r => r.match.confidence > 0 && r.match.confidence < 0.9 && !r.match.ambiguous),
           ambiguousMatches: inScopeRows.filter(r => r.match.ambiguous),
-          instanceMatches: plan.instanceRows,
+          instanceSummary,
+          instanceMatches: plan.instanceRows.filter(r => !routineInstance(r)),
           readyToWrite: plan.requests.length > 0,
           note: plan.requests.length === 0 ? "No changes: either values are current or links are unresolved. Inspect unresolvedTypes and instanceMatches; connection alone does not choose a building component." : "Only listed, reliably linked elements will be updated; unresolved links remain unchanged.",
         };

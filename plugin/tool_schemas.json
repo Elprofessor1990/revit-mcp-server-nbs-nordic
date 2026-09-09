@@ -6458,7 +6458,7 @@
   },
   {
     "name": "sync_revit_types_to_nbs",
-    "description": "On-demand NBS-to-Revit parameter sync. Link mode (Type Only / Instance Only / Type and Instance) and the set of NBS fields to write default to what the user saved for this model in Revit Settings > NBS Nordic, falling back to the Link Type the official NBS addin stored in the model; pass them explicitly to override for one call. Type and instance links are independent; never overwrite an instance link from its type. Uses the NBS project saved in the active model. Can write NBS component IDs, full classification, name, date and published document links. NOT the official NBS addin's two-way Sync Now: does not upload models/quantities, create components, allocate .001-.050 numbers or change native addin settings. Defaults to preview; writes are model-guarded, verified and atomic.",
+    "description": "On-demand NBS-to-Revit parameter sync. Link mode (Type Only / Instance Only / Type and Instance) and the set of NBS fields to write default to what the user saved for this model in Revit Settings > NBS Nordic, falling back to the Link Type the official NBS addin stored in the model; pass them explicitly to override for one call. Type and instance links are independent; never overwrite an instance link from its type. Uses the NBS project saved in the active model. Can write NBS component IDs, full classification, name, date and published document links. NOT the official NBS addin's two-way Sync Now: does not upload models/quantities, create components or change native addin settings. NBS data model (verified 2026-09-09): a building component's serial (.001, .002 ...) identifies the component, not an element; NBS links components per Revit type (category) and its instances carry only quantities, so there is no per-element numbering to allocate. Defaults to preview; writes are model-guarded, verified and atomic.",
     "input_schema": {
       "type": "object",
       "properties": {
@@ -6526,7 +6526,7 @@
         "inheritTypeForUnlinkedInstances": {
           "type": "boolean",
           "default": false,
-          "description": "Only for Type and Instance: explicitly copy a reliable type link to completely unlinked instances. Existing instance IDs/codes are always preserved. Does not allocate unique numbers."
+          "description": "Only for Type and Instance: explicitly copy a reliable type link to completely unlinked instances. Existing instance IDs/codes are always preserved. Instances get the type's component; NBS has no per-element numbering."
         }
       },
       "required": [
