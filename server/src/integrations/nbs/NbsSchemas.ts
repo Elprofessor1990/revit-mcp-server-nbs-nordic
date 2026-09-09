@@ -1,11 +1,16 @@
 import { z } from "zod";
 
 // Fields per the official /projects/[id]/component POST documentation.
-// Live create 2026-09-09 (v1, project 10973, component 343153): name and
-// classificationcode were applied and NBS assigned the next free
-// classificationserial itself. discipline_id and measure_id were silently
-// IGNORED (subject "-" / measure "" on the created row), so callers must not
-// rely on them — set fag/målemetode in the NBS web UI afterwards.
+// Live creates 2026-09-09 (v1, project 10973): name and classificationcode are
+// applied. classificationserial is NOT controllable: the first create got .003,
+// but the next four (343221-343224, seconds apart) ALL got .004, an explicit
+// classificationserial in the body was ignored, a full code "[L]%AD.005" was
+// rejected silently (200, empty body, nothing created), and no update/delete
+// route exists (v1/v2 PATCH/PUT/DELETE -> 404; v2 POST /components/{id} answers
+// "success" to any body without changing the row). Duplicate serials must be
+// fixed by hand in the NBS web UI. discipline_id and measure_id are silently
+// IGNORED (subject "-" / measure "" on the created row) — set fag/målemetode in
+// the NBS web UI afterwards. See docs/nbs-component-serial-2026-09-09.md.
 export const NbsComponentCreateSchema = z.object({
   name: z.string(),
   structure: z.string().optional(),
