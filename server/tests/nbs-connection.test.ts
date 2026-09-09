@@ -5,6 +5,9 @@ import { buildSyncPlan, fullClassification, type SyncSnapshot } from "../src/int
 import { matchType } from "../src/integrations/nbs/matching/TypeMatcher.js";
 import { connectProject, cloneProject, resolveNbsProjectId, validateProjectId } from "../src/integrations/nbs/ProjectConnection.js";
 import { nbsClient } from "../src/integrations/nbs/NbsClient.js";
+import { createComponent } from "../src/integrations/nbs/components/ComponentService.js";
+import { pushSheet } from "../src/integrations/nbs/sheets/SheetService.js";
+import { pushQuantities } from "../src/integrations/nbs/quantities/QuantityService.js";
 import type { NbsProject, NbsComponent } from "../src/integrations/nbs/NbsTypes.js";
 
 const project: NbsProject = { id: 10, project_name: "Test", project_id: "P1", plan: "free", classificationcode_separator: "." };
@@ -217,6 +220,26 @@ test("project connection checks API access, guards model identity, and does not 
     if (oldDefault === undefined) delete process.env.NBS_PROJECT_ID; else process.env.NBS_PROJECT_ID = oldDefault;
     await new Promise<void>(resolve => server.close(() => resolve()));
   }
+});
+
+// Live probe 2026-09-09: these three POST routes only exist under /api/v1 even
+// though the public docs list them as V2; on v2 they are a bare 404. The clone
+// POST is the opposite (v2 only). Lock the base per route so a doc-driven
+// "cleanup" cannot silently reintroduce the 404s.
+test("write routes use the API base that actually serves them, not the documented one", async () => {
+  const original = nbsClient.request;
+  const calls: any[] = [];
+  nbsClient.request = async (path, options) => { calls.push({ path, options }); return {} as any; };
+  try {
+    await createComponent(10, { name: "MCP-testvæg" });
+    await pushSheet({ name: "s", revit_id: "r", project_id: 10, json_array: [] });
+    await pushQuantities({ project_id: 10, json_array: [] });
+    assert.deepEqual(calls.map(c => [c.path, c.options.method, c.options.useV1]), [
+      ["/projects/10/component", "POST", true],
+      ["/sheet", "POST", true],
+      ["/quantities", "POST", true],
+    ]);
+  } finally { nbsClient.request = original; }
 });
 
 test("project creation uses the documented clone POST and never retries it", async () => {

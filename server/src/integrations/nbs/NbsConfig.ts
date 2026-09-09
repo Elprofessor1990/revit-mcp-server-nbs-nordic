@@ -4,11 +4,16 @@ import { homedir } from "os";
 
 const DEFAULT_BASE_URL = "https://nbsnordic.net/api/v2";
 
-// The public docs confirm V1 document endpoints (/documents, /documents/[id],
-// /projects/[id]/documents) exist but never state their base path explicitly.
-// This is inferred from the v2 convention (same host, /api/v1 instead of
-// /api/v2) — NOT independently verified. Override with NBS_V1_BASE_URL once
-// confirmed against a live account.
+// Live-verified against nbsnordic.net on 2026-09-09 using method probes (a
+// PATCH with no body returns 405 + an Allow header on registered routes and a
+// bare 404 on unregistered ones). The public docs are wrong about the base for
+// three POST routes. Actual routing:
+//   v1 only : POST /projects/[id]/component, POST /sheet, POST /quantities,
+//             GET /documents, GET /projects/[id]/documents
+//   v2 only : GET /projects/[id]/instances, GET /export-backup/[id],
+//             POST /projects/[id]?project_name= (clone)
+//   both    : GET /projects, GET /projects/[id], GET /projects/[id]/components
+//   neither : /projects/[id]/component/[extra_field_id] (404 on both)
 const DEFAULT_V1_BASE_URL = "https://nbsnordic.net/api/v1";
 
 export interface NbsConfig {
