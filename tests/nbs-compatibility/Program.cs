@@ -9,7 +9,11 @@ static void Assert(bool condition, string message)
 
 var initialized = NbsNativeSettings.EnsureInitialized(null);
 Assert(initialized.StartsWith("NBSOverride=0,"), "Missing native state initializes the overwrite object without enabling parameter overrides");
-Assert(initialized.Contains("NBSLinkType=1"), "New native settings use the vendor's Type Only default");
+Assert(initialized.Contains("NBSLinkType=1"), "New native settings seed Type Only, the least intrusive link type");
+Assert(NbsNativeSettings.DecodeLinkType("0") == "typeAndInstance" && NbsNativeSettings.DecodeLinkType("1") == "typeOnly"
+    && NbsNativeSettings.DecodeLinkType("2") == "instanceOnly", "NBSLinkType codes decode by the mapping verified against the addin's Settings dialog");
+Assert(NbsNativeSettings.DecodeLinkType("3") == null && NbsNativeSettings.DecodeLinkType("") == null && NbsNativeSettings.DecodeLinkType(null) == null,
+    "Unknown NBSLinkType codes are not guessed");
 Assert(NbsNativeSettings.EnsureInitialized(initialized) == initialized, "Repeated repair is a no-op");
 var existing = initialized.Replace("NBSLinkType=1", "NBSLinkType=0").Replace("NBSSyncSch=0", "NBSSyncSch=1") + ",FutureOption=keep=all";
 Assert(NbsNativeSettings.EnsureInitialized(existing) == existing, "User choices and unknown vendor options are preserved byte-for-byte");

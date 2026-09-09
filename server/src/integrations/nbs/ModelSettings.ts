@@ -14,6 +14,41 @@ export interface ModelSyncSettings {
   fields?: SyncField[];
 }
 
+/**
+ * NBSLinkType code (official addin's "NBS Override" setting) → our link mode.
+ * Verified live 2026-09-09 against addin 1.6.0 in Revit 2027: the addin's
+ * Settings combobox lists "Type and Instance", "Type Only", "Instance Only", and
+ * Revit's journal showed SelectItem(0) → NBSLinkType=0 and SelectItem(1) →
+ * NBSLinkType=1 written to the model. Index 2 follows from the list order.
+ * Keep in step with plugin/Core/NbsNativeSettings.cs LinkTypeCodes.
+ */
+export const NATIVE_LINK_TYPE_CODES: Readonly<Record<string, LinkMode>> = {
+  "0": "typeAndInstance",
+  "1": "typeOnly",
+  "2": "instanceOnly",
+};
+
+/** Our link mode for a raw NBSLinkType value; undefined for absent or unknown codes. */
+export function decodeNativeLinkType(code: string | null | undefined): LinkMode | undefined {
+  if (typeof code !== "string") return undefined;
+  return NATIVE_LINK_TYPE_CODES[code.trim()];
+}
+
+export type LinkModeSource = "call" | "modelSettings" | "nativeAddin";
+
+/**
+ * Link mode for one sync call: explicit argument, then the user's saved
+ * per-model choice, then the official addin's own setting in the model.
+ * Throws when none is available — a link mode is never guessed.
+ */
+export function resolveLinkMode(explicit: LinkMode | undefined, saved: ModelSyncSettings, nativeLinkType: string | null | undefined): { linkMode: LinkMode; source: LinkModeSource } {
+  if (explicit) return { linkMode: explicit, source: "call" };
+  if (saved.linkMode) return { linkMode: saved.linkMode, source: "modelSettings" };
+  const native = decodeNativeLinkType(nativeLinkType);
+  if (native) return { linkMode: native, source: "nativeAddin" };
+  throw new Error("No link mode chosen. Pass linkMode (typeOnly / instanceOnly / typeAndInstance), save one for this model under Revit Settings > NBS Nordic > Synkronisering, or set Link Type in the NBS Nordic addin.");
+}
+
 export function defaultConfigPath(): string {
   return join(homedir(), ".mcp-revit", "nbs-config.json");
 }

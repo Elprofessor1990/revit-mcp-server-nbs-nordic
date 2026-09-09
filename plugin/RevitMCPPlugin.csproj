@@ -93,8 +93,10 @@
         <ItemGroup>
             <AddinFiles Include="$(RootDir)**\*.*"/>
         </ItemGroup>
-        <Message Text="Copy files to Addin folder" Importance="high"/>
-        <Copy SourceFiles="@(AddinFiles)" DestinationFolder="$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)\%(RecursiveDir)" Condition="$(Configuration.Contains('Debug'))"/>
+        <!-- Pass -p:SkipAddinCopy=true while Revit is running (e.g. iterating with Add-In Manager
+             from the bin folder); Revit locks the deployed DLLs and the copy would fail the build. -->
+        <Message Text="Copy files to Addin folder" Importance="high" Condition="'$(SkipAddinCopy)' != 'true'"/>
+        <Copy SourceFiles="@(AddinFiles)" DestinationFolder="$(AppData)\Autodesk\Revit\Addins\$(RevitVersion)\%(RecursiveDir)" Condition="$(Configuration.Contains('Debug')) and '$(SkipAddinCopy)' != 'true'"/>
     </Target>
 
 </Project>

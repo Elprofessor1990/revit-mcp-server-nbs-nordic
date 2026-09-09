@@ -10,8 +10,10 @@ export interface RevitNbsContext {
   missingParameters: string[];
   parameterFileAvailable: boolean;
   isReadOnly: boolean;
-  /** Raw NBSLinkType value from the official addin's "NBS Override" setting, shown read-only; its numeric mapping is not verified. */
+  /** Raw NBSLinkType value from the official addin's "NBS Override" setting; decode with decodeNativeLinkType (mapping verified 2026-09-09). */
   nativeLinkType?: string | null;
+  /** The plugin's own decoding of nativeLinkType; absent from older plugin builds. */
+  nativeLinkMode?: string | null;
   nativeSettingsReady?: boolean;
 }
 

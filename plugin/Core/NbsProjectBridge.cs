@@ -56,25 +56,26 @@ namespace revit_mcp_plugin.Core
             try
             {
                 if (DateTime.UtcNow > request.Deadline) throw new TimeoutException("Projektoperationen udløb før udførelse.");
-                var doc = app.ActiveUIDocument?.Document;
-                if (doc == null || doc.IsFamilyDocument) throw new InvalidOperationException("Åbn en Revit-projektmodel først.");
-                string operation = (string)request.Args["operation"] ?? "status";
-                if (operation == "snapshot")
-                {
-                    request.Completion.TrySetResult(Snapshot(doc, request.Args));
-                    return;
-                }
-                if (operation == "write_parameters")
-                {
-                    request.Completion.TrySetResult(WriteParameters(doc, request.Args));
-                    return;
-                }
-                if (operation == "connect") Connect(app, doc, request.Args);
-                else if (operation != "status") throw new ArgumentException("Ukendt projektoperation.");
-                request.Completion.TrySetResult(GetStatus(doc, app.Application.VersionNumber));
+                request.Completion.TrySetResult(Run(app, request.Args));
             }
             catch (Exception ex) { request.Completion.TrySetException(ex); }
             finally { lock (gate) executing = false; }
+        }
+
+        /// <summary>
+        /// Dispatch one operation against the active model. Must run in a Revit API context:
+        /// the external event above, or an IExternalCommand such as NbsBridgeSmokeTest.
+        /// </summary>
+        internal static object Run(UIApplication app, JObject args)
+        {
+            var doc = app.ActiveUIDocument?.Document;
+            if (doc == null || doc.IsFamilyDocument) throw new InvalidOperationException("Åbn en Revit-projektmodel først.");
+            string operation = (string)args["operation"] ?? "status";
+            if (operation == "snapshot") return Snapshot(doc, args);
+            if (operation == "write_parameters") return WriteParameters(doc, args);
+            if (operation == "connect") Connect(app, doc, args);
+            else if (operation != "status") throw new ArgumentException("Ukendt projektoperation.");
+            return GetStatus(doc, app.Application.VersionNumber);
         }
 
         public string GetName() => "NBS Nordic project connection";
@@ -181,9 +182,10 @@ namespace revit_mcp_plugin.Core
                 missingParameters = RequiredNames.Where(n => !bound.Contains(n)).ToArray(),
                 instanceParametersNeedingGroupVariation = groupSettings.ToArray(),
                 nativeSettingsReady = settingsReady,
-                // Raw value of the official addin's own link-type setting. Shown read-only;
-                // its numeric meaning is not verified, so it is never written or interpreted here.
+                // The official addin's own link-type setting: raw code plus our decoded link mode
+                // (mapping verified 2026-09-09, see NbsNativeSettings.LinkTypeCodes). Read-only here.
                 nativeLinkType = NbsNativeSettings.ReadValue(settings, "NBSLinkType"),
+                nativeLinkMode = NbsNativeSettings.DecodeLinkType(NbsNativeSettings.ReadValue(settings, "NBSLinkType")),
                 parameterFileAvailable = File.Exists(DefinitionPath(version)),
                 isReadOnly = doc.IsReadOnly
             };

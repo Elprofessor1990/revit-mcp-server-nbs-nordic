@@ -121,9 +121,12 @@ namespace revit_mcp_plugin.UI
             FieldDocLinkCheck.IsChecked = selected.Contains("docLink");
 
             string native = (string)model?["nativeLinkType"];
+            string nativeMode = NbsNativeSettings.DecodeLinkType(native);
+            string nativeLabel = nativeMode == "typeOnly" ? "Type Only" : nativeMode == "instanceOnly" ? "Instance Only" : nativeMode == "typeAndInstance" ? "Type and Instance" : null;
             NativeLinkTypeText.Text = model == null ? ""
                 : native == null ? "NBS Nordic's eget plugin har ikke gemt en koblingstype i denne model endnu."
-                : "Til orientering: NBS Nordic's eget plugin har gemt NBSLinkType=" + native + " i modellen. Talkoden er ikke dokumenteret, så den læses kun — vælg din koblingstype ovenfor.";
+                : nativeLabel == null ? "NBS Nordic's eget plugin har gemt NBSLinkType=" + native + " i modellen. Koden er ukendt, så den bruges ikke — vælg din koblingstype ovenfor."
+                : "NBS Nordic's eget plugin bruger " + nativeLabel + " (NBSLinkType=" + native + ") i denne model. Vælger du intet ovenfor, følger din AI det valg.";
             SaveSyncButton.IsEnabled = !busy && model != null;
         }
 

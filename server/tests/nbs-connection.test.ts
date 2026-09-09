@@ -8,7 +8,7 @@ import { nbsClient } from "../src/integrations/nbs/NbsClient.js";
 import { createComponent } from "../src/integrations/nbs/components/ComponentService.js";
 import { pushSheet } from "../src/integrations/nbs/sheets/SheetService.js";
 import { pushQuantities } from "../src/integrations/nbs/quantities/QuantityService.js";
-import { readModelSettings, NBS_SYNC_FIELDS } from "../src/integrations/nbs/ModelSettings.js";
+import { readModelSettings, NBS_SYNC_FIELDS, decodeNativeLinkType, resolveLinkMode } from "../src/integrations/nbs/ModelSettings.js";
 import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -253,6 +253,24 @@ test("per-model sync defaults are read from the shared settings file and malform
     writeFileSync(file, "{ not json");
     assert.deepEqual(readModelSettings("model-a", file), {});
   } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+// Live verification 2026-09-09 (addin 1.6.0, Revit 2027): the Revit journal logged
+// cB_LinkType.SelectItem(0, Type and Instance) → NBSLinkType=0 and
+// SelectItem(1, Type Only) → NBSLinkType=1 in "NBS Override"; index 2 is the
+// remaining list entry. Unknown codes must never be guessed into a mode.
+test("the official addin's NBSLinkType code is decoded by the verified mapping and used only after explicit and saved choices", () => {
+  assert.equal(decodeNativeLinkType("0"), "typeAndInstance");
+  assert.equal(decodeNativeLinkType("1"), "typeOnly");
+  assert.equal(decodeNativeLinkType(" 2 "), "instanceOnly");
+  for (const code of ["3", "", "typeOnly", null, undefined]) assert.equal(decodeNativeLinkType(code), undefined);
+
+  assert.deepEqual(resolveLinkMode("instanceOnly", { linkMode: "typeOnly" }, "0"), { linkMode: "instanceOnly", source: "call" });
+  assert.deepEqual(resolveLinkMode(undefined, { linkMode: "typeOnly" }, "0"), { linkMode: "typeOnly", source: "modelSettings" });
+  assert.deepEqual(resolveLinkMode(undefined, {}, "0"), { linkMode: "typeAndInstance", source: "nativeAddin" });
+  assert.deepEqual(resolveLinkMode(undefined, { fields: ["id"] }, "1"), { linkMode: "typeOnly", source: "nativeAddin" });
+  assert.throws(() => resolveLinkMode(undefined, {}, null), /No link mode chosen/);
+  assert.throws(() => resolveLinkMode(undefined, {}, "9"), /No link mode chosen/);
 });
 
 // Live probe 2026-09-09: these three POST routes only exist under /api/v1 even

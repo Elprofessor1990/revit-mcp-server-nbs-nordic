@@ -7,15 +7,15 @@ import { listComponents } from "../integrations/nbs/components/ComponentService.
 import { nbsClient } from "../integrations/nbs/NbsClient.js";
 import { getModelContext, validateProjectId } from "../integrations/nbs/ProjectConnection.js";
 import { buildSyncPlan, type SyncSnapshot } from "../integrations/nbs/matching/SyncPlanner.js";
-import { NBS_SYNC_FIELDS, readModelSettings } from "../integrations/nbs/ModelSettings.js";
+import { NBS_SYNC_FIELDS, readModelSettings, resolveLinkMode } from "../integrations/nbs/ModelSettings.js";
 import type { NbsProject } from "../integrations/nbs/NbsTypes.js";
 import { dbRun } from "../database/db.js";
 
 export function registerSyncRevitTypesToNbsTool(server: McpServer) {
   server.tool("sync_revit_types_to_nbs",
-    "On-demand NBS-to-Revit parameter sync. Link mode (Type Only / Instance Only / Type and Instance) and the set of NBS fields to write default to what the user saved for this model in Revit Settings > NBS Nordic; pass them explicitly to override for one call. Type and instance links are independent; never overwrite an instance link from its type. Uses the NBS project saved in the active model. Can write NBS component IDs, full classification, name, date and published document links. NOT the official NBS addin's two-way Sync Now: does not upload models/quantities, create components, allocate .001-.050 numbers or change native addin settings. Defaults to preview; writes are model-guarded, verified and atomic.", {
+    "On-demand NBS-to-Revit parameter sync. Link mode (Type Only / Instance Only / Type and Instance) and the set of NBS fields to write default to what the user saved for this model in Revit Settings > NBS Nordic, falling back to the Link Type the official NBS addin stored in the model; pass them explicitly to override for one call. Type and instance links are independent; never overwrite an instance link from its type. Uses the NBS project saved in the active model. Can write NBS component IDs, full classification, name, date and published document links. NOT the official NBS addin's two-way Sync Now: does not upload models/quantities, create components, allocate .001-.050 numbers or change native addin settings. Defaults to preview; writes are model-guarded, verified and atomic.", {
       category: z.string().describe("Revit BuiltInCategory, e.g. OST_Walls or OST_Doors."),
-      linkMode: z.enum(["typeOnly", "instanceOnly", "typeAndInstance"]).optional().describe("Sync target. Omit to use the link mode the user saved for this model in Revit Settings; if none is saved, the call fails and the user must choose."),
+      linkMode: z.enum(["typeOnly", "instanceOnly", "typeAndInstance"]).optional().describe("Sync target. Omit to use the link mode the user saved for this model in Revit Settings, else the Link Type set in the official NBS Nordic addin; if neither exists, the call fails and the user must choose."),
       fields: z.array(z.enum(NBS_SYNC_FIELDS)).min(1).optional().describe("NBS fields to write: id, classificationcode, name, date, docLink. Omit to use the user's saved selection for this model (default: all)."),
       projectId: z.union([z.string(), z.number()]).optional().describe("Optional assertion: must match this model's NBS project."),
       maxTypes: z.number().int().min(1).max(2000).default(500),
@@ -33,10 +33,8 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
         if (context.missingParameters.length) throw new Error("NBS bindings are incomplete. Run nbs_connect_project for the same project to repair them.");
 
         const saved = readModelSettings(context.modelKey);
-        const linkMode = args.linkMode ?? saved.linkMode;
-        if (!linkMode) throw new Error("No link mode chosen. Pass linkMode (typeOnly / instanceOnly / typeAndInstance) or save one for this model under Revit Settings > NBS Nordic > Synkronisering.");
+        const { linkMode, source: linkModeSource } = resolveLinkMode(args.linkMode, saved, context.nativeLinkType);
         const fields = args.fields ?? saved.fields ?? [...NBS_SYNC_FIELDS];
-        const linkModeSource = args.linkMode ? "call" : "modelSettings";
         const fieldsSource = args.fields ? "call" : saved.fields ? "modelSettings" : "default";
 
         const snapshot = await withRevitConnection(c => c.sendCommand("nbs_project", {

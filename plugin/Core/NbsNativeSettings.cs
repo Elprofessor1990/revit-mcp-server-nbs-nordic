@@ -24,8 +24,31 @@ namespace revit_mcp_plugin.Core
             new KeyValuePair<string, string>("NBSRename", "0"),
             new KeyValuePair<string, string>("NBSRenameFinalName", ""),
             new KeyValuePair<string, string>("NBSIFC", "0"),
+            // Type Only (see LinkTypeCodes): the least intrusive sync target for a model the
+            // vendor addin has never configured. The vendor's own default is not verified.
             new KeyValuePair<string, string>("NBSLinkType", "1")
         };
+
+        /// <summary>
+        /// NBSLinkType code → our link mode. Verified live on 2026-09-09 against the official
+        /// addin 1.6.0 (Revit 2027): its Settings combobox cB_LinkType lists
+        /// "Type and Instance", "Type Only", "Instance Only" in that order, and Revit's journal
+        /// showed SelectItem(0, Type and Instance) → NBSLinkType=0 and SelectItem(1, Type Only)
+        /// → NBSLinkType=1 written to "NBS Override". Index 2 follows from the list order.
+        /// </summary>
+        public static readonly KeyValuePair<string, string>[] LinkTypeCodes = {
+            new KeyValuePair<string, string>("0", "typeAndInstance"),
+            new KeyValuePair<string, string>("1", "typeOnly"),
+            new KeyValuePair<string, string>("2", "instanceOnly")
+        };
+
+        /// <summary>Our link mode for a raw NBSLinkType value; null for absent or unknown codes.</summary>
+        public static string DecodeLinkType(string code)
+        {
+            if (code == null) return null;
+            foreach (var entry in LinkTypeCodes) if (entry.Key == code.Trim()) return entry.Value;
+            return null;
+        }
 
         public static bool IsProjectParameter(string name) => ProjectParameterNames.Contains(name);
 
