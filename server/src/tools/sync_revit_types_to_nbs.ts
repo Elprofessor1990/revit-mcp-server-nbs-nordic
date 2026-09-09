@@ -11,7 +11,21 @@ import { NBS_SYNC_FIELDS, readModelSettings, resolveLinkMode } from "../integrat
 import type { NbsProject } from "../integrations/nbs/NbsTypes.js";
 import { dbRun } from "../database/db.js";
 
-export function registerSyncRevitTypesToNbsTool(server: McpServer) {
+/** Internal observation/guard only; never exposed in the MCP input schema. */
+export interface SyncExecutionPlan {
+  modelKey: string;
+  projectId: string;
+  category: string;
+  dryRun: boolean;
+  unresolved: boolean;
+  requests: ReturnType<typeof buildSyncPlan>["requests"];
+}
+
+export interface SyncExecutionHooks {
+  beforeWriteOrPreview(plan: SyncExecutionPlan): Promise<void>;
+}
+
+export function registerSyncRevitTypesToNbsTool(server: McpServer, hooks?: SyncExecutionHooks) {
   server.tool("sync_revit_types_to_nbs",
     "On-demand NBS-to-Revit parameter sync. Link mode (Type Only / Instance Only / Type and Instance) and the set of NBS fields to write default to what the user saved for this model in Revit Settings > NBS Nordic, falling back to the Link Type the official NBS addin stored in the model; pass them explicitly to override for one call. Type and instance links are independent; never overwrite an instance link from its type. Uses the NBS project saved in the active model. Can write NBS component IDs, full classification, name, date and published document links. NOT the official NBS addin's two-way Sync Now: does not upload models/quantities, create components or change native addin settings. NBS data model (verified 2026-09-09): a building component's serial (.001, .002 ...) identifies the component, not an element; NBS links components per Revit type (category) and its instances carry only quantities, so there is no per-element numbering to allocate. Defaults to preview; writes are model-guarded, verified and atomic.", {
       category: z.string().describe("Revit BuiltInCategory, e.g. OST_Walls or OST_Doors."),
@@ -78,6 +92,13 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer) {
           readyToWrite: plan.requests.length > 0,
           note: plan.requests.length === 0 ? "No changes: either values are current or links are unresolved. Inspect unresolvedTypes and instanceMatches; connection alone does not choose a building component." : "Only listed, reliably linked elements will be updated; unresolved links remain unchanged.",
         };
+        // A private orchestrator can inspect/audit the exact existing requests and
+        // reject a changed preview before any write. Ordinary MCP calls are unchanged.
+        await hooks?.beforeWriteOrPreview({ modelKey: snapshot.modelKey, projectId,
+          category: args.category, dryRun: args.dryRun,
+          unresolved: summary.unresolvedTypes.length > 0 || summary.nameMatchProposals.length > 0 ||
+            summary.ambiguousMatches.length > 0 || instanceSummary.unresolved > 0 || instanceSummary.ambiguous > 0,
+          requests: structuredClone(plan.requests) });
         if (args.dryRun) return rawToolResponse("sync_revit_types_to_nbs", summary);
         if (!plan.requests.length) return rawToolResponse("sync_revit_types_to_nbs", {
           ...summary, typesWritten: 0, instancesWritten: 0, writtenParameters: 0, verified: true,
