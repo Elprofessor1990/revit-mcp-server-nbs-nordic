@@ -78,6 +78,29 @@ export function getCciGroup(classificationcode: string): CciGroup | undefined {
   return data.groups.find((g) => g.classificationcode === classificationcode);
 }
 
+/**
+ * Detect a classificationcode that looks like a group code with a serial
+ * concatenated onto it (e.g. "[L]%AD130" or "[L]%AD.130" instead of the
+ * group-only "[L]%AD"). NBS's create endpoint does not reject these: it
+ * silently truncates to the known group prefix and discards the digits,
+ * so the caller's intended sub-type (e.g. "130" = Skalmuret vs "140" =
+ * Skeletkonstruktion) is lost with no error (live-verified 2026-09-09,
+ * project 13365: components 343271/343277/343278/343291 were all created
+ * with classificationcode "[L]%AD" regardless of what was actually sent).
+ * Only fires when stripping a trailing digit run yields a KNOWN CCI group,
+ * so it never misfires on a genuinely different (non-CCI) classification
+ * system's codes — for those this simply returns undefined and is a no-op.
+ */
+export function detectEmbeddedSerial(classificationcode: string): { groupCode: string; digits: string } | undefined {
+  const data = loadData();
+  if (data.groups.some((g) => g.classificationcode === classificationcode)) return undefined; // already a bare, known group code
+  const m = /^(.*?)[.\-_]?(\d{2,})$/.exec(classificationcode.trim());
+  if (!m) return undefined;
+  const [, prefix, digits] = m;
+  const group = data.groups.find((g) => g.classificationcode === prefix);
+  return group ? { groupCode: group.classificationcode, digits } : undefined;
+}
+
 export function getCciDataInfo(): { source: string; classificationSystemHint: string; groupCount: number; entryCount: number } {
   const data = loadData();
   return {

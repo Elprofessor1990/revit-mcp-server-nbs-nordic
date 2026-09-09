@@ -9,6 +9,7 @@ import { createComponent } from "../src/integrations/nbs/components/ComponentSer
 import { pushSheet } from "../src/integrations/nbs/sheets/SheetService.js";
 import { pushQuantities } from "../src/integrations/nbs/quantities/QuantityService.js";
 import { readModelSettings, NBS_SYNC_FIELDS, decodeNativeLinkType, resolveLinkMode } from "../src/integrations/nbs/ModelSettings.js";
+import { detectEmbeddedSerial } from "../src/integrations/nbs/classification/ClassificationLookup.js";
 import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -293,6 +294,25 @@ test("the official addin's NBSLinkType code is decoded by the verified mapping a
   assert.deepEqual(resolveLinkMode(undefined, { fields: ["id"] }, "1"), { linkMode: "typeOnly", source: "nativeAddin" });
   assert.throws(() => resolveLinkMode(undefined, {}, null), /No link mode chosen/);
   assert.throws(() => resolveLinkMode(undefined, {}, "9"), /No link mode chosen/);
+});
+
+// Live 2026-09-09 (project 13365, another session's investigation): nbs_create_component
+// calls with classificationcode "[L]%AD130"/"[L]%AD.130" all produced components stored
+// with classificationcode "[L]%AD" only — NBS silently drops any serial appended to a
+// group code, no error, no warning. detectEmbeddedSerial catches this before the API call.
+test("detectEmbeddedSerial catches a group code with a serial concatenated on, and is inert for everything else", () => {
+  assert.deepEqual(detectEmbeddedSerial("[L]%AD130"), { groupCode: "[L]%AD", digits: "130" });
+  assert.deepEqual(detectEmbeddedSerial("[L]%AD.130"), { groupCode: "[L]%AD", digits: "130" });
+  assert.deepEqual(detectEmbeddedSerial("[L]%AD-130"), { groupCode: "[L]%AD", digits: "130" });
+  assert.deepEqual(detectEmbeddedSerial("[L]%AD140"), { groupCode: "[L]%AD", digits: "140" });
+  // Bare, already-correct group codes are never flagged.
+  assert.equal(detectEmbeddedSerial("[L]%AD"), undefined);
+  // A single digit is too short to be a serial guess (avoids false positives on short codes).
+  assert.equal(detectEmbeddedSerial("[L]%AD1"), undefined);
+  // Unknown/non-CCI codes are left alone — the check only fires against known CCI groups,
+  // so it never misfires for BIM7AA/CCS or any code this reference data has no group for.
+  assert.equal(detectEmbeddedSerial("BIM7AA-9999"), undefined);
+  assert.equal(detectEmbeddedSerial("totally-unknown-code"), undefined);
 });
 
 // Live probe 2026-09-09: these three POST routes only exist under /api/v1 even
