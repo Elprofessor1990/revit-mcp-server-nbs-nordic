@@ -39,3 +39,20 @@ re-read whole files.
 After big code changes, refresh the graph with `graft build` (deterministic,
 no API key, $0).
 <!-- graft:end -->
+
+## Review-workflow for dette repo
+
+- Commit og push aldrig selv. Lad ændringer stå som uncommitted diff i
+  working tree — en separat reviewer (projektejeren, med Claude som
+  kvalitetstjek) læser diffen og kører testene, før noget committes.
+- Hold dig strengt til det afgrænsede trin, prompten beder om. Stop og
+  rapportér, når det trin er færdigt, selvom næste skridt i planen er
+  oplagt — fortsæt ikke selv.
+- Kør selv `npm run build:check` og de relevante testscripts
+  (`test:nbs`, `test:agent-foundation`, `test:agent-routing`, ...) efter
+  hver runde, og rapportér de faktiske resultater — ikke kun hvad du
+  forventer skal bestå.
+- Dokumentationsopdateringer (worklog, Obsidian-note) skal være korte:
+  maks 3-5 linjer pr. runde, ingen fortællende fejlsøgningshistorik —
+  kun konklusion. Læs Obsidian-noten igen umiddelbart før du skriver til
+  den, og tilføj — overskriv aldrig eksisterende sektioner.
