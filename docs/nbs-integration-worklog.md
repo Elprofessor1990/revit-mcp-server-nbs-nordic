@@ -5,6 +5,11 @@ kun op der for fulde kommandoer og API-svar bag en konklusion.
 
 ## Status til næste udvikler (Codex)
 
+- Trin 3: additiv RuleEngine og deterministisk routing for væghøjde, vægschedule, typeomdøbning og NBS-sync; dansk/engelsk normalisering.
+- Allow-list, 20-step-grænse og faste validate/verify-templates håndhæves; NBS genbruger ét atomisk sync-write med preview.
+- Verificeret: build:check, NBS 25/25, foundation 4/4 (151 uændrede tool-kontrakter), routing 10/10.
+- Næste skridt efter review: agent-entrypoint i plan-only mode; execution, runtime-kontroller og live-tests afventer.
+
 - Tool-Agent foundation trin 1-2 er implementeret: feature flag er default off, og 151 tool-kontrakter er frosset som snapshot.
 - Workflow-cache og audit har separate interfaces, schema migration v1 og separate filer (`workflow-cache.db` / `audit-log.db`) fra `revit-data.db`.
 - Verificeret med `tsc --noEmit`, 25/25 NBS-tests og 4/4 nye contract/cache-tests.
