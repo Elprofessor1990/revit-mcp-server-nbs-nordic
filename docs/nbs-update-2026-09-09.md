@@ -16,6 +16,16 @@ denne permanente installation afventer, at Revit åbnes.
 
 Oprettelse af bygningsdele via det dokumenterede API gav fortsat HTTP 404 i de
 afprøvede projekter. Væggene har derfor ikke fået `.001`–`.050`-koblinger.
+
+> **Opdatering (senere samme dag, Claude Code):** 404'en er forklaret og rettet.
+> Metodeprober mod den live server (`PATCH` uden body → `405 + Allow` på
+> registrerede ruter, bar `404` på uregistrerede) viser at `POST /projects/[id]/component`,
+> `POST /sheet` og `POST /quantities` **kun findes under `/api/v1`** — dokumentationen
+> lister dem fejlagtigt som V2. Plan-uafhængigt. `useV1: true` er tilføjet på de tre
+> kald i `ComponentService`/`SheetService`/`QuantityService`, med regressionstest.
+> Det fulde verificerede rute-kort står i `server/src/integrations/nbs/NbsConfig.ts`.
+> Første ægte oprettelse er ikke udført (kræver godkendelse). Genstart MCP-klienten
+> for at indlæse det nye bundle.
 Navneguiden for studerende er undersøgt og foreslået, men ikke implementeret.
 Referencens hovedtypekoder må ikke forveksles med individuelle elementnumre.
 
