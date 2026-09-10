@@ -5,6 +5,12 @@ kun op der for fulde kommandoer og API-svar bag en konklusion.
 
 ## Status til næste udvikler (Codex)
 
+- Produktions-runtime: konkrete bindings, længde→interne feet, felt-/navnevalidering og separat semantisk read-back for alle fire reference-intents.
+- Afviser trunkering (valg/typekatalog maks. 99), ukendte parameter-/kategorinavne og NBS-scopeudvidelse; eksisterende NBS-links skal matche den entydige live-nøgle.
+- Verificeret: build:check rent; NBS 25/25, foundation 4/4, routing 10/10, entrypoint 3/3, orchestrator 17/17 og runtime 40/40.
+- Kun offline-testet; live Revit-test (trin 8) mangler fortsat.
+- `orchestrate_workflow` er urørt; execute-wiring mangler og kommer i en separat reviewrunde. Ingen commit/push.
+
 - Trin 5: intern WorkflowOrchestrator genbruger reviewede handlers og NBS-planens requests; AuditSink logger hvert step og old/new med fejl/verifikation.
 - Stop ved fejl, ingen delvis workflow-success eller udokumenteret rollback; bindings og semantisk read-back kræves fra betroet kode.
 - Verificeret offline: build:check rent; NBS 25/25, foundation 4/4, routing 10/10, entrypoint 3/3 og orchestrator 17/17.
