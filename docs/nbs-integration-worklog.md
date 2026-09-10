@@ -5,6 +5,19 @@ kun op der for fulde kommandoer og API-svar bag en konklusion.
 
 ## Status til næste udvikler (Codex)
 
+- Trin 6: plan+request udsteder sessionsbundet engangs-planId (5 min); execute kræver uændret plan og confirmed=true, uden request-overrides.
+- Eksisterende orchestrator/runtime udfører; fuldt WorkflowRun returneres, cache får success/failure med eksisterende automatisk pruning; flag default off.
+- Plan har ingen live-læsning: request bekræftes, mens model/selection opløses ved execute og kontrolleres af runtime.
+- Verificeret offline: build:check rent; NBS 25/25, foundation 4/4, routing 10/10, entrypoint 3/3, orchestrator 17/17, runtime 40/40, execute 6/6. Live Revit-test (trin 8) mangler.
+- Afventer review uden commit/push.
+
+**Performanceforslag fra trin 6, ikke implementeret** (forbindelseslaget serialiserer kald og opretter/lukker TCP-forbindelsen pr. operation; pluginet sender arbejdet videre til Revit via `ExternalEvent`. Væghøjde-fixturen bruger 21 bridge-kald for fire workflow-steps, uden live-tidsmåling. Se `ConnectionManager.ts:41` og `SocketService.cs:254`):
+1. Batch læsesnapshot: modelidentitet, selection, typer og parametre i én `ExternalEvent`. Færre round-trips og mere konsistent snapshot; kræver ny plugin-kontrakt.
+2. Genbrug data inden for én kørsel (især typekatalog/feltmetadata). Kræver sikker invalidering ved relevante ændringer; pre-write-kontrol og post-write-read-back skal bevares.
+3. Genbrug NBS-preview: del snapshot/NBS-data mellem runtime og sync. Færre gentagne opslag, men kræver versions-/stale-kontrol.
+4. Vedvarende TCP-forbindelse: reducerer forbindelsesoverhead, ikke Revit-køtid. Kræver robust reconnect og må ikke automatisk gentage usikre writes.
+5. Instrumentér del-tider først (TCP, `ExternalEvent`-ventetid, API-arbejde, NBS) — grundlag for prioritering uden at gætte gevinster.
+
 - Produktions-runtime: konkrete bindings, længde→interne feet, felt-/navnevalidering og separat semantisk read-back for alle fire reference-intents.
 - Afviser trunkering (valg/typekatalog maks. 99), ukendte parameter-/kategorinavne og NBS-scopeudvidelse; eksisterende NBS-links skal matche den entydige live-nøgle.
 - Verificeret: build:check rent; NBS 25/25, foundation 4/4, routing 10/10, entrypoint 3/3, orchestrator 17/17 og runtime 40/40.
