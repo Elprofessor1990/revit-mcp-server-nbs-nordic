@@ -19,6 +19,7 @@ const requestSchema = z.discriminatedUnion("intentKind", [
     projectId: z.string().regex(/^[1-9]\d*$/) }).strict(),
 ]);
 export type RuntimeRequest = z.input<typeof requestSchema>;
+export { requestSchema as runtimeRequestSchema };
 
 /** Existing parameter reader uses AsDouble(), and setter uses Set(double):
  * lengths cross that boundary in Revit internal feet, NOT display units.

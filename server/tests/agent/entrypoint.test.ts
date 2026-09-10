@@ -60,7 +60,7 @@ test("MCP plan results equal direct routing for all four intents and unknown fal
   } finally { await s.close(); }
 });
 
-test("execute and missing mode fail validation explicitly", async () => {
+test("execute without prior confirmation and missing mode fail explicitly", async () => {
   const s = await session("true");
   try {
     for (const args of [{ mode: "execute", intent: "Create a roof" }, { intent: "Create a roof" }]) {

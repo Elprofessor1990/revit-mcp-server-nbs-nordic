@@ -72,9 +72,8 @@ function decode(result: unknown): unknown {
   return data;
 }
 
-/** Internal execution kernel only: deliberately not imported by MCP registration
- * or orchestrate_workflow. Caller must own selection/units/identity checks in the
- * runtime; confirmed execution and cache feedback are separate future work.
+/** Execution kernel. Confirmation/cache are owned by ConfirmedWorkflowService;
+ * selection/units/identity checks remain the supplied runtime's responsibility.
  */
 export class WorkflowOrchestrator {
   constructor(private readonly rules: RuleEngine, private readonly tools: ToolExecutor,

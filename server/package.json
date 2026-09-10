@@ -8,6 +8,7 @@
         "mcp-server-for-revit": "./build/index.js"
     },
     "scripts": {
+        "test:agent-execute": "node test-agent-execute.mjs",
         "test:agent-runtime": "node test-agent-runtime.mjs",
         "test:agent-orchestrator": "node test-agent-orchestrator.mjs",
         "test:agent-entrypoint": "node test-agent-entrypoint.mjs",
