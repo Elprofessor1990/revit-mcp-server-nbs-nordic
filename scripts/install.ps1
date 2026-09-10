@@ -1,54 +1,34 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Installer for mcp-servers-for-revit  --  Revit plugin + MCP server.
-
+    Install this checkout's local Revit + NBS Nordic build.
 .DESCRIPTION
-    Designed to work on a clean machine with only Revit and PowerShell installed.
-    - Forces TLS 1.2 (required for GitHub API on older Windows)
-    - Detects installed Revit versions (2023-2027) via registry and filesystem
-    - Detects any previous installation and asks: Replace / Skip / Abort
-    - Checks that target Revit is not running before installing (files would be locked)
-    - Downloads the latest (or specified) pre-built Release from GitHub
-    - Verifies download integrity (byte-exact size check)
-    - Extracts to the correct Addins folder
-    - Unblocks all files (removes Zone.Identifier so Windows loads the DLLs)
-    - Verifies all required files and the .addin manifest after extraction
-    - Checks Node.js (>= 18) and offers to install it (required for MCP server)
-    - Optionally configures Claude Desktop claude_desktop_config.json
-
+    STEP 1-4 retain the original prerequisite checks and Node.js LTS option.
+    Uses the complete local Release build. -Build rebuilds from source first.
+    The build machine needs npm and the matching .NET SDK; students do not.
+    Installs hash-checked local artifacts with file backups and recovery manifest.
+    Preserves existing commandRegistry.json, unrelated addins and user settings.
+    Configures Claude Desktop, Claude Code and Codex independently/additively.
+    Waits for a real read-only MCP -> Revit API response after opening Revit.
+    See README.md, "Local NBS installer: writes and verification" for all paths.
+.PARAMETER SourceRoot
+    Source checkout; defaults to the parent of this scripts directory.
+.PARAMETER Build
+    Prepare local artifacts with npm ci/build:local and dotnet Release builds.
 .PARAMETER RevitVersion
-    Target a specific Revit version (2023, 2024, 2025, 2026).
-    If omitted, all detected Revit installations are targeted.
-
-.PARAMETER Tag
-    GitHub release tag to install (e.g. "v1.2.0"). Defaults to "latest".
-
-.PARAMETER Uninstall
-    Remove the plugin from all detected (or specified) Revit versions and exit.
-
-.PARAMETER Force
-    Skip the Replace/Skip/Abort prompt and always replace an existing installation.
-
-.PARAMETER SkipNodeCheck
-    Skip the Node.js prerequisite check.
-
+    Limit installation to one detected Revit version (2023-2027).
 .PARAMETER SkipMcpConfig
-    Skip Claude Desktop MCP server configuration.
-
+    Skip all three client configurations.
+.PARAMETER VerifyTimeoutSeconds
+    Time to open Revit/project and verify the connection (default 180).
+.PARAMETER Uninstall
+    Original uninstall flow (deletes the plugin without backup; NOT reversible).
+.PARAMETER Tag
+    Legacy parameter. Release tags are rejected in this NBS edition.
+.PARAMETER LocalZip
+    Legacy parameter. Archives are rejected; use SourceRoot.
 .EXAMPLE
-    .\install.ps1
-    # Auto-detect Revit versions, install latest release
-
-.EXAMPLE
-    .\install.ps1 -RevitVersion 2025 -Tag v1.2.0
-
-.EXAMPLE
-    .\install.ps1 -Uninstall
-
-.EXAMPLE
-    powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/LuDattilo/revit-mcp-server/main/scripts/install.ps1 | iex"
-    # One-liner install directly from GitHub
+    .\scripts\install.ps1 -RevitVersion 2027
 #>
 param(
     [ValidateSet('2023','2024','2025','2026','2027')]
@@ -58,11 +38,17 @@ param(
     [switch]$Force,
     [switch]$SkipNodeCheck,
     [switch]$SkipMcpConfig,
-    [string]$LocalZip
+    [string]$LocalZip,
+    [string]$SourceRoot = (Split-Path $PSScriptRoot -Parent),
+    [switch]$Build,
+    [ValidateRange(1,600)][int]$VerifyTimeoutSeconds = 180
 )
 
 $ErrorActionPreference = 'Stop'
 $ProgressPreference    = 'SilentlyContinue'
+
+# Release/archive installation is deliberately unavailable for the NBS edition.
+if ($LocalZip -or $Tag -ne 'latest') { throw 'Use -SourceRoot with this local NBS checkout, not -LocalZip or -Tag.' }
 
 # When run via `irm ... | iex` the script executes in the caller's scope and a
 # pre-existing $Tag variable can override the param() default.  Guard against it.
@@ -420,323 +406,67 @@ if (-not $SkipNodeCheck) {
 }
 
 # =============================================================================
-# STEP 5 & 6  --  FETCH RELEASE / INSTALL
+# STEP 5 & 6  --  BUILD AND INSTALL THIS SOURCE CHECKOUT
 # =============================================================================
-if ($LocalZip) {
-    Write-Host "  STEP 5  --  Using local files (skipping download)" -ForegroundColor White
-    Write-Ok "Local installation from: $LocalZip"
-    Write-Host ""
-
-    # Go directly to install
-    Write-Host "  STEP 6  --  Installing plugin" -ForegroundColor White
-} else {
-    # =============================================================================
-    # STEP 5  --  FETCH RELEASE INFO FROM GITHUB
-    # =============================================================================
-    Write-Host "  STEP 5  --  Fetching release information" -ForegroundColor White
-
-    $apiHeaders = @{ 'User-Agent' = 'mcp-revit-installer'; 'Accept' = 'application/vnd.github+json' }
-    $releaseUrl = if ($Tag -eq 'latest') {
-        "https://api.github.com/repos/$REPO/releases/latest"
-    } else {
-        "https://api.github.com/repos/$REPO/releases/tags/$Tag"
+. "$PSScriptRoot\install-local.ps1"
+try {
+    $sourcePath = [IO.Path]::GetFullPath($SourceRoot)
+    Write-Host "  STEP 5  --  Local NBS build (no release download)" -ForegroundColor White
+    if ($Build) { Build-LocalInstallation -SourceRoot $sourcePath -Versions $revitInstalls }
+    else { Write-Step 'Using prepared local Release artifacts. No compiler needed on the student machine.' }
+    # Preflight every target before modifying the first installation.
+    $plans = @($revitInstalls | ForEach-Object {
+        Get-LocalInstallPlan -SourceRoot $sourcePath -Year $_.Year -AddinsDir $_.AddinsDir
+    })
+    if (Get-Process Revit -ErrorAction SilentlyContinue) {
+        throw 'Save and close Revit before installing. No Addins files have been changed.'
     }
-
-    try {
-        $release = Invoke-RestMethod -Uri $releaseUrl -Headers $apiHeaders -ErrorAction Stop
-    } catch {
-        if ($_.Exception.Response.StatusCode.value__ -eq 404) {
-            Write-Err "Release '$Tag' not found."
-            Write-Info "Available: https://github.com/$REPO/releases"
-        } else {
-            Write-Err "Could not fetch release: $_"
-        }
-        exit 1
-    }
-
-    $releaseTag  = $release.tag_name
-    $releaseDate = $release.published_at.Substring(0,10)
-    Write-Ok "Release: $releaseTag  ($releaseDate)"
-    if ($release.body) {
-        ($release.body -split "`n" | Select-Object -First 3) | ForEach-Object { Write-Info "  $_" }
-    }
-    Write-Host ""
-
-    # =============================================================================
-    # STEP 6  --  DOWNLOAD & INSTALL
-    # =============================================================================
-    Write-Host "  STEP 6  --  Installing plugin" -ForegroundColor White
-}
-
-function Test-PluginInstall {
-    param([string]$AddinsDir, [string]$Year, [string]$Tag)
-    Write-Step "Revit $Year  --  verifying..."
-    $pluginRoot    = "$AddinsDir\$PLUGIN_FOLDER"
-    $commandSetDir = "$pluginRoot\Commands\RevitMCPCommandSet\$Year"
-    $serverRoot    = "$pluginRoot\Commands\RevitMCPCommandSet\server"
-    $required = @(
-        @{ P = "$AddinsDir\$ADDIN_FILE";                    L = "Add-in manifest (.addin)"       },
-        @{ P = "$pluginRoot\RevitMCPPlugin.dll";             L = "Main plugin DLL"                },
-        @{ P = "$pluginRoot\RevitMCPSDK.dll";                L = "RevitMCP SDK DLL"               },
-        @{ P = "$pluginRoot\Newtonsoft.Json.dll";            L = "Newtonsoft.Json"                },
-        @{ P = "$pluginRoot\Commands\commandRegistry.json";  L = "Command registry"               },
-        @{ P = "$commandSetDir\RevitMCPCommandSet.dll";      L = "Command set DLL (Revit $Year)"  },
-        @{ P = "$serverRoot\build\index.js";                 L = "MCP server (index.js)"          },
-        @{ P = "$serverRoot\runtime\node.exe";               L = "Bundled Node.js runtime"        }
-    )
-    $allOk = $true
-    foreach ($f in $required) {
-        if (Test-Path $f.P) {
-            Write-Ok "    $($f.L)"
-        } else {
-            Write-Err "    MISSING: $($f.L)"
-            Write-Info "      Expected: $($f.P)"
-            $allOk = $false
-        }
-    }
-    # Guard against source-code installs
-    $srcFiles = (Get-ChildItem $pluginRoot -Include '*.cs','*.csproj' -Recurse -ErrorAction SilentlyContinue).Count
-    if ($srcFiles -gt 0) {
-        Write-Err "    Source files found instead of compiled binaries  --  download the ZIP from GitHub Releases"
-        $allOk = $false
-    }
-    $dllCount = (Get-ChildItem $pluginRoot -Filter '*.dll' -Recurse -ErrorAction SilentlyContinue).Count
-    Write-Ok "    $dllCount DLL files present"
-    # Verify manifest assembly path
-    if (Test-Path "$AddinsDir\$ADDIN_FILE") {
-        try {
-            [xml]$xml = Get-Content "$AddinsDir\$ADDIN_FILE" -Raw
-            $asmFull  = Join-Path $AddinsDir $xml.RevitAddIns.AddIn.Assembly
-            if (Test-Path $asmFull) {
-                Write-Ok "    Manifest assembly path valid"
-            } else {
-                Write-Err "    Manifest assembly not found: $asmFull"
-                $allOk = $false
-            }
-        } catch { Write-Warn "    Could not parse .addin manifest" }
-    }
-    Write-Host ""
-    if ($allOk) {
-        Write-Ok "Revit $Year  --  verified OK ($Tag)"
-        return $true
-    } else {
-        Write-Err "Revit $Year  --  installation incomplete  --  see above"
-        Write-Info "Download manually: https://github.com/$REPO/releases/tag/$Tag"
-        return $false
-    }
-}
-
-function Install-ForVersion {
-    param([PSCustomObject]$Rv, [object]$Release)
-    $year      = $Rv.Year
-    $addinsDir = $Rv.AddinsDir
-
-    # -- LOCAL INSTALL (from extracted ZIP / bat launcher) ---------------------
-    if ($LocalZip) {
-        $localAddin = Join-Path $LocalZip "$ADDIN_FILE"
-        $localPlugin = Join-Path $LocalZip $PLUGIN_FOLDER
-
-        if (-not (Test-Path $localAddin)) {
-            Write-Err "Local install: $ADDIN_FILE not found in $LocalZip"
-            return $false
-        }
-
-        # Check for running Revit (same check as remote install)
-        $allRevitProcs = Get-Process -Name "Revit" -ErrorAction SilentlyContinue
-        $thisRunning = $allRevitProcs | Where-Object {
-            $_.Path -match [regex]::Escape("Revit $year") -or
-            $_.MainWindowTitle -match $year
-        }
-        if ($thisRunning) {
-            Write-Warn "Revit $year is currently running -- close it first."
-            $wait = (Read-Host "  [Enter / skip]").Trim().ToLower()
-            if ($wait -eq 'skip') { Write-Warn "Skipped Revit $year."; return $false }
-        }
-
-        # Remove old installation
-        Remove-Item "$addinsDir\$ADDIN_FILE" -Force -ErrorAction SilentlyContinue
-        Remove-Item "$addinsDir\$PLUGIN_FOLDER" -Recurse -Force -ErrorAction SilentlyContinue
-
-        # Ensure Addins directory exists
-        if (-not (Test-Path $addinsDir)) {
-            New-Item -ItemType Directory -Path $addinsDir -Force | Out-Null
-        }
-
-        # Copy from local
-        Write-Step "Revit $year -- installing from local files..."
-        Copy-Item $localAddin "$addinsDir\" -Force
-        Copy-Item $localPlugin "$addinsDir\" -Recurse -Force
-
-        # Unblock all files
-        Write-Step "Revit $year -- unblocking files..."
-        Get-ChildItem -Path "$addinsDir\$PLUGIN_FOLDER" -Recurse -File -ErrorAction SilentlyContinue |
-            ForEach-Object { Unblock-File -Path $_.FullName -ErrorAction SilentlyContinue }
-
-        return Test-PluginInstall -AddinsDir $addinsDir -Year $year -Tag "local"
-    }
-    # -- END LOCAL INSTALL ----------------------------------------------------
-
-    $tag       = $Release.tag_name
-    $assetName = "$PLUGIN_NAME-$tag-Revit$year.zip"
-    $asset     = $Release.assets | Where-Object { $_.name -eq $assetName }
-
-    if (-not $asset) {
-        Write-Warn "Revit $year  --  asset '$assetName' not found in release $tag"
-        $avail = ($Release.assets | ForEach-Object { $_.name }) -join ', '
-        if ($avail) { Write-Info "Available assets: $avail" }
-        return $false
-    }
-
-    # Check for running Revit process for this version
-    $allRevitProcs = Get-Process -Name "Revit" -ErrorAction SilentlyContinue
-    $thisRunning   = $allRevitProcs | Where-Object {
-        $_.Path -match [regex]::Escape("Revit $year") -or
-        $_.MainWindowTitle -match $year
-    }
-    if (-not $thisRunning -and $allRevitProcs -and $revitInstalls.Count -eq 1) {
-        $thisRunning = $allRevitProcs | Select-Object -First 1
-    }
-    if ($thisRunning) {
-        Write-Warn "Revit $year is currently running  --  DLL files will be locked."
-        Write-Warn "Close Revit $year and press Enter to retry, or type 'skip'."
-        $wait = (Read-Host "  [Enter / skip]").Trim().ToLower()
-        if ($wait -eq 'skip') { Write-Warn "Skipped Revit $year."; return $false }
-        if (Get-Process -Name "Revit" -ErrorAction SilentlyContinue) {
-            Write-Warn "Revit still running  --  attempting install anyway (some files may fail)."
-        }
-    }
-
-    $sizeMb  = [math]::Round($asset.size / 1MB, 1)
-    Write-Step "Revit $year  --  downloading $assetName ($sizeMb MB)..."
-
-    $tempDir = Join-Path $env:TEMP "mcp-revit-$year"
-    $tempZip = Join-Path $tempDir "$assetName"
-    if (Test-Path $tempDir) { Remove-Item $tempDir -Recurse -Force }
-    New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
-
-    try {
-        Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $tempZip `
-            -Headers @{ 'User-Agent' = 'mcp-revit-installer' }
-    } catch {
-        Write-Err "Download failed: $_"
-        Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-        return $false
-    }
-
-    # Byte-exact integrity check
-    $dlSize = (Get-Item $tempZip).Length
-    if ($dlSize -ne $asset.size) {
-        Write-Err "Size mismatch: got $dlSize bytes, expected $($asset.size)  --  download may be corrupt"
-        Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-        return $false
-    }
-    Write-Ok "Revit $year  --  download verified"
-
-    # Remove old installation
-    Remove-Item "$addinsDir\$ADDIN_FILE"         -Force -ErrorAction SilentlyContinue
-    Remove-Item "$addinsDir\$PLUGIN_FOLDER"       -Recurse -Force -ErrorAction SilentlyContinue
-    Remove-Item "$addinsDir\RevitMCPCommandSet"   -Recurse -Force -ErrorAction SilentlyContinue
-
-    # Ensure Addins directory exists
-    if (-not (Test-Path $addinsDir)) {
-        New-Item -ItemType Directory -Path $addinsDir -Force | Out-Null
-    }
-
-    Write-Step "Revit $year  --  extracting..."
-    try {
-        Expand-Archive -Path $tempZip -DestinationPath $addinsDir -Force
-    } catch {
-        Write-Err "Extraction failed: $_"
-        Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-        return $false
-    }
-
-    # Unblock all files  --  Windows adds Zone.Identifier to downloaded files which
-    # prevents .NET from loading DLLs without a security prompt
-    Write-Step "Revit $year  --  unblocking files..."
-    Get-ChildItem -Path $addinsDir -Recurse -File -ErrorAction SilentlyContinue |
-        ForEach-Object { Unblock-File -Path $_.FullName -ErrorAction SilentlyContinue }
-
-    Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-    return Test-PluginInstall -AddinsDir $addinsDir -Year $year -Tag $tag
-}
-
-$installed = 0
-foreach ($rv in $revitInstalls) {
-    if (Install-ForVersion -Rv $rv -Release $release) { $installed++ }
-    Write-Host ""
-}
-
-if ($installed -eq 0) {
-    Write-Err "No version was installed successfully."
+    Write-Host "  STEP 6  --  Installing local build" -ForegroundColor White
+    foreach ($plan in $plans) { Install-LocalPlan $plan }
+} catch {
+    Write-Err "Local installation failed: $_"
     exit 1
 }
 
 # =============================================================================
-# STEP 7  --  CONFIGURE CLAUDE DESKTOP
+# STEP 7  --  INDEPENDENT, ADDITIVE CLIENT CONFIGURATION
 # =============================================================================
+$serverPath = $plans[-1].ServerPath
+$nodePath = Get-NodePath
+$configFailed = $false
 if (-not $SkipMcpConfig) {
-    Write-Host "  STEP 7  --  Claude Desktop configuration" -ForegroundColor White
-
-    $claudeDir = Get-ClaudeDesktopDir
-
-    if (-not $claudeDir) {
-        Write-Warn "Claude Desktop not found  --  skipping automatic configuration"
-        Write-Info "Install Claude Desktop from https://claude.ai/download"
-        Write-Info "Then re-run: .\install.ps1 -SkipNodeCheck"
-    } else {
-        Write-Ok "Claude Desktop found: $claudeDir"
-        $cfgInfo    = Get-ClaudeDesktopConfig $claudeDir
-        $configPath = $cfgInfo.Path
-
-        $config = if ($cfgInfo.Exists -and $cfgInfo.Config) {
-            $cfgInfo.Config
-        } elseif ($cfgInfo.Exists) {
-            Write-Warn "Could not parse existing config  --  backing up"
-            Copy-Item $configPath "$configPath.bak" -Force
-            [PSCustomObject]@{}
-        } else { [PSCustomObject]@{} }
-
-        # Use the local server installed with the plugin (not the npm package)
-        $serverPath = Get-McpServerPath
-        if (-not $serverPath) {
-            Write-Warn "Claude Desktop  --  local server not found, skipping config"
-            Write-Info "This should not happen  --  check that the plugin was installed correctly"
-        } else {
-            $nodePath = Get-NodePath
-            if (-not $nodePath) {
-                Write-Warn "Claude Desktop  --  Node.js not found (system or bundled), skipping config"
-                Write-Info "Install Node.js from https://nodejs.org then re-run: .\install.ps1 -SkipNodeCheck"
-            } else {
-                if (-not $config.mcpServers) {
-                    $config | Add-Member -NotePropertyName 'mcpServers' -NotePropertyValue ([PSCustomObject]@{})
-                }
-                $revitMcpEntry = New-RevitMcpEntry $serverPath
-                Write-Info "Node: $nodePath"
-                Write-Info "Server: $serverPath"
-                $config.mcpServers | Add-Member -NotePropertyName 'revit-mcp' -NotePropertyValue $revitMcpEntry -Force
-                $config | ConvertTo-Json -Depth 10 | Set-Content $configPath -Encoding UTF8
-                Write-Ok "Claude Desktop  --  revit-mcp configured"
-                Write-Info "Config: $configPath"
-            }
+    Write-Host "  STEP 7  --  AI client configuration" -ForegroundColor White
+    $desktopDir = Get-ClaudeDesktopDir
+    if (-not $desktopDir) { $desktopDir = Join-Path $env:APPDATA 'Claude' }
+    $claudeCodePath = if ($env:CLAUDE_CONFIG_DIR) { Join-Path $env:CLAUDE_CONFIG_DIR '.claude.json' } else { Join-Path $env:USERPROFILE '.claude.json' }
+    $codexDir = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE '.codex' }
+    foreach ($client in @(
+        @{ Name = 'Claude Desktop'; Path = (Join-Path $desktopDir 'claude_desktop_config.json'); Format = 'json' },
+        @{ Name = 'Claude Code'; Path = $claudeCodePath; Format = 'json' },
+        @{ Name = 'Codex'; Path = (Join-Path $codexDir 'config.toml'); Format = 'toml' }
+    )) {
+        try {
+            if (-not $nodePath) { throw 'Node.js unavailable; client configuration was not changed.' }
+            Set-LocalClientConfig -Path $client.Path -Format $client.Format -NodePath $nodePath -ServerPath $serverPath
+            Write-Ok "$($client.Name) -- configured: $($client.Path)"
+        } catch {
+            $configFailed = $true
+            Write-Err "$($client.Name) -- $_"
         }
     }
-    Write-Host ""
 }
 
 # =============================================================================
-# SUMMARY
+# STEP 8  --  REAL MCP -> TCP -> REVIT READ-ONLY VERIFICATION
 # =============================================================================
-Write-Host "  ================================================================" -ForegroundColor Green
-Write-Host "      Installation complete!  ($installed version(s) installed)"     -ForegroundColor Green
-Write-Host "  ================================================================" -ForegroundColor Green
-Write-Host ""
-Write-Host "  Next steps:" -ForegroundColor White
-Write-Host "    1. Open (or restart) Revit"                                     -ForegroundColor Gray
-Write-Host "    2. Go to the Add-Ins tab  --  you will see the Revit MCP panel"    -ForegroundColor Gray
-Write-Host "    3. Click 'Revit MCP Switch' to start the local server"          -ForegroundColor Gray
-Write-Host "    4. Open Claude Desktop / Claude Code and start chatting"        -ForegroundColor Gray
-Write-Host ""
-Write-Host "  Docs:   https://github.com/$REPO#readme"   -ForegroundColor DarkGray
-Write-Host "  Issues: https://github.com/$REPO/issues"   -ForegroundColor DarkGray
-Write-Host ""
+Write-Host "  STEP 8  --  Connection verification" -ForegroundColor White
+Write-Step "Open Revit and your project now; then open your AI client. This window checks the connection automatically."
+Write-Info "Waiting up to $VerifyTimeoutSeconds seconds. No model writes or NBS calls."
+if (-not $nodePath) { Write-Err 'Cannot verify without Node.js.'; exit 1 }
+& $nodePath "$PSScriptRoot\verify-install.mjs" $serverPath $VerifyTimeoutSeconds
+if ($LASTEXITCODE -ne 0) {
+    Write-Warn 'Files installed, but live connection NOT verified. See the diagnostic above; installation is not fully verified.'
+    exit 1
+}
+if ($configFailed) { Write-Warn 'Connection verified, but one or more client configurations need attention.'; exit 1 }
+Write-Ok 'Installation and live Revit connection verified. Open your AI client.'
