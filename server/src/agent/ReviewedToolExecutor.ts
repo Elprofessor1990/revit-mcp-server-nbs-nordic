@@ -7,6 +7,9 @@ import { registerListSchedulableFieldsTool } from "../tools/list_schedulable_fie
 import { registerCreateScheduleTool } from "../tools/create_schedule.js";
 import { registerGetScheduleDataTool } from "../tools/get_schedule_data.js";
 import { registerBatchRenameTool } from "../tools/batch_rename.js";
+import { registerGetAvailableFamilyTypesTool } from "../tools/get_available_family_types.js";
+import { registerNbsGetProjectTool } from "../tools/nbs_get_project.js";
+import { registerNbsListComponentsTool } from "../tools/nbs_list_components.js";
 import { registerNbsProjectConnectionTools } from "../tools/nbs_project_connection.js";
 import { registerSyncRevitTypesToNbsTool, type SyncExecutionHooks } from "../tools/sync_revit_types_to_nbs.js";
 
@@ -19,6 +22,10 @@ const registrations: Record<string, (server: McpServer) => void> = {
   get_schedule_data: registerGetScheduleDataTool,
   batch_rename: registerBatchRenameTool,
   get_connection_status: registerNbsProjectConnectionTools,
+  // Internal runtime reads only; does not expand the routing/write allow-list.
+  get_available_family_types: registerGetAvailableFamilyTypesTool,
+  nbs_get_project: registerNbsGetProjectTool,
+  nbs_list_components: registerNbsListComponentsTool,
 };
 
 export interface ToolExecutor {

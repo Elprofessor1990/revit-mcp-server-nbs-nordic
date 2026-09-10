@@ -13,6 +13,8 @@ import { dbRun } from "../database/db.js";
 
 /** Internal observation/guard only; never exposed in the MCP input schema. */
 export interface SyncExecutionPlan {
+  /** Internal scope evidence, never added to the public MCP response. */
+  snapshot?: SyncSnapshot;
   modelKey: string;
   projectId: string;
   category: string;
@@ -94,7 +96,7 @@ export function registerSyncRevitTypesToNbsTool(server: McpServer, hooks?: SyncE
         };
         // A private orchestrator can inspect/audit the exact existing requests and
         // reject a changed preview before any write. Ordinary MCP calls are unchanged.
-        await hooks?.beforeWriteOrPreview({ modelKey: snapshot.modelKey, projectId,
+        await hooks?.beforeWriteOrPreview({ snapshot: structuredClone(snapshot), modelKey: snapshot.modelKey, projectId,
           category: args.category, dryRun: args.dryRun,
           unresolved: summary.unresolvedTypes.length > 0 || summary.nameMatchProposals.length > 0 ||
             summary.ambiguousMatches.length > 0 || instanceSummary.unresolved > 0 || instanceSummary.ambiguous > 0,
