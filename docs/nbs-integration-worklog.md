@@ -3,6 +3,12 @@
 Rå evidens/citater fra 2026-09-09 ligger i `docs/archive/2026-09-09-nbs/`; slå
 kun op der for fulde kommandoer og API-svar bag en konklusion.
 
+## Installer — lokal NBS-build (adskilt fra Tool-Agent)
+- Release-download erstattet af lokale Release-artefakter; STEP 1–4 uændret, filbackup/rollback og additive konfigurationer til tre klienter.
+- Verificeret: installer 7/7, probe-fixtures 3/3, build:check rent og alle NBS/agent-suiter bestået; installerens berørte stier dokumenteret i README.
+- Eksisterende MCP svarede på initialize/tools/list; Revit utilgængelig, så live-probe fejlede korrekt. Ingen virkelig installation/configændring udført.
+- Afventer review uden commit/push; næste skridt er kontrolleret installation og vellykket live Revit-verifikation.
+
 ## Status til næste udvikler (Codex)
 
 - Trin 6: plan+request udsteder sessionsbundet engangs-planId (5 min); execute kræver uændret plan og confirmed=true, uden request-overrides.
